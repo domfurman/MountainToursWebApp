@@ -1,0 +1,17 @@
+server:
+  error:
+    include-message: always
+    include-binding-errors: always
+
+spring:
+  application:
+    name: mountaintours
+  datasource:
+    username: postgres
+    password: password
+    url: jdbc:postgresql://localhost:5432/registration
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
