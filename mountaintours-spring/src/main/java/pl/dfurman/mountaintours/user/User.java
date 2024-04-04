@@ -16,8 +16,8 @@ import java.util.Collections;
 public class User implements UserDetails {
 
     private Long id;
-    private String name;
-    private String username;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
     private UserRole userRole;
@@ -25,14 +25,12 @@ public class User implements UserDetails {
     private Boolean locked;
     private Boolean enabled;
 
-    public User(String name, String username, String password, String email, UserRole userRole, Boolean locked, Boolean enabled) {
-        this.name = name;
-        this.username = username;
+    public User(String name, String lastName, String password, String email, UserRole userRole) {
+        this.firstName = name;
+        this.lastName = lastName;
         this.password = password;
         this.email = email;
         this.userRole = userRole;
-        this.locked = locked;
-        this.enabled = enabled;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return email;
     }
 
     @Override
@@ -70,4 +68,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
+
 }

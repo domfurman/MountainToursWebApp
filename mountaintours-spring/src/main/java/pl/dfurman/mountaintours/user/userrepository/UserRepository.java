@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
-    List<User> findAll();
+    List<User> findAllUsers();
     Optional<User> findByEmail(String email);
+
+    int saveUser(User user);
 }
