@@ -21,7 +21,6 @@ public class User implements UserDetails {
     private String password;
     private String email;
     private UserRole userRole;
-
     private Boolean locked;
     private Boolean enabled;
 
