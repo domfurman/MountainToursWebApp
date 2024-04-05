@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import pl.dfurman.mountaintours.user.userrepository.JdbcUserRepository;
 import pl.dfurman.mountaintours.user.userrepository.UserRepository;
 
+import java.util.List;
+
 @Service
 public class UserService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MSG = "User with email %s not found";
@@ -27,12 +29,14 @@ public class UserService implements UserDetailsService {
     }
 
     public String singUpUser(User user) {
-        boolean userExists = userRepository.findByEmail(user.getEmail())
+        // next lines cause error
+
+        /*boolean userExists = userRepository.findByEmail(user.getEmail())
                 .isPresent();
 
         if (userExists) {
             throw new IllegalStateException("Email already taken");
-        }
+        }*/
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
