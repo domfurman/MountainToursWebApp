@@ -1,0 +1,8 @@
+<h1>Greeting!</h1>
+<div [hidden]="!authenticated()">
+  <p>Hello {{user.firstName}}!</p>
+  <p>the id is {{user.id}}</p>
+</div>
+<div [hidden]="authenticated()">
+  <p>please log in</p>
+</div>

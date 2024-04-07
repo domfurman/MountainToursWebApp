@@ -45,4 +45,13 @@ public class UserService implements UserDetailsService {
         userRepository.saveUser(user);
         return "sign up works";
     }
+
+    public User findById(int id) {
+        boolean userExists = userRepository.findById(id).isPresent();
+
+        if (!userExists) {
+            throw new IllegalStateException("User not found");
+        }
+        return userRepository.findById(id).get();
+    }
 }

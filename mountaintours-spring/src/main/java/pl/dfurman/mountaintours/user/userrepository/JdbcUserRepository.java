@@ -36,4 +36,11 @@ public class JdbcUserRepository  implements UserRepository{
         """,
                 user.getFirstName(), user.getLastName(), user.getPassword(), user.getEmail(), user.getUserRole().toString());
     }
+
+    @Override
+    public Optional<User> findById(int id) {
+        User user = jdbcTemplate.queryForObject("SELECT * FROM users WHERE id =?",
+                BeanPropertyRowMapper.newInstance(User.class), id);
+        return Optional.of(user);
+    }
 }
