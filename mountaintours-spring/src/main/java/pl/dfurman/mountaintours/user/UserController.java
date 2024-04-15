@@ -1,6 +1,9 @@
 package pl.dfurman.mountaintours.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -8,8 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600,
-    allowedHeaders = {"x-auth-token", "x-requested-with", "x-xsrf-token"})
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     private final UserService userService;
@@ -19,19 +21,29 @@ public class UserController {
         this.userService = userService;
     }
 
-    /*@GetMapping("/api/user/20")
-    public Map<String, Object> userInfo() {
-        User user = userService.findById(20);
-        Map<String, Object> userInfo = new HashMap<String, Object>();
-        userInfo.put("id", user.getId());
-        userInfo.put("firstName", user.getFirstName());
-        return userInfo;
-    }*/
-
     @GetMapping("/api/user/20")
-    public User userInfo() {
-        return userService.findById(20);
+    public User userJohn() {
+        return userService.findByEmail("johncena@gmail.com");
     }
+    @PostMapping(value = "/",
+    consumes = {"application/json"})
+    public ResponseEntity<?> login(@RequestBody User user) {
+        System.out.println(user);
+        User userDetails = userService.findByEmail(user.getEmail());
+        if (user.getPassword().equals(userDetails.getPassword())) {
+            return ResponseEntity.ok(user);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
+//        return (ResponseEntity<?>) ResponseEntity.internalServerError();
+        return ResponseEntity.ok().headers(headers).body(user);
+    }
+
+
+    /*@GetMapping("/api/user/20")
+    public UserDetails userInfo() {
+        return userService.loadUserByUsername("johncena@gmail.com");
+    }*/
 
     @RequestMapping("/user")
     public Principal user(Principal user) {

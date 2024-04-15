@@ -10,12 +10,39 @@ import {User} from "../models/user";
 export class AppService {
 
   authenticated = false;
+  private basicUrl: string = 'http://localhost:8080'
 
   constructor(private http: HttpClient) { }
 
-  authenticate(credentials: Credentials, callback: any) {
-    /*const headers = new HttpHeaders(credentials ? {
-      authorization : 'Basic ' + btoa(credentials.username + ':' + credentials.password)
+/*
+  login(user: User): Observable<object> {
+    console.log(user);
+    return this.http.post(`${this.basicUrl}/`, user, {withCredentials: true});
+  }
+*/
+  login(username: String, password: String): Observable<object> {
+    // console.log();
+    const headers = new HttpHeaders({Authorization: 'Basic ' + btoa(username+":"+password)})
+    const options = {headers, withCredentials: true, responseType: 'text' as 'json'};
+    const creds = {
+      'username' : username,
+      'password' : password
+    }
+    return this.http.post(`${this.basicUrl}/api/login`, creds);
+  }
+
+
+  findUser(username: String, password: String) {
+    const creds = {
+      'username' : username,
+      'password' : password
+    }
+    return this.http.get<User>(`${this.basicUrl}/api/user/20`)
+  }
+
+  /*authenticate(credentials: Credentials, callback: any) {
+    const headers = new HttpHeaders(credentials ? {
+      authorization : 'Basic ' + btoa(credentials.email + ':' + credentials.password)
     } : {});
 
     this.http.get('http://localhost:8080/user', {headers: headers}).subscribe(response => {
@@ -26,13 +53,14 @@ export class AppService {
         this.authenticated = false;
       }*!/
       return callback && callback();
-    })*/
-    this.authenticated = true;
-  }
+    })
+    this.authenticated = false;
+  }*/
 
-  dologin(username: String, password: String) {
-    return this.http.post('http://localhost:8080/login', {username, password})
-  }
+  /*dologin(username: String, password: String) {
+    const headers = new HttpHeaders({Authorization: 'Basic' + btoa(username+":"+password)})
+    return this.http.get('http://localhost:8080/login', {headers, responseType:'text' as 'json'})
+  }*/
   /*authenticate(credentials: Credentials, callback: any) {
     const headers = credentials ?
       new HttpHeaders({
@@ -41,16 +69,13 @@ export class AppService {
 
     this.http.get('user', {headers: headers}).subscribe(
       response => {
-        // Handle successful response
-        this.authenticated = !!response['name']; // Set authenticated based on response
+        this.authenticated = !!response['name'];
       },
       error => {
-        // Handle error
         console.error('Authentication Error:', error);
-        this.authenticated = false; // Set authenticated to false on error
+        this.authenticated = false;
       },
       () => {
-        // Callback after request completion
         if (callback) {
           callback();
         }
@@ -58,9 +83,12 @@ export class AppService {
     );
   }*/
 
-  getUserInfo(): Observable<User> {
-    return this.http.get<User>('http://localhost:8080/api/user/20')
-  }
+  /*getUserInfo() {
+    let username="johncena@gmail.com"
+    let password = "password"
+    const headers = new HttpHeaders({Authorization: 'Basic' + btoa(username+":"+password)})
+    return this.http.get('http://localhost:8080/api/user/20', {headers})
+  }*/
 
 
 

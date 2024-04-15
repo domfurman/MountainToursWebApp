@@ -19,16 +19,16 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit() {
-    this.loadUserInfo();
+    // this.loadUserInfo();
   }
 
   authenticated() {
     return this.appService.authenticated;
   }
 
-  loadUserInfo(): void {
+  /*loadUserInfo(): void {
     this.appService.getUserInfo().subscribe(userData => {
       this.user = userData
     })
-  }
+  }*/
 }

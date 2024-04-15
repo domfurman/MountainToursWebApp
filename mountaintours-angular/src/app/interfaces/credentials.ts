@@ -1,4 +1,4 @@
 export interface Credentials {
-  username: String,
+  email: String,
   password: String
 }

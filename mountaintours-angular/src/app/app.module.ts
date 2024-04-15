@@ -18,7 +18,7 @@ import {HomeComponent} from "./components/home/home.component";
 import {LoginComponent} from "./components/login/login.component";
 import {Observable} from "rxjs";
 
-@Injectable()
+/*@Injectable()
 export class XhrInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const xhr = req.clone({
@@ -26,7 +26,7 @@ export class XhrInterceptor implements HttpInterceptor {
     });
     return next.handle(xhr);
   }
-}
+}*/
 
 @NgModule({
   declarations: [
@@ -43,7 +43,6 @@ export class XhrInterceptor implements HttpInterceptor {
   ],
   providers: [
     AppService,
-    {provide: HTTP_INTERCEPTORS, useClass: XhrInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
 })

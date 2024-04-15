@@ -14,11 +14,11 @@ export class AppComponent {
 
   constructor(private http: HttpClient, private appService: AppService, private router: Router) {
     const credentials: Credentials = {
-      username: '',
+      email: '',
       password: ''
     };
     const callback = () => {};
 
-    this.appService.authenticate(credentials, callback);
+    // this.appService.authenticate(credentials, callback);
   }
 }

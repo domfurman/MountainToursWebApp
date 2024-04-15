@@ -6,8 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.*;
 import org.springframework.util.StringUtils;
@@ -43,23 +46,38 @@ public class WebSecurityConfig {
 
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CorsFilter corsFilter;
+
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET","POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/registration", "/*.bundle.*", "/home", "/login", "api/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
+                        .requestMatchers("/api/registration", "/*.bundle.*", "/home", "/login", "api/login", "/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .csrf((csrf) -> csrf
+                /*.csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                 )
-                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-//                .cors(Customizer.withDefaults())
+                .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)*/
+//                .cors(AbstractHttpConfigurer::disable)
         ;
 
         return http.build();
@@ -84,6 +102,16 @@ public class WebSecurityConfig {
     }
 
     /*@Bean
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
+        FilterRegistrationBean<CorsFilter> registrationBean =
+                new FilterRegistrationBean<>(new CorsFilter(corsConfigurationSource()));
+        registrationBean.setName("CORS Filter");
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setOrder(1);
+        return registrationBean;
+    }*/
+
+    /*@Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setPasswordEncoder(bCryptPasswordEncoder);
@@ -97,40 +125,40 @@ public class WebSecurityConfig {
 
      */
 
-    final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
+    /*final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
         private final CsrfTokenRequestHandler delegate = new XorCsrfTokenRequestAttributeHandler();
 
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
-            /*
+
              * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
              * the CsrfToken when it is rendered in the response body.
-             */
+
             this.delegate.handle(request, response, csrfToken);
         }
 
         @Override
         public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-            /*
+
              * If the request contains a request header, use CsrfTokenRequestAttributeHandler
              * to resolve the CsrfToken. This applies when a single-page application includes
              * the header value automatically, which was obtained via a cookie containing the
              * raw CsrfToken.
-             */
+
             if (StringUtils.hasText(request.getHeader(csrfToken.getHeaderName()))) {
                 return super.resolveCsrfTokenValue(request, csrfToken);
             }
-            /*
+
              * In all other cases (e.g. if the request contains a request parameter), use
              * XorCsrfTokenRequestAttributeHandler to resolve the CsrfToken. This applies
              * when a server-side rendered form includes the _csrf request parameter as a
              * hidden input.
-             */
+
             return this.delegate.resolveCsrfTokenValue(request, csrfToken);
         }
-    }
+    }*/
 
-    final class CsrfCookieFilter extends OncePerRequestFilter {
+    /*final class CsrfCookieFilter extends OncePerRequestFilter {
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -141,15 +169,12 @@ public class WebSecurityConfig {
 
             filterChain.doFilter(request, response);
         }
-    }
+    }*/
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
-        configuration.setAllowedMethods(Arrays.asList("GET","POST"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
+
+
+    /*@Bean
+    CorsFilter corsFilter() {
+        return new CorsFilter(corsConfigurationSource());
+    }*/
 }
