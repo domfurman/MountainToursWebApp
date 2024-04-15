@@ -45,7 +45,7 @@ public class UserController {
         return userService.loadUserByUsername("johncena@gmail.com");
     }*/
 
-    @RequestMapping("/user")
+    @GetMapping("/user")
     public Principal user(Principal user) {
         return user;
     }

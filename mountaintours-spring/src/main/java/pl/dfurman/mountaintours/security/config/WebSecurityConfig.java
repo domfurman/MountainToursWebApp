@@ -26,12 +26,15 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.csrf.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.dfurman.mountaintours.security.session.SessionFilter;
 import pl.dfurman.mountaintours.user.UserService;
 
 import javax.sql.DataSource;
@@ -47,6 +50,7 @@ public class WebSecurityConfig {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final CorsFilter corsFilter;
+    private final SessionFilter sessionFilter;
 
 
     @Bean
@@ -62,6 +66,7 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//        SecurityContextRepository repository = new HttpSessionSecurityContextRepository();
         http
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
@@ -72,6 +77,9 @@ public class WebSecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class)
+                /*.securityContext((context) -> context
+                        .securityContextRepository(repository))*/
                 /*.csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
@@ -84,11 +92,11 @@ public class WebSecurityConfig {
     }
     @Bean
     public AuthenticationManager authenticationManager(
-            UserDetailsService userDetailsService,
-            BCryptPasswordEncoder passwordEncoder) {
+            UserService userDetailsService,
+            BCryptPasswordEncoder bCryptPasswordEncoder) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
 
         ProviderManager providerManager = new ProviderManager(authenticationProvider);
         providerManager.setEraseCredentialsAfterAuthentication(false);
@@ -96,10 +104,10 @@ public class WebSecurityConfig {
         return providerManager;
     }
 
-    @Autowired
+    /*@Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
-    }
+    }*/
 
     /*@Bean
     public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
@@ -125,56 +133,5 @@ public class WebSecurityConfig {
 
      */
 
-    /*final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
-        private final CsrfTokenRequestHandler delegate = new XorCsrfTokenRequestAttributeHandler();
 
-        @Override
-        public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
-
-             * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
-             * the CsrfToken when it is rendered in the response body.
-
-            this.delegate.handle(request, response, csrfToken);
-        }
-
-        @Override
-        public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-
-             * If the request contains a request header, use CsrfTokenRequestAttributeHandler
-             * to resolve the CsrfToken. This applies when a single-page application includes
-             * the header value automatically, which was obtained via a cookie containing the
-             * raw CsrfToken.
-
-            if (StringUtils.hasText(request.getHeader(csrfToken.getHeaderName()))) {
-                return super.resolveCsrfTokenValue(request, csrfToken);
-            }
-
-             * In all other cases (e.g. if the request contains a request parameter), use
-             * XorCsrfTokenRequestAttributeHandler to resolve the CsrfToken. This applies
-             * when a server-side rendered form includes the _csrf request parameter as a
-             * hidden input.
-
-            return this.delegate.resolveCsrfTokenValue(request, csrfToken);
-        }
-    }*/
-
-    /*final class CsrfCookieFilter extends OncePerRequestFilter {
-
-        @Override
-        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-                throws ServletException, IOException {
-            CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
-            // Render the token value to a cookie by causing the deferred token to be loaded
-            csrfToken.getToken();
-
-            filterChain.doFilter(request, response);
-        }
-    }*/
-
-
-
-    /*@Bean
-    CorsFilter corsFilter() {
-        return new CorsFilter(corsConfigurationSource());
-    }*/
 }

@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
@@ -34,15 +34,6 @@ public class UserService implements UserDetailsService {
     }
 
     public String singUpUser(User user) {
-        // next lines cause error
-
-        /*boolean userExists = userRepository.findByEmail(user.getEmail())
-                .isPresent();
-
-        if (userExists) {
-            throw new IllegalStateException("Email already taken");
-        }*/
-
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
