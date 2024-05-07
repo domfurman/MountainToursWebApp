@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit() {
     // this.find();
-    // this.appService.getList();
+    this.appService.getList();
   }
 
   authenticated() {

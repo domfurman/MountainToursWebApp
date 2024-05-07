@@ -22,20 +22,8 @@ export class LoginComponent {
 
   sessionId: any = '';
 
-  user: User = new User();
-
   constructor(private appService: AppService, private router: Router) {
   }
-
-  /*userLogin() {
-    this.appService.login(this.credentials.email, this.credentials.password).subscribe(data => {
-      alert('login successful')
-      this.router.navigate(['/home'])
-    }, error => {
-      console.log('Login error: ', error)
-      alert('sth went wrong')
-    });
-  }*/
 
   userLogin() {
     this.appService.login(this.credentials.email, this.credentials.password).subscribe(res => {

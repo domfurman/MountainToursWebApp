@@ -14,12 +14,6 @@ export class AppService {
 
   constructor(private http: HttpClient) { }
 
-/*
-  login(user: User): Observable<object> {
-    console.log(user);
-    return this.http.post(`${this.basicUrl}/`, user, {withCredentials: true});
-  }
-*/
   login(username: String, password: String){
     // console.log();
     const headers = new HttpHeaders({Authorization: 'Basic ' + btoa(username+":"+password)})
@@ -40,49 +34,6 @@ export class AppService {
     return this.http.get<User>(`${this.basicUrl}/api/user/20`)
   }
 
-  /*authenticate(credentials: Credentials, callback: any) {
-    const headers = new HttpHeaders(credentials ? {
-      authorization : 'Basic ' + btoa(credentials.email + ':' + credentials.password)
-    } : {});
-
-    this.http.get('http://localhost:8080/user', {headers: headers}).subscribe(response => {
-      this.authenticated = true;
-      /!*if (response['authenticated']) {
-        this.authenticated = true;
-      } else {
-        this.authenticated = false;
-      }*!/
-      return callback && callback();
-    })
-    this.authenticated = false;
-  }*/
-
-  /*dologin(username: String, password: String) {
-    const headers = new HttpHeaders({Authorization: 'Basic' + btoa(username+":"+password)})
-    return this.http.get('http://localhost:8080/login', {headers, responseType:'text' as 'json'})
-  }*/
-  /*authenticate(credentials: Credentials, callback: any) {
-    const headers = credentials ?
-      new HttpHeaders({
-        authorization: 'Basic ' + btoa(credentials.username + ':' + credentials.password)
-      }) : new HttpHeaders();
-
-    this.http.get('user', {headers: headers}).subscribe(
-      response => {
-        this.authenticated = !!response['name'];
-      },
-      error => {
-        console.error('Authentication Error:', error);
-        this.authenticated = false;
-      },
-      () => {
-        if (callback) {
-          callback();
-        }
-      }
-    );
-  }*/
-
   /*getUserInfo() {
     let username="johncena@gmail.com"
     let password = "password"
@@ -92,7 +43,11 @@ export class AppService {
 
   getList() {
     return this.http.get<any>(`${this.basicUrl}/api/list`).subscribe(res => {
-      console.log(res)
+      if (res) {
+        console.log(res)
+      } else {
+        console.error()
+      }
     })
   }
 }

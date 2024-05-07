@@ -12,13 +12,4 @@ import {Credentials} from "./interfaces/credentials";
 export class AppComponent {
   title = 'mountaintours-angular';
 
-  constructor(private http: HttpClient, private appService: AppService, private router: Router) {
-    const credentials: Credentials = {
-      email: '',
-      password: ''
-    };
-    const callback = () => {};
-
-    // this.appService.authenticate(credentials, callback);
-  }
 }
