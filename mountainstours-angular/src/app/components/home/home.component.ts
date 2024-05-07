@@ -15,18 +15,18 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit() {
-    // this.find();
-    this.appService.getList();
+    this.retrieveUserData();
   }
 
   authenticated() {
     return this.appService.authenticated;
   }
 
-  find() {
-    this.appService.findUser().subscribe(data => {
-      this.user = data;
-    })
+  retrieveUserData() {
+    this.appService.getPrincipal().subscribe((user => {
+      this.user = user
+      console.log(this.user)
+    }))
   }
 
 }

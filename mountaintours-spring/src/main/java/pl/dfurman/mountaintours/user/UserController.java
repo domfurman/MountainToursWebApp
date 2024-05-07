@@ -40,12 +40,12 @@ public class UserController {
     }
 
 
-    /*@GetMapping("/api/user/20")
-    public UserDetails userInfo() {
-        return userService.loadUserByUsername("johncena@gmail.com");
-    }*/
+    @GetMapping("/api/currentuser")
+    public UserDetails userInfo(String email) {
+        return userService.loadUserByUsername(email);
+    }
 
-    @GetMapping("/user")
+    @GetMapping("/api/principaluser")
     public Principal user(Principal user) {
         return user;
     }

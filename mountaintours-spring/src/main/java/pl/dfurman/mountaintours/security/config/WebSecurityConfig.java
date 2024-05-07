@@ -71,7 +71,7 @@ public class WebSecurityConfig {
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.OPTIONS,"/**").permitAll()
-                        .requestMatchers("/api/registration", "/*.bundle.*", "/home", "/login", "api/login", "/").permitAll()
+                        .requestMatchers("/api/registration", "/*.bundle.*", "/login", "api/login", "/").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults())

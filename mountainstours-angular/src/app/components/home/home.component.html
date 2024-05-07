@@ -1,9 +1,17 @@
 <h1>Greeting!</h1>
-<div>
-<!--  <p>Hello {{user.}}!</p>-->
-  <p>the id is {{user.id}}</p>
-</div>
-<div>
+<!--<div>-->
+<!--&lt;!&ndash;  <p>Hello {{user.}}!</p>&ndash;&gt;-->
+<!--  <p>the id is {{user.id}}</p>-->
+<!--</div>-->
+<!--<div>-->
+<!--  <p>please log in</p>-->
+<!--</div>-->
+
+<div [hidden]="authenticated()">
   <p>please log in</p>
+</div>
+
+<div [hidden]="!authenticated()">
+  <p>Welcome {{user.firstName}} !</p>
 </div>
 
