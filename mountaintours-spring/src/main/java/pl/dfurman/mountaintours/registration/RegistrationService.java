@@ -1,6 +1,7 @@
 package pl.dfurman.mountaintours.registration;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.dfurman.mountaintours.user.User;
 import pl.dfurman.mountaintours.user.UserRole;
@@ -13,7 +14,7 @@ public class RegistrationService {
     private final UserService userService;
     private final EmailValidator emailValidator;
 
-    public String register(RegistrationRequest request) {
+    public ResponseEntity<Integer> register(RegistrationRequest request) {
         boolean isValid = emailValidator.test(request.getEmail());
 
         if(!isValid) {

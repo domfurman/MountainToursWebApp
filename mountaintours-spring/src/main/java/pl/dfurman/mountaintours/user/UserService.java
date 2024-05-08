@@ -1,6 +1,7 @@
 package pl.dfurman.mountaintours.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -33,13 +34,14 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, email)));
     }
 
-    public String singUpUser(User user) {
+    public ResponseEntity<Integer> singUpUser(User user) {
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
 
         user.setPassword(encodedPassword);
 
-        userRepository.saveUser(user);
-        return "sign up works";
+        Integer u = userRepository.saveUser(user);
+//        return "sign up works";
+        return ResponseEntity.ok(u);
     }
 
     public User findById(int id) {

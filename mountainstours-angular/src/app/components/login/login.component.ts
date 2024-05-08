@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {NgForm} from "@angular/forms";
 import {User} from "../../models/user";
 import {error} from "@angular/compiler-cli/src/transformers/util";
+import {RegistrationCredentials} from "../../interfaces/registration-credentials";
 // import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
@@ -20,7 +21,15 @@ export class LoginComponent {
     password: ''
   }
 
+  registrationCredentials: RegistrationCredentials = {
+    firstName: '',
+    lastName: '',
+    password:'',
+    email: ''
+  }
+
   sessionId: any = '';
+  showLoginForm = false;
 
   constructor(private appService: AppService, private router: Router) {
   }
@@ -42,7 +51,24 @@ export class LoginComponent {
       console.log('Login error: ', error)
       alert('sth went wrong')
     })
+  }
 
+  userRegistration() {
+    this.appService.registerUser(
+      this.registrationCredentials.firstName,
+      this.registrationCredentials.lastName,
+      this.registrationCredentials.email,
+      this.registrationCredentials.password).subscribe(res => {
+      console.log('success')
+      this.changeForm();
+    }, error => {
+      console.log(error)
+    })
+
+  }
+
+  changeForm() {
+    this.showLoginForm = !this.showLoginForm;
   }
 
 }

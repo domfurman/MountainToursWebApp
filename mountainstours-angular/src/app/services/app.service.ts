@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Credentials} from "../interfaces/credentials";
 import {map, Observable} from "rxjs";
 import {User} from "../models/user";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AppService {
   private basicUrl: string = 'http://localhost:8080'
   user: User = new User();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   login(username: String, password: String){
     // console.log();
@@ -54,27 +55,19 @@ export class AppService {
           this.authenticated = true;
           return user;
         }
-        return new User(); // Return null if user data is not available
+        return new User();
       })
     );
-    // this.http.get<any>(`${this.basicUrl}/api/principaluser`).subscribe(res => {
-    //   if (res != null) {
-    //     // console.log(res.principal)
-    //     this.user.id = res.principal.id;
-    //     this.user.email = res.principal.email;
-    //     this.user.firstName = res.principal.firstName;
-    //     this.user.lastName = res.principal.lastName;
-    //     this.user.password = res.principal.password;
-    //     this.user.userRole = res.principal.userRole;
-    //
-    //     console.log(this.user)
-    //   }
-    //   return this.user;
-    // })
   }
 
-  // getCurUserInfo() {
-  //   this.getPrincipal();
-  //   console.log(this.user);
-  // }
+  registerUser(firstName: string, lastName: string, email: string, password: string) {
+    const creds = {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'password': password
+    }
+
+    return this.http.post<any>(`${this.basicUrl}/api/registration`, creds)
+  }
 }
