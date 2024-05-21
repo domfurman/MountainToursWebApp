@@ -1,10 +1,14 @@
 
 <div class="map-container">
+  <div class="autoComplete_wrapper">
+    <input id="autoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off">
+  </div>
+  <form id="geocode-form">
+    <input type="text" id="geocode-input"/>
+    <button type="submit">Geocode</button>
+  </form>
   <div class="map-frame">
-    <form id="geocode-form">
-      <input type="text" id="geocode-input"/>
-      <button type="submit">Geocode</button>
-    </form>
+
     <div id="map"></div>
   </div>
 </div>

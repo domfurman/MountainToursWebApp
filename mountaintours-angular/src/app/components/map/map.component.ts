@@ -4,7 +4,7 @@ import { GeoJSON } from 'geojson';
 import axios from 'axios';
 import 'leaflet-layerindex';
 import { LatLngBoundsLiteral } from 'leaflet';
-
+import AutoComplete from '@tarekraafat/autocomplete.js/dist/autoComplete.js';
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -24,28 +24,50 @@ export class MapComponent implements OnInit{
   ngOnInit(): void {
     this.configMap();
     this.setupFormListener();
+    this.autocomplete();
   }
 
   configMap() {
-    this.map = L.map('map').setView([50.0723658, 14.418540], 16 );
+    this.map = L.map('map').setView([50.049683, 19.944544], 16 );
 
-    L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
-      minZoom: 0,
-      maxZoom: 19,
-      attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
-    }).addTo(this.map);
+    // L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
+    //   minZoom: 0,
+    //   maxZoom: 19,
+    //   attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+    // }).addTo(this.map);
 
+    const tileLayers = {
+      'Basic': L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
+        minZoom: 0,
+        maxZoom: 19,
+        attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+      }),
+      'Outdoor': L.tileLayer(`https://api.mapy.cz/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
+        minZoom: 0,
+        maxZoom: 19,
+        attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+      }),
+      'Winter': L.tileLayer(`https://api.mapy.cz/v1/maptiles/winter/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
+        minZoom: 0,
+        maxZoom: 19,
+        attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+      }),
+      'Aerial': L.tileLayer(`https://api.mapy.cz/v1/maptiles/aerial/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
+        minZoom: 0,
+        maxZoom: 19,
+        attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
+      }),
+    };
 
+    tileLayers['Outdoor'].addTo(this.map);
 
-    // GeoJSON.Feature<GeoJSON.LineString>
+    L.control.layers(tileLayers).addTo(this.map);
 
     const routeGeoJSON: GeoJSON.Feature<GeoJSON.LineString> = {
       type: "Feature",
       geometry: {
         type: "LineString",
         coordinates: []
-          // [14.418540, 50.0723658], //Prague
-          // [16.606836, 49.195061] //Brno
       },
       properties: {}
     };
@@ -85,12 +107,6 @@ export class MapComponent implements OnInit{
 
   setMarkerIcon() {
     const locationIcon = L.icon({
-      // shadowUrl: 'assets/markers/location-pin.png',
-      // iconSize: [38,95],
-      // shadowSize: [50,64],
-      // iconAnchor: [22,94],
-      // shadowAnchor: [4,62],
-      // popupAnchor: [-3,-76]
       iconUrl: 'assets/markers/location-pin.png',
       // iconRetinaUrl: 'assets/markers/location-pin.png',
       // shadowUrl: 'assets/markers/location-pin.png',
@@ -117,8 +133,10 @@ export class MapComponent implements OnInit{
     });
 
     return [
-      [minLongitude, minLatitude],
-      [maxLongitude, maxLatitude],
+      [minLatitude, minLongitude],
+      [maxLatitude, maxLongitude],
+      // [minLongitude, minLatitude],
+      // [maxLongitude, maxLatitude],
     ];
   }
   async route() {
@@ -138,24 +156,15 @@ export class MapComponent implements OnInit{
 
       const response = await axios.get(url.toString(), {params});
       const json = response.data
-      // const json: GeoJSON.Feature<GeoJSON.LineString> = response.data;
-      // const json: GeoJSON.Feature<GeoJSON.LineString> = response.data;
-      // console.log(json.geometry.geometry.coordinates);
       console.log(this.name)
       console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
 
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
       }
-      //
       this.routeLayer = L.geoJSON(json.geometry, {
-        // style: {
-        //   color: '#0033ff',
-        //   weight: 8,
-        //   opacity: 0.6
-        // }
       }).addTo(this.map);
-      //
+
       const bboxCoords = this.bbox(json.geometry.geometry.coordinates);
       this.map.fitBounds(bboxCoords, { padding: [40, 40] });
     } catch (ex) {
@@ -232,4 +241,84 @@ export class MapComponent implements OnInit{
     }
   }
 
+  autocomplete(): void {
+    const inputElem = document.querySelector("#autoComplete") as HTMLInputElement | null;
+
+    if (!inputElem) {
+      console.error('Input element not found');
+      return;
+    }
+
+    const autoCompleteJS = new AutoComplete({
+      selector: () => inputElem,
+      placeHolder: "Enter your address...",
+      searchEngine: (query: string, record: any) => `<mark>${record}</mark>`,
+      data: {
+        keys: ["value"],
+        src: async (query: string) => {
+          try {
+            const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=en&limit=5&type=regional.address&apikey=${this.API_KEY}&query=${query}`);
+            const jsonData = await fetchData.json();
+            return jsonData.items.map((item: any) => ({
+              value: item.name,
+              data: item,
+            }));
+          } catch (exc) {
+            console.log(exc);
+            return [];
+          }
+        },
+        cache: false,
+      },
+      resultItem: {
+        element: (item: HTMLElement, data: any) => {
+          const itemData = data.value.data;
+          const desc = document.createElement("div");
+          desc.style.overflow = "hidden";
+          desc.style.whiteSpace = "nowrap";
+          desc.style.textOverflow = "ellipsis";
+          desc.innerHTML = `${itemData.label}, ${itemData.location}`;
+          item.append(desc);
+        },
+        highlight: true
+      },
+      resultsList: {
+        element: (list: HTMLElement, data: { results: any[], query: string }) => {
+          list.style.maxHeight = "max-content";
+          list.style.overflow = "hidden";
+
+          if (!data.results.length) {
+            const message = document.createElement("div");
+            message.setAttribute("class", "no_result");
+            message.style.padding = "5px";
+            message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
+            list.prepend(message);
+          } else {
+            const logoHolder = document.createElement("div");
+            const text = document.createElement("span");
+            const img = new Image();
+
+            logoHolder.style.padding = "5px";
+            logoHolder.style.display = "flex";
+            logoHolder.style.alignItems = "center";
+            logoHolder.style.justifyContent = "end";
+            logoHolder.style.gap = "5px";
+            logoHolder.style.fontSize = "12px";
+            text.textContent = "Powered by";
+            img.src = "https://api.mapy.cz/img/api/logo-small.svg";
+            img.style.width = "60px";
+            logoHolder.append(text, img);
+            list.append(logoHolder);
+          }
+        },
+        noResults: true,
+      },
+    });
+
+    inputElem.addEventListener("selection", (event: any) => {
+      const origData = event.detail.selection.value.data;
+      console.log(origData);
+      inputElem.value = origData.name;
+    });
+  }
 }
