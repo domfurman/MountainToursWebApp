@@ -21,10 +21,16 @@ export class MapComponent implements OnInit{
   routeLayer: any;
   markersLayer: L.GeoJSON<GeoJSON.FeatureCollection<GeoJSON.Geometry>> | undefined;
 
+  startPlace: any;
+
   ngOnInit(): void {
     this.configMap();
     this.setupFormListener();
     this.autocomplete();
+  }
+
+  console() {
+    console.log(`${this.startPlace[0]}, ${this.startPlace[1]}`);
   }
 
   configMap() {
@@ -101,8 +107,8 @@ export class MapComponent implements OnInit{
     });
 
     new LogoControl().addTo(this.map)
-    this.route();
-    this.setMarkerIcon();
+    // this.route();
+    // this.setMarkerIcon();
   }
 
   setMarkerIcon() {
@@ -139,7 +145,7 @@ export class MapComponent implements OnInit{
       // [maxLongitude, maxLatitude],
     ];
   }
-  async route() {
+  async route( ) {
     const coordsPrague = L.latLng(50.0723658, 14.418540);
     const coordsBrno = L.latLng(49.195061, 16.606836);
     try {
@@ -147,7 +153,7 @@ export class MapComponent implements OnInit{
 
       const params = new URLSearchParams({
         'apikey': this.API_KEY,
-        'lang': 'en',
+        'lang': 'pl',
         'start': `${coordsPrague.lng},${coordsPrague.lat}`,
         'end': `${coordsBrno.lng},${coordsBrno.lat}`,
         'routeType': 'car_fast_traffic',
@@ -177,7 +183,7 @@ export class MapComponent implements OnInit{
       const url = new URL(`https://api.mapy.cz/v1/geocode`);
 
       const params = new URLSearchParams({
-        'lang': 'en',
+        'lang': 'pl',
         'apikey': this.API_KEY,
         'query': query,
         'limit': '15'
@@ -222,6 +228,7 @@ export class MapComponent implements OnInit{
       }).addTo(this.map);
 
       const bboxCoords = this.bbox(json.items.map((item: any) => ([item.position.lon, item.position.lat])));
+      // console.log(json.items.map((item: any) => ([item.position.lon, item.position.lat])))
       this.map.fitBounds(bboxCoords, { padding: [40, 40] });
 
     } catch (ex) {
@@ -257,7 +264,8 @@ export class MapComponent implements OnInit{
         keys: ["value"],
         src: async (query: string) => {
           try {
-            const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=en&limit=5&type=regional.address&apikey=${this.API_KEY}&query=${query}`);
+            // const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&type=regional.address&apikey=${this.API_KEY}&query=${query}`);
+            const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
             const jsonData = await fetchData.json();
             return jsonData.items.map((item: any) => ({
               value: item.name,
@@ -317,8 +325,23 @@ export class MapComponent implements OnInit{
 
     inputElem.addEventListener("selection", (event: any) => {
       const origData = event.detail.selection.value.data;
-      console.log(origData);
+      // console.log(origData);
+      // console.log(typeof origData.position.lat === 'number')
+      // this.startPlace = [parseFloat(origData.position.lat), parseFloat(origData.position.lon)]
       inputElem.value = origData.name;
+
+      const lat = parseFloat(origData.position.lat);
+      const lon = parseFloat(origData.position.lon);
+
+      if (isNaN(lat) || isNaN(lon)) {
+        console.error("Invalid latitude or longitude");
+        return;
+      }
+
+      const currentZoom = this.map.getZoom()
+
+      const bboxCoords = this.bbox([[lon, lat]]);
+      this.map.fitBounds(bboxCoords, { padding: [100, 100], maxZoom: currentZoom });
     });
   }
 }
