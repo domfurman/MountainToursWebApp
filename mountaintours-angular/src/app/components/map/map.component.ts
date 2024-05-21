@@ -79,8 +79,28 @@ export class MapComponent implements OnInit{
     });
 
     new LogoControl().addTo(this.map)
-
     this.route();
+    this.setMarkerIcon();
+  }
+
+  setMarkerIcon() {
+    const locationIcon = L.icon({
+      // shadowUrl: 'assets/markers/location-pin.png',
+      // iconSize: [38,95],
+      // shadowSize: [50,64],
+      // iconAnchor: [22,94],
+      // shadowAnchor: [4,62],
+      // popupAnchor: [-3,-76]
+      iconUrl: 'assets/markers/location-pin.png',
+      // iconRetinaUrl: 'assets/markers/location-pin.png',
+      // shadowUrl: 'assets/markers/location-pin.png',
+      iconSize: [25, 30],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    })
+
+    L.Marker.prototype.options.icon = locationIcon;
   }
 
   bbox(coords: [number, number][]): LatLngBoundsLiteral {
@@ -186,7 +206,11 @@ export class MapComponent implements OnInit{
         })),
       };
 
-      this.markersLayer = L.geoJSON(featureCollection).addTo(this.map);
+      this.markersLayer = L.geoJSON(featureCollection, {
+        pointToLayer: (feature, latlng) => {
+          return L.marker(latlng, { icon: L.Marker.prototype.getIcon()});
+        }
+      }).addTo(this.map);
 
       const bboxCoords = this.bbox(json.items.map((item: any) => ([item.position.lon, item.position.lat])));
       this.map.fitBounds(bboxCoords, { padding: [40, 40] });
