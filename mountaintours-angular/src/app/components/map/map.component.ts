@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { GeoJSON } from 'geojson';
 import axios from 'axios';
@@ -12,16 +12,18 @@ import { LatLngBoundsLiteral } from 'leaflet';
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
-export class MapComponent {
+export class MapComponent implements OnInit{
 
   @Input() public name = '';
 
   API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
   map!: L.Map;
   routeLayer: any;
+  markersLayer: L.GeoJSON<GeoJSON.FeatureCollection<GeoJSON.Geometry>> | undefined;
 
   ngOnInit(): void {
-    this.configMap()
+    this.configMap();
+    this.setupFormListener();
   }
 
   configMap() {
@@ -105,29 +107,9 @@ export class MapComponent {
     try {
       const url = new URL(`https://api.mapy.cz/v1/routing/route`);
 
-      // url.searchParams.set('lang', 'en');
-      // url.searchParams.set('apikey', this.API_KEY);
-      // url.searchParams.set('start', `${coordsPrague.lng},${coordsPrague.lat}`);
-      // url.searchParams.set('end', `${coordsBrno.lng},${coordsBrno.lat}`);
-      // url.searchParams.set('routeType', 'car_fast');
-      // url.searchParams.set('format', 'geojson');
-      // url.searchParams.set('avoidToll', 'false');
-
-      // const response = await fetch(url.toString(), {
-      //   mode: 'cors',
-      // });
-      // const json = await response.json();
-      //
-      // console.log(json)
-
-      // console.log(
-      //   `length: ${json.length / 1000} km`,
-      //   `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`
-      //   )
-
       const params = new URLSearchParams({
         'apikey': this.API_KEY,
-        'lang': 'cs',
+        'lang': 'en',
         'start': `${coordsPrague.lng},${coordsPrague.lat}`,
         'end': `${coordsBrno.lng},${coordsBrno.lat}`,
         'routeType': 'car_fast_traffic',
@@ -161,7 +143,69 @@ export class MapComponent {
     }
   }
 
+  async geocode(query: string) {
+    try {
+      const url = new URL(`https://api.mapy.cz/v1/geocode`);
 
+      const params = new URLSearchParams({
+        'lang': 'en',
+        'apikey': this.API_KEY,
+        'query': query,
+        'limit': '15'
+      });
+      [
+        'regional.municipality',
+        'regional.municipality_part',
+        'regional.street',
+        'regional.address'
+      ].forEach(type => url.searchParams.append('type', type));
 
+      const response = await axios.get(url.toString(), {params});
+      const json = response.data;
+      console.log('geocode', json);
+
+      if (this.markersLayer) {
+        this.map.removeLayer(this.markersLayer);
+      }
+
+      const featureCollection: GeoJSON.FeatureCollection<GeoJSON.Geometry> = {
+        type: 'FeatureCollection',
+        features: json.items.map((item: any) => ({
+          type: 'Feature',
+          geometry: {
+            type: 'Point',
+            coordinates: [item.position.lon, item.position.lat],
+          },
+          properties: {
+            name: item.name,
+            label: item.label,
+            location: item.location,
+            longitude: item.position.lon,
+            latitude: item.position.lat,
+          },
+        })),
+      };
+
+      this.markersLayer = L.geoJSON(featureCollection).addTo(this.map);
+
+      const bboxCoords = this.bbox(json.items.map((item: any) => ([item.position.lon, item.position.lat])));
+      this.map.fitBounds(bboxCoords, { padding: [40, 40] });
+
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
+  setupFormListener() {
+    const form = document.querySelector('#geocode-form');
+    const input = document.querySelector('#geocode-input') as HTMLInputElement;
+
+    if (form && input) {
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        this.geocode(input.value);
+      }, false);
+    }
+  }
 
 }
