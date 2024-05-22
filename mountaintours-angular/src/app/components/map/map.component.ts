@@ -23,6 +23,9 @@ export class MapComponent implements OnInit{
 
   startPlace: any;
   endPlace: any;
+  waypoints: [number, number][] = [];
+
+  waypointCounter = 0;
 
   ngOnInit(): void {
     this.configMap();
@@ -152,8 +155,8 @@ export class MapComponent implements OnInit{
   async route() {
     const start = L.latLng(this.startPlace[0], this.startPlace[1]);
     const end = L.latLng(this.endPlace[0], this.endPlace[1]);
-    const coordsPrague = L.latLng(50.0723658, 14.418540);
-    const coordsBrno = L.latLng(49.195061, 16.606836);
+    const waypoints = this.waypoints
+    
     try {
       const url = new URL(`https://api.mapy.cz/v1/routing/route`);
 
@@ -166,10 +169,15 @@ export class MapComponent implements OnInit{
         'avoidToll': 'false'
       });
 
+      if (waypoints.length > 0) {
+        params.set('waypoints', waypoints.map(point => point.join(',')).join(';'));
+      }
+
       const response = await axios.get(url.toString(), {params});
       const json = response.data
       console.log(this.name)
       console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
+      console.log(this.waypoints);
 
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
@@ -354,6 +362,27 @@ export class MapComponent implements OnInit{
   setEndPlace(data: { lat: number; lon: number; name: string }) {
     this.endPlace = [data.lat, data.lon];
     L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${data.name}`).openPopup();
+  }
+
+  addStop() {
+    let myDiv = document.getElementsByClassName('waypoints')[0];
+    const input = document.createElement('input');
+    const uniqueId = `waypoint-${this.waypointCounter++}`;
+    input.id = uniqueId;
+    input.type = 'text';
+    input.autocomplete = 'off';
+    input.autocapitalize = 'off';
+    input.spellcheck = false;
+    input.dir = 'ltr';
+    input.placeholder = 'Waypoint';
+    myDiv.appendChild(input)
+
+    this.autocomplete(input.id, this.addWaypointToList.bind(this));
+  }
+
+  addWaypointToList(data: { lat: number; lon: number; name: string }) {
+    this.waypoints.push([data.lon, data.lat])
+    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Waypoint: ${data.name}`).openPopup();
   }
 
   // autocomplete(): void {
