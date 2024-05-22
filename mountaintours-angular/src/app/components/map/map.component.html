@@ -1,18 +1,27 @@
-<button (click)="console()">
-  CLICK
-</button>
+<!--<button (click)="console()">-->
+<!--  CLICK-->
+<!--</button>-->
 
+<div class="parameters">
+
+</div>
 
 <div class="map-container">
   <div class="autoComplete_wrapper">
-    <input id="autoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off">
+    <input id="startAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Start">
   </div>
-  <form id="geocode-form">
-    <input type="text" id="geocode-input"/>
-    <button type="submit">Geocode</button>
-  </form>
-  <div class="map-frame">
+  <div class="autoComplete_wrapper">
+    <input id="endAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="End">
+  </div>
+  <div>
+    <button (click)="route()">Show route</button>
+  </div>
 
+<!--  <form id="geocode-form">-->
+<!--    <input type="text" id="geocode-input"/>-->
+<!--    <button type="submit">Geocode</button>-->
+<!--  </form>-->
+  <div class="map-frame">
     <div id="map"></div>
   </div>
 </div>

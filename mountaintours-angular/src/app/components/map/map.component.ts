@@ -22,11 +22,13 @@ export class MapComponent implements OnInit{
   markersLayer: L.GeoJSON<GeoJSON.FeatureCollection<GeoJSON.Geometry>> | undefined;
 
   startPlace: any;
+  endPlace: any;
 
   ngOnInit(): void {
     this.configMap();
-    this.setupFormListener();
-    this.autocomplete();
+    // this.setupFormListener();
+    this.autocomplete('startAutoComplete', this.setStartPlace.bind(this));
+    this.autocomplete('endAutoComplete', this.setEndPlace.bind(this));
   }
 
   console() {
@@ -114,7 +116,7 @@ export class MapComponent implements OnInit{
   setMarkerIcon() {
     const locationIcon = L.icon({
       iconUrl: 'assets/markers/location-pin.png',
-      // iconRetinaUrl: 'assets/markers/location-pin.png',
+      iconRetinaUrl: 'assets/markers/location-pin.png',
       // shadowUrl: 'assets/markers/location-pin.png',
       iconSize: [25, 30],
       iconAnchor: [12, 41],
@@ -123,6 +125,8 @@ export class MapComponent implements OnInit{
     })
 
     L.Marker.prototype.options.icon = locationIcon;
+
+    return locationIcon;
   }
 
   bbox(coords: [number, number][]): LatLngBoundsLiteral {
@@ -145,7 +149,9 @@ export class MapComponent implements OnInit{
       // [maxLongitude, maxLatitude],
     ];
   }
-  async route( ) {
+  async route() {
+    const start = L.latLng(this.startPlace[0], this.startPlace[1]);
+    const end = L.latLng(this.endPlace[0], this.endPlace[1]);
     const coordsPrague = L.latLng(50.0723658, 14.418540);
     const coordsBrno = L.latLng(49.195061, 16.606836);
     try {
@@ -154,9 +160,9 @@ export class MapComponent implements OnInit{
       const params = new URLSearchParams({
         'apikey': this.API_KEY,
         'lang': 'pl',
-        'start': `${coordsPrague.lng},${coordsPrague.lat}`,
-        'end': `${coordsBrno.lng},${coordsBrno.lat}`,
-        'routeType': 'car_fast_traffic',
+        'start': `${start.lng},${start.lat}`,
+        'end': `${end.lng},${end.lat}`,
+        'routeType': 'foot_fast',
         'avoidToll': 'false'
       });
 
@@ -248,23 +254,21 @@ export class MapComponent implements OnInit{
     }
   }
 
-  autocomplete(): void {
-    const inputElem = document.querySelector("#autoComplete") as HTMLInputElement | null;
+  autocomplete(elementId: string, setPlaceCallback: (data: any) => void): void {
+    const inputElem = document.querySelector(`#${elementId}`) as HTMLInputElement | null;
 
     if (!inputElem) {
       console.error('Input element not found');
       return;
     }
 
-    const autoCompleteJS = new AutoComplete({
+    new AutoComplete({
       selector: () => inputElem,
-      placeHolder: "Enter your address...",
       searchEngine: (query: string, record: any) => `<mark>${record}</mark>`,
       data: {
         keys: ["value"],
         src: async (query: string) => {
           try {
-            // const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&type=regional.address&apikey=${this.API_KEY}&query=${query}`);
             const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
             const jsonData = await fetchData.json();
             return jsonData.items.map((item: any) => ({
@@ -325,9 +329,6 @@ export class MapComponent implements OnInit{
 
     inputElem.addEventListener("selection", (event: any) => {
       const origData = event.detail.selection.value.data;
-      // console.log(origData);
-      // console.log(typeof origData.position.lat === 'number')
-      // this.startPlace = [parseFloat(origData.position.lat), parseFloat(origData.position.lon)]
       inputElem.value = origData.name;
 
       const lat = parseFloat(origData.position.lat);
@@ -338,10 +339,117 @@ export class MapComponent implements OnInit{
         return;
       }
 
-      const currentZoom = this.map.getZoom()
-
-      const bboxCoords = this.bbox([[lon, lat]]);
-      this.map.fitBounds(bboxCoords, { padding: [100, 100], maxZoom: currentZoom });
+      setPlaceCallback({ lat, lon, name: origData.name });
+      const offset: [number, number] = [0, 0]; // Adjust the offset as needed
+      this.map.setView([lat, lon], 16, { animate: true });
+      this.map.panBy(offset, { animate: true });
     });
   }
+
+  setStartPlace(data: { lat: number; lon: number; name: string }) {
+    this.startPlace = [data.lat, data.lon];
+    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Start: ${data.name}`).openPopup();
+  }
+
+  setEndPlace(data: { lat: number; lon: number; name: string }) {
+    this.endPlace = [data.lat, data.lon];
+    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${data.name}`).openPopup();
+  }
+
+  // autocomplete(): void {
+  //   const inputElem = document.querySelector("#autoComplete") as HTMLInputElement | null;
+  //
+  //   if (!inputElem) {
+  //     console.error('Input element not found');
+  //     return;
+  //   }
+  //
+  //   const autoCompleteJS = new AutoComplete({
+  //     selector: () => inputElem,
+  //     placeHolder: "Enter your address...",
+  //     searchEngine: (query: string, record: any) => `<mark>${record}</mark>`,
+  //     data: {
+  //       keys: ["value"],
+  //       src: async (query: string) => {
+  //         try {
+  //           const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
+  //           const jsonData = await fetchData.json();
+  //           return jsonData.items.map((item: any) => ({
+  //             value: item.name,
+  //             data: item,
+  //           }));
+  //         } catch (exc) {
+  //           console.log(exc);
+  //           return [];
+  //         }
+  //       },
+  //       cache: false,
+  //     },
+  //     resultItem: {
+  //       element: (item: HTMLElement, data: any) => {
+  //         const itemData = data.value.data;
+  //         const desc = document.createElement("div");
+  //         desc.style.overflow = "hidden";
+  //         desc.style.whiteSpace = "nowrap";
+  //         desc.style.textOverflow = "ellipsis";
+  //         desc.innerHTML = `${itemData.label}, ${itemData.location}`;
+  //         item.append(desc);
+  //       },
+  //       highlight: true
+  //     },
+  //     resultsList: {
+  //       element: (list: HTMLElement, data: { results: any[], query: string }) => {
+  //         list.style.maxHeight = "max-content";
+  //         list.style.overflow = "hidden";
+  //
+  //         if (!data.results.length) {
+  //           const message = document.createElement("div");
+  //           message.setAttribute("class", "no_result");
+  //           message.style.padding = "5px";
+  //           message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
+  //           list.prepend(message);
+  //         } else {
+  //           const logoHolder = document.createElement("div");
+  //           const text = document.createElement("span");
+  //           const img = new Image();
+  //
+  //           logoHolder.style.padding = "5px";
+  //           logoHolder.style.display = "flex";
+  //           logoHolder.style.alignItems = "center";
+  //           logoHolder.style.justifyContent = "end";
+  //           logoHolder.style.gap = "5px";
+  //           logoHolder.style.fontSize = "12px";
+  //           text.textContent = "Powered by";
+  //           img.src = "https://api.mapy.cz/img/api/logo-small.svg";
+  //           img.style.width = "60px";
+  //           logoHolder.append(text, img);
+  //           list.append(logoHolder);
+  //         }
+  //       },
+  //       noResults: true,
+  //     },
+  //   });
+  //
+  //   inputElem.addEventListener("selection", (event: any) => {
+  //     const origData = event.detail.selection.value.data;
+  //     // console.log(origData);
+  //     // console.log(typeof origData.position.lat === 'number')
+  //     // this.startPlace = [parseFloat(origData.position.lat), parseFloat(origData.position.lon)]
+  //     inputElem.value = origData.name;
+  //
+  //     const lat = parseFloat(origData.position.lat);
+  //     const lon = parseFloat(origData.position.lon);
+  //
+  //     if (isNaN(lat) || isNaN(lon)) {
+  //       console.error("Invalid latitude or longitude");
+  //       return;
+  //     }
+  //
+  //     L.marker([lat, lon], {icon: this.setMarkerIcon()}).addTo(this.map);
+  //     const currentZoom = this.map.getZoom();
+  //
+  //     const bboxCoords = this.bbox([[lon, lat]]);
+  //     this.map.fitBounds(bboxCoords, { padding: [100, 100], maxZoom: currentZoom });
+  //   });
+  // }
 }
