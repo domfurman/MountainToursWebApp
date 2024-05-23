@@ -13,8 +13,7 @@ import AutoComplete from '@tarekraafat/autocomplete.js/dist/autoComplete.js';
   styleUrl: './map.component.scss'
 })
 export class MapComponent implements OnInit{
-
-  @Input() public name = '';
+  @Input() name: string = '';
 
   API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
   map!: L.Map;
@@ -42,8 +41,15 @@ export class MapComponent implements OnInit{
   }
 
   console() {
-    // console.log(`${this.startPlace[0]}, ${this.startPlace[1]}`);
-    console.log('Hello World!')
+    console.log('start:' ,this.startPlace);
+    console.log('end: ', this.endPlace);
+    console.log('waypoints: ', this.waypoints);
+    console.log('startMarker: ',this.startMarker);
+    console.log('endMarker: ',this.endMarker);
+    console.log('waypointsMarkers: ',this.waypointsMarkers);
+    // console.log(Array.isArray(this.startPlace));
+    // console.log(typeof this.startPlace[0] === 'number');
+    // console.log('Hello World!')
   }
 
 
@@ -414,13 +420,6 @@ export class MapComponent implements OnInit{
     this.waypoints.push([data.lon, data.lat]);
     this.waypointsMarkers.push(waypointMarker);
 
-    // const inputElem = waypointItem.querySelector('input') as HTMLInputElement;
-    // if (inputElem) {
-    //   inputElem.value = data.name;
-    //   inputElem.dataset.lat = data.lat.toString();
-    //   inputElem.dataset.lon = data.lon.toString();
-    // }
-
     const removeBtn = waypointItem.querySelector('.remove-waypoint-btn');
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
@@ -630,4 +629,20 @@ export class MapComponent implements OnInit{
   //     this.map.fitBounds(bboxCoords, { padding: [100, 100], maxZoom: currentZoom });
   //   });
   // }
+
+  // startPlace: any;
+  // endPlace: any;
+  // waypoints: [number, number][] = [];
+
+  getStartPlace() {
+    return this.startPlace;
+  }
+
+  getEndPlace() {
+    return this.endPlace;
+  }
+
+  getWaypoints() {
+    return this.waypoints;
+  }
 }

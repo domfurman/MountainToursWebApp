@@ -1,3 +1,5 @@
 <p>tours works!</p>
 
-<app-map name="Hello"></app-map>
+<div *ngFor="let map of mapList">
+  <h2>Coords: {{map.startPlace}}</h2>
+</div>
