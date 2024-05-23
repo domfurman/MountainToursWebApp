@@ -379,26 +379,60 @@ export class MapComponent implements OnInit{
     this.endMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${data.name}`).openPopup();
   }
 
-  addStop() {
+  addWaypoint() {
     let myDiv = document.getElementsByClassName('waypoints')[0];
-    const input = document.createElement('input');
+    const waypointItem = document.createElement('div');
+    waypointItem.className = 'waypoint-item';
     const uniqueId = `waypoint-${this.waypointCounter++}`;
-    input.id = uniqueId;
-    input.type = 'text';
-    input.autocomplete = 'off';
-    input.autocapitalize = 'off';
-    input.spellcheck = false;
-    input.dir = 'ltr';
-    input.placeholder = 'Waypoint';
-    myDiv.appendChild(input)
-
-    this.autocomplete(input.id, this.addWaypointToList.bind(this));
+    waypointItem.innerHTML = `
+    <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Waypoint">
+    <button class="remove-waypoint-btn">Remove</button>`;
+    myDiv.appendChild(waypointItem);
+    this.autocomplete(uniqueId, (data) => {
+      this.addWaypointToList(data, waypointItem);
+    });
+    // let myDiv = document.getElementsByClassName('waypoints')[0];
+    // const input = document.createElement('input');
+    // const uniqueId = `waypoint-${this.waypointCounter++}`;
+    // input.id = uniqueId;
+    // input.type = 'text';
+    // input.autocomplete = 'off';
+    // input.autocapitalize = 'off';
+    // input.spellcheck = false;
+    // input.dir = 'ltr';
+    // input.placeholder = 'Waypoint';
+    // myDiv.appendChild(input)
+    //
+    // this.autocomplete(input.id, this.addWaypointToList.bind(this));
   }
 
-  addWaypointToList(data: { lat: number; lon: number; name: string }) {
-    const waypointMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Waypoint: ${data.name}`).openPopup();
+  addWaypointToList(data: { lat: number; lon: number; name: string } ,waypointItem: HTMLElement) {
+    const waypointMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() })
+      .addTo(this.map)
+      .bindPopup(`Waypoint: ${data.name}`)
+      .openPopup();
     this.waypoints.push([data.lon, data.lat]);
     this.waypointsMarkers.push(waypointMarker);
+
+    // const inputElem = waypointItem.querySelector('input') as HTMLInputElement;
+    // if (inputElem) {
+    //   inputElem.value = data.name;
+    //   inputElem.dataset.lat = data.lat.toString();
+    //   inputElem.dataset.lon = data.lon.toString();
+    // }
+
+    const removeBtn = waypointItem.querySelector('.remove-waypoint-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        this.map.removeLayer(waypointMarker);
+        const waypointList = document.getElementsByClassName('waypoints')[0];
+        if (waypointList) {
+          waypointList.removeChild(waypointItem);
+        }
+        this.waypoints = this.waypoints.filter(point => point[0] !== data.lon || point[1] !== data.lat);
+        this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
+      });
+    }
   }
 
   reverseGeocode(event: L.LeafletMouseEvent) {
@@ -489,13 +523,6 @@ export class MapComponent implements OnInit{
       waypointItem.innerHTML = `
       <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" value="${name}">
       <button class="remove-waypoint-btn">Remove</button>`;
-      // waypointItem.id = uniqueId;
-      // waypointItem.type = 'text';
-      // waypointItem.autocomplete = 'off';
-      // waypointItem.autocapitalize = 'off';
-      // waypointItem.spellcheck = false;
-      // waypointItem.dir = 'ltr';
-      // waypointItem.value = `${name}`;
       waypointList.appendChild(waypointItem);
 
       waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
