@@ -24,6 +24,10 @@ export class MapComponent implements OnInit{
   startPlace: any;
   endPlace: any;
   waypoints: [number, number][] = [];
+  startMarker: L.Marker | null = null;
+  endMarker: L.Marker | null = null;
+  waypointsMarkers: L.Marker[]= [];
+
 
   waypointCounter = 0;
 
@@ -32,11 +36,16 @@ export class MapComponent implements OnInit{
     // this.setupFormListener();
     this.autocomplete('startAutoComplete', this.setStartPlace.bind(this));
     this.autocomplete('endAutoComplete', this.setEndPlace.bind(this));
+    this.map.on('click', (event: L.LeafletMouseEvent) => {
+      this.reverseGeocode(event);
+    });
   }
 
   console() {
-    console.log(`${this.startPlace[0]}, ${this.startPlace[1]}`);
+    // console.log(`${this.startPlace[0]}, ${this.startPlace[1]}`);
+    console.log('Hello World!')
   }
+
 
   configMap() {
     this.map = L.map('map').setView([50.049683, 19.944544], 16 );
@@ -156,7 +165,7 @@ export class MapComponent implements OnInit{
     const start = L.latLng(this.startPlace[0], this.startPlace[1]);
     const end = L.latLng(this.endPlace[0], this.endPlace[1]);
     const waypoints = this.waypoints
-    
+
     try {
       const url = new URL(`https://api.mapy.cz/v1/routing/route`);
 
@@ -262,7 +271,7 @@ export class MapComponent implements OnInit{
     }
   }
 
-  autocomplete(elementId: string, setPlaceCallback: (data: any) => void): void {
+  autocomplete(elementId: string, setPlaceCallback: (data: any) => void): void  {
     const inputElem = document.querySelector(`#${elementId}`) as HTMLInputElement | null;
 
     if (!inputElem) {
@@ -355,13 +364,19 @@ export class MapComponent implements OnInit{
   }
 
   setStartPlace(data: { lat: number; lon: number; name: string }) {
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+    }
     this.startPlace = [data.lat, data.lon];
-    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Start: ${data.name}`).openPopup();
+    this.startMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Start: ${data.name}`).openPopup();
   }
 
   setEndPlace(data: { lat: number; lon: number; name: string }) {
+    if (this.endMarker) {
+      this.map.removeLayer(this.endMarker);
+    }
     this.endPlace = [data.lat, data.lon];
-    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${data.name}`).openPopup();
+    this.endMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${data.name}`).openPopup();
   }
 
   addStop() {
@@ -381,8 +396,115 @@ export class MapComponent implements OnInit{
   }
 
   addWaypointToList(data: { lat: number; lon: number; name: string }) {
-    this.waypoints.push([data.lon, data.lat])
-    L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Waypoint: ${data.name}`).openPopup();
+    const waypointMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Waypoint: ${data.name}`).openPopup();
+    this.waypoints.push([data.lon, data.lat]);
+    this.waypointsMarkers.push(waypointMarker);
+  }
+
+  reverseGeocode(event: L.LeafletMouseEvent) {
+    let html = '';
+
+    try {
+      fetch(`https://api.mapy.cz/v1/rgeocode/?lon=${event.latlng.lng}&lat=${event.latlng.lat}&apikey=${this.API_KEY}`, {
+        mode: 'cors',
+      })
+        .then(response => response.json())
+        .then(json => {
+          if (json?.items?.length > 0) {
+            html = '<p>Response details are available in the console.</p><ul>';
+            json.items.forEach((item: any) => {
+              html += `<li>${item.name}</li>`;
+            });
+            html += '</ul>';
+            html += '<button id="reverseGeocodeStart">Set start</button>'
+            html += '<button id="reverseGeocodeEnd">Set end</button>'
+            html += '<button id="reverseGeocodeWaypoint">Set waypoint</button>'
+
+            console.log(json.items);
+          } else {
+            html = '<p>No results found.</p>';
+          }
+
+          L.popup()
+            .setLatLng(event.latlng)
+            .setContent(html)
+            .openOn(this.map);
+
+          document.getElementById('reverseGeocodeStart')?.addEventListener('click', () => {
+            this.setStartPlaceFromMapClick(event.latlng.lat, event.latlng.lng, json.items[0].name);
+          });
+          document.getElementById('reverseGeocodeEnd')?.addEventListener('click', () => {
+            this.setEndPlaceFromMapClick(event.latlng.lat, event.latlng.lng, json.items[0].name);
+          });
+          document.getElementById('reverseGeocodeWaypoint')?.addEventListener('click', () => {
+            this.addWaypointFromClick(event.latlng.lat, event.latlng.lng, json.items[0].name);
+          });
+        })
+        .catch(ex => {
+          console.log(ex);
+        });
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
+  setStartPlaceFromMapClick(lat: number, lon: number, name: string) {
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+    }
+    this.startPlace = [lat, lon];
+    const inputElem = document.getElementById('startAutoComplete') as HTMLInputElement;
+    if (inputElem) {
+      inputElem.value = name;
+    }
+    this.startMarker = L.marker([lat, lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`Start: ${name}`).openPopup();
+  }
+
+  setEndPlaceFromMapClick(lat: number, lon: number, name: string) {
+    if (this.endMarker) {
+      this.map.removeLayer(this.endMarker);
+    }
+    this.endPlace = [lat, lon];
+    const inputElem = document.getElementById('endAutoComplete') as HTMLInputElement;
+    if (inputElem) {
+      inputElem.value = name;
+    }
+    this.endMarker = L.marker([lat, lon], { icon: this.setMarkerIcon() }).addTo(this.map).bindPopup(`End: ${name}`).openPopup();
+  }
+
+  addWaypointFromClick(lat: number, lon: number, name: string) {
+    const waypointMarker = L.marker([lat, lon], { icon: this.setMarkerIcon() })
+      .addTo(this.map)
+      .bindPopup(`Waypoint: ${name}`)
+      .openPopup();
+
+    this.waypoints.push([lon, lat]);
+    this.waypointsMarkers.push(waypointMarker);
+
+    const waypointList = document.getElementsByClassName('waypoints')[0];
+    if (waypointList) {
+      const waypointItem = document.createElement('div');
+      waypointItem.className = 'waypoint-item';
+      const uniqueId = `waypoint-${this.waypointCounter++}`;
+      waypointItem.innerHTML = `
+      <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" value="${name}">
+      <button class="remove-waypoint-btn">Remove</button>`;
+      // waypointItem.id = uniqueId;
+      // waypointItem.type = 'text';
+      // waypointItem.autocomplete = 'off';
+      // waypointItem.autocapitalize = 'off';
+      // waypointItem.spellcheck = false;
+      // waypointItem.dir = 'ltr';
+      // waypointItem.value = `${name}`;
+      waypointList.appendChild(waypointItem);
+
+      waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
+        this.map.removeLayer(waypointMarker);
+        waypointList.removeChild(waypointItem);
+        this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
+        this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
+      });
+    }
   }
 
   // autocomplete(): void {
