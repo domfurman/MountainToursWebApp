@@ -36,4 +36,8 @@ export class HomeComponent implements OnInit{
     this.router.navigate(['/community/tours'])
   }
 
+  navigateToRoutePlannig() {
+    this.router.navigate(['/community/route-planning'])
+  }
+
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Map} from "../../../models/map";
+import {MapDetails} from "../../../models/map-details";
 import {MapService} from "../../../services/map.service";
 
 @Component({
@@ -8,7 +8,7 @@ import {MapService} from "../../../services/map.service";
   styleUrl: './tours.component.scss'
 })
 export class ToursComponent implements OnInit{
-  mapList: Map[] = [];
+  mapList: MapDetails[] = [];
 
   constructor(private mapService: MapService) {
   }

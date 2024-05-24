@@ -5,6 +5,10 @@ import axios from 'axios';
 import 'leaflet-layerindex';
 import { LatLngBoundsLiteral } from 'leaflet';
 import AutoComplete from '@tarekraafat/autocomplete.js/dist/autoComplete.js';
+import {MapDetails} from "../../models/map-details";
+import {MapService} from "../../services/map.service";
+import {AuthService} from "../../services/auth.service";
+import {User} from "../../models/user";
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -27,10 +31,16 @@ export class MapComponent implements OnInit{
   endMarker: L.Marker | null = null;
   waypointsMarkers: L.Marker[]= [];
 
+  mapDetails: MapDetails = new MapDetails();
+  user: User = new User();
 
   waypointCounter = 0;
 
+  constructor(private mapService: MapService, private authService: AuthService) {
+  }
+
   ngOnInit(): void {
+    this.retrieveUserData();
     this.configMap();
     // this.setupFormListener();
     this.autocomplete('startAutoComplete', this.setStartPlace.bind(this));
@@ -41,12 +51,12 @@ export class MapComponent implements OnInit{
   }
 
   console() {
-    console.log('start:' ,this.startPlace);
-    console.log('end: ', this.endPlace);
-    console.log('waypoints: ', this.waypoints);
-    console.log('startMarker: ',this.startMarker);
-    console.log('endMarker: ',this.endMarker);
-    console.log('waypointsMarkers: ',this.waypointsMarkers);
+    console.log('start:' ,this.getStartPlace());
+    console.log('end: ', this.getEndPlace());
+    console.log('waypoints: ', this.getWaypoints());
+    // console.log('startMarker: ',this.startMarker);
+    // console.log('endMarker: ',this.endMarker);
+    // console.log('waypointsMarkers: ',this.waypointsMarkers);
     // console.log(Array.isArray(this.startPlace));
     // console.log(typeof this.startPlace[0] === 'number');
     // console.log('Hello World!')
@@ -644,5 +654,25 @@ export class MapComponent implements OnInit{
 
   getWaypoints() {
     return this.waypoints;
+  }
+
+  saveRoute() {
+    this.mapDetails.ownerId = this.user.id;
+    this.mapDetails.startPlace = this.getStartPlace();
+    this.mapDetails.endPlace = this.getEndPlace();
+    this.mapDetails.waypoints = this.getWaypoints();
+    this.mapService.addNewRoute(this.mapDetails).subscribe(
+      (result: MapDetails) => {
+        console.log('poszlo');
+      },
+      (error) => {
+        console.error('nie poszlo', error);
+      }
+    )
+  }
+  retrieveUserData() {
+    this.authService.getPrincipal().subscribe((user => {
+      this.user = user
+    }))
   }
 }

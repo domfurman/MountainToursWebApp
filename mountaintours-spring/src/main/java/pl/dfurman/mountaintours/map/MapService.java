@@ -21,6 +21,7 @@ public class MapService {
     public ResponseEntity<Integer> saveMap(MapRequest request) {
         Integer m = mapRepository.saveMap(
                 new Map(
+                        request.getOwnerId(),
                         request.getStartPlace(),
                         request.getEndPlace(),
                         request.getWaypoints()

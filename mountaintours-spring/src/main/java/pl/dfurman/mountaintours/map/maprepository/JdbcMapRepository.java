@@ -22,10 +22,10 @@ public class JdbcMapRepository implements MapRepository{
     public int saveMap(Map map) {
 
         return jdbcTemplate.update("""
-            INSERT INTO tours (startplace, endplace, waypoints)
-            VALUES (?, ?, ?)
+            INSERT INTO tours (owner_id, startplace, endplace, waypoints)
+            VALUES (?, ?, ?, ?)
         """,
-                map.getStartPlace(), map.getEndPlace(), new SqlValue() {
+                map.getOwnerId() ,map.getStartPlace(), map.getEndPlace(), new SqlValue() {
                     @Override
                     public void setValue(PreparedStatement ps, int paramIndex) throws SQLException {
                         Connection conn = ps.getConnection();
