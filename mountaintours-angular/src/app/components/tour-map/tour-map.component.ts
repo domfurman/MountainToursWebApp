@@ -18,19 +18,17 @@ import {User} from "../../models/user";
 })
 export class TourMapComponent implements OnInit{
   @Input() mapDetails!: MapDetails;
+  @Input() mapId!: string;
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
   map!: L.Map;
   routeLayer: any;
-  markersLayer: L.GeoJSON<GeoJSON.FeatureCollection<GeoJSON.Geometry>> | undefined;
 
-  startPlace: any;
-  endPlace: any;
   waypoints: [number, number][] = [];
 
 
-  constructor(private mapService: MapService, private authService: AuthService, private cdr: ChangeDetectorRef) {
+  constructor(private cdr: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
@@ -41,7 +39,7 @@ export class TourMapComponent implements OnInit{
 
 
   configMap() {
-    this.map = L.map('map').setView([50.049683, 19.944544], 16);
+    this.map = L.map(this.mapId).setView([50.049683, 19.944544], 16);
 
     const tileLayers = {
       'Basic': L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
@@ -108,8 +106,6 @@ export class TourMapComponent implements OnInit{
     });
 
     new LogoControl().addTo(this.map)
-    // this.route();
-    // this.setMarkerIcon();
   }
 
   bbox(coords: [number, number][]): LatLngBoundsLiteral {
@@ -155,9 +151,7 @@ export class TourMapComponent implements OnInit{
 
       const response = await axios.get(url.toString(), {params});
       const json = response.data
-      // console.log(this.name)
       console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
-      // console.log(this.waypoints);
 
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
