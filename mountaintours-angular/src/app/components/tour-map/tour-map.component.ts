@@ -18,7 +18,7 @@ import {User} from "../../models/user";
 })
 export class TourMapComponent implements OnInit{
   @Input() mapDetails!: MapDetails;
-  @Input() mapId!: string;
+  // @Input() mapId!: string;
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
   API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
@@ -39,7 +39,7 @@ export class TourMapComponent implements OnInit{
 
 
   configMap() {
-    this.map = L.map(this.mapId).setView([50.049683, 19.944544], 16);
+    this.map = L.map(this.mapContainer.nativeElement).setView([50.049683, 19.944544], 16);
 
     const tileLayers = {
       'Basic': L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {

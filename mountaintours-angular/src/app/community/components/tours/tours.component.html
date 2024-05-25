@@ -1,6 +1,6 @@
 <p>tours works!</p>
 <div *ngFor="let route of routes$ | async; let i = index">
-  <app-tour-map [mapDetails]="route" [mapId]="'map' + i"></app-tour-map>
+  <app-tour-map [mapDetails]="route"></app-tour-map>
 </div>
 
 <div *ngFor="let map of mapList">
