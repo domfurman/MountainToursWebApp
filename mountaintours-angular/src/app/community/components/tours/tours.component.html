@@ -1,5 +1,10 @@
 <p>tours works!</p>
+<div *ngFor="let route of routes$ | async">
+  <app-tour-map [mapDetails]="route"></app-tour-map>
+</div>
 
 <div *ngFor="let map of mapList">
-  <h2>Coords: {{map.startPlace}}</h2>
+  <h1>Coords: {{map.ownerId}}</h1>
 </div>
+
+<!--<app-tour-map></app-tour-map>-->

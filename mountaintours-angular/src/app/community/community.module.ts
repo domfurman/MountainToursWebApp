@@ -5,6 +5,7 @@ import { CommunityRoutingModule } from './community-routing.module';
 import {ToursComponent} from "./components/tours/tours.component";
 import {MapComponent} from "../components/map/map.component";
 import { RoutePlanningComponent } from './components/route-planning/route-planning.component';
+import {TourMapComponent} from "../components/tour-map/tour-map.component";
 
 
 @NgModule({
@@ -15,7 +16,8 @@ import { RoutePlanningComponent } from './components/route-planning/route-planni
   imports: [
     CommonModule,
     CommunityRoutingModule,
-    MapComponent
+    MapComponent,
+    TourMapComponent,
   ]
 })
 export class CommunityModule { }

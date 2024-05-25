@@ -11,7 +11,7 @@ export class MapService {
   private basicUrl: string = 'http://localhost:8080'
   constructor(private http: HttpClient) { }
 
-  getAllMaps(): Observable<MapDetails[]> {
+  getAllRoutes(): Observable<MapDetails[]> {
     return this.http.get<MapDetails[]>(`${this.basicUrl}/api/find-all-maps`);
   }
 

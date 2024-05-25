@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {MapDetails} from "../../../models/map-details";
 import {MapService} from "../../../services/map.service";
+import * as L from "leaflet";
+import {GeoJSON} from "geojson";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-tours',
@@ -9,17 +12,31 @@ import {MapService} from "../../../services/map.service";
 })
 export class ToursComponent implements OnInit{
   mapList: MapDetails[] = [];
+  routes$!: Observable<MapDetails[]>;
+  map!: L.Map;
+
 
   constructor(private mapService: MapService) {
+    this.routes$ = this.loadMaps();
   }
 
   ngOnInit(): void {
-    this.loadMaps();
+    this.loadAllMaps()
+    console.log(this.routes$)
+    console.log(this.mapList);
     }
 
   loadMaps() {
-    this.mapService.getAllMaps().subscribe(
+    return this.mapService.getAllRoutes();
+    // return this.mapService.getAllRoutes().subscribe(
+    //   (data) => this.mapList = data
+    // )
+  }
+
+  loadAllMaps() {
+    return this.mapService.getAllRoutes().subscribe(
       (data) => this.mapList = data
     )
   }
+
 }
