@@ -1,10 +1,8 @@
 <p>tours works!</p>
 <div *ngFor="let route of routes$ | async; let i = index">
+  <h1>Owner: {{route.owner?.firstName}}</h1>
+  <h2>Tour Date: {{route.tourDate}}</h2>
   <app-tour-map [mapDetails]="route"></app-tour-map>
-</div>
-
-<div *ngFor="let map of mapList">
-  <h1>Coords: {{map.ownerId}}</h1>
 </div>
 
 <!--<app-tour-map></app-tour-map>-->

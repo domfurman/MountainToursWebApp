@@ -69,4 +69,8 @@ export class AuthService {
 
     return this.http.post<any>(`${this.basicUrl}/api/registration`, creds)
   }
+
+  getUserInfoByTourOwnerId(tourOwnerId: number): Observable<User> {
+    return this.http.get<User>(`${this.basicUrl}/api/user-by-tour-owner-id/${tourOwnerId}`)
+  }
 }

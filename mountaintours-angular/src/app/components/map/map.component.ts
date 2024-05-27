@@ -9,10 +9,12 @@ import {MapDetails} from "../../models/map-details";
 import {MapService} from "../../services/map.service";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../models/user";
+import {FormsModule} from "@angular/forms";
+import {MapAdditionalInfo} from "../../interfaces/map-additional-info";
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [],
+  imports: [FormsModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
@@ -30,9 +32,18 @@ export class MapComponent implements OnInit{
   startMarker: L.Marker | null = null;
   endMarker: L.Marker | null = null;
   waypointsMarkers: L.Marker[]= [];
+  length: number = 0;
+  duration: number = 0;
 
   mapDetails: MapDetails = new MapDetails();
   user: User = new User();
+  mapAdditionalInfo: MapAdditionalInfo = {
+    driverStartingPoint: '',
+    difficultyLevel: '',
+    tourDate: new Date(),
+    numberOfSpots: 0,
+    participationCosts: 0
+  }
 
   waypointCounter = 0;
 
@@ -199,10 +210,12 @@ export class MapComponent implements OnInit{
       }
 
       const response = await axios.get(url.toString(), {params});
-      const json = response.data
-      console.log(this.name)
+      const json = response.data;
+      console.log(this.name);
       console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
       console.log(this.waypoints);
+      this.length = json.length;
+      this.duration = json.duration;
 
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);
@@ -640,9 +653,6 @@ export class MapComponent implements OnInit{
   //   });
   // }
 
-  // startPlace: any;
-  // endPlace: any;
-  // waypoints: [number, number][] = [];
 
   getStartPlace() {
     return this.startPlace;
@@ -661,6 +671,15 @@ export class MapComponent implements OnInit{
     this.mapDetails.startPlace = this.getStartPlace();
     this.mapDetails.endPlace = this.getEndPlace();
     this.mapDetails.waypoints = this.getWaypoints();
+    this.mapDetails.length = this.length;
+    this.mapDetails.duration = this.duration;
+    this.mapDetails.driverStartingPoint = this.mapAdditionalInfo.driverStartingPoint;
+    this.mapDetails.mapDifficultyLevel = this.mapAdditionalInfo.difficultyLevel;
+    this.mapDetails.tourDate = this.mapAdditionalInfo.tourDate;
+    this.mapDetails.numberOfSpots = this.mapAdditionalInfo.numberOfSpots;
+    this.mapDetails.participationCosts = this.mapAdditionalInfo.participationCosts;
+    this.mapDetails.creationDate = new Date();
+    this.mapDetails.expirationDate = new Date;
     this.mapService.addNewRoute(this.mapDetails).subscribe(
       (result: MapDetails) => {
         console.log('poszlo');
@@ -674,5 +693,9 @@ export class MapComponent implements OnInit{
     this.authService.getPrincipal().subscribe((user => {
       this.user = user
     }))
+  }
+
+  onSubmit() {
+    console.log(this.mapDetails);
   }
 }
