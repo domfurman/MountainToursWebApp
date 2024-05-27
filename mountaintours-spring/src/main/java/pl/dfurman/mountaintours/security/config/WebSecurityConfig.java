@@ -76,7 +76,8 @@ public class WebSecurityConfig {
                                 "/login",
                                 "api/login",
                                 "/","api/save-map",
-                                "api/find-all-maps" )
+                                "api/find-all-maps" ,
+                                "api/user-by-tour-owner-id/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

@@ -2,19 +2,16 @@ package pl.dfurman.mountaintours.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.dfurman.mountaintours.user.userrepository.JdbcUserRepository;
-import pl.dfurman.mountaintours.user.userrepository.UserRepository;
-
-import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
     private final static String USER_NOT_FOUND_MSG = "User with email %s not found";
+    private final static String USER_ID_NOT_FOUND_MSG = "User with id %s not found";
     private final JdbcUserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -51,5 +48,10 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("User not found");
         }
         return userRepository.findById(id).get();
+    }
+
+    public User getUserInfoByTourOwnerId(int tourOwnerId) {
+        return userRepository.getUserInfoByTourOwnerId(tourOwnerId)
+                .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_ID_NOT_FOUND_MSG, tourOwnerId)));
     }
 }

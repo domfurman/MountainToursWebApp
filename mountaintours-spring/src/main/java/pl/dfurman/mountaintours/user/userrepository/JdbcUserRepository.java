@@ -43,4 +43,12 @@ public class JdbcUserRepository  implements UserRepository{
                 BeanPropertyRowMapper.newInstance(User.class), id);
         return Optional.of(user);
     }
+
+    @Override
+    public Optional<User> getUserInfoByTourOwnerId(int tourOwnerId) {
+        User user = jdbcTemplate.queryForObject("""
+                    SELECT u.* FROM users u JOIN tours t ON u.id = t.owner_id WHERE owner_id = ?;
+                """, BeanPropertyRowMapper.newInstance(User.class), tourOwnerId);
+        return Optional.of(user);
+    }
 }

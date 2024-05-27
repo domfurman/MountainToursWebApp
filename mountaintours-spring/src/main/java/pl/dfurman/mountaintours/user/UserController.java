@@ -7,8 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
@@ -48,5 +46,15 @@ public class UserController {
     @GetMapping("/api/principaluser")
     public Principal user(Principal user) {
         return user;
+    }
+
+//    @GetMapping(path = "api/user-by-tour-id/{tourId}")
+//    public ResponseEntity<User> getUserInfoByTicketId(@PathVariable("tourId") int tourId) {
+//        User user = userService.getUserInfoByTourId(tourId);
+//        return new ResponseEntity<>(user, HttpStatus.OK);
+//    }
+    @GetMapping(path = "/api/user-by-tour-owner-id/{tourOwnerId}")
+    public User getUserInfoByTicketId(@PathVariable("tourOwnerId") int tourOwnerId) {
+        return userService.getUserInfoByTourOwnerId(tourOwnerId);
     }
 }

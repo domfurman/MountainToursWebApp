@@ -10,4 +10,6 @@ public interface UserRepository {
     Optional<User> findByEmail(String email);
     int saveUser(User user);
     Optional<User> findById(int id);
+
+    Optional<User> getUserInfoByTourOwnerId(int tourId);
 }
