@@ -18,7 +18,7 @@ public class MapController {
     }
 
     @PostMapping(path = "api/save-map")
-    public ResponseEntity<Integer> saveMap(@RequestBody MapRequest mapRequest) {
+    public ResponseEntity<Integer> saveMap(@RequestBody MapRequest mapRequest) throws SQLException{
         return mapService.saveMap(mapRequest);
     }
 

@@ -6,8 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.SqlValue;
 import org.springframework.stereotype.Repository;
 import pl.dfurman.mountaintours.map.Map;
+import pl.dfurman.mountaintours.map.MapDifficulty;
 
 import java.sql.*;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,14 +20,31 @@ public class JdbcMapRepository implements MapRepository{
 
     @Autowired
     JdbcTemplate jdbcTemplate;
-    @Override
-    public int saveMap(Map map) {
 
+    @Override
+    public int saveMap(Map map) throws SQLException{
         return jdbcTemplate.update("""
-            INSERT INTO tours (owner_id, startplace, endplace, waypoints)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO tours (
+            owner_id, 
+            startplace, 
+            endplace, 
+            waypoints, 
+            length, 
+            duration, 
+            driver_starting_point, 
+            map_difficulty_level,
+            tour_date,
+            number_of_spots,
+            participation_costs,
+            creation_date,
+            expiration_date
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
-                map.getOwnerId() ,map.getStartPlace(), map.getEndPlace(), new SqlValue() {
+                map.getOwnerId(),
+                map.getStartPlace(),
+                map.getEndPlace(),
+                new SqlValue() {
                     @Override
                     public void setValue(PreparedStatement ps, int paramIndex) throws SQLException {
                         Connection conn = ps.getConnection();
@@ -39,8 +58,31 @@ public class JdbcMapRepository implements MapRepository{
                     @Override
                     public void cleanup() {
                     }
+                },
+                map.getLength(),
+                map.getDuration(),
+                map.getDriverStartingPoint(),
+                new SqlValue() {
+                    @Override
+                    public void setValue(PreparedStatement ps, int paramIndex) throws SQLException {
+                        Connection conn = ps.getConnection();
+                        MapDifficulty mapDifficulty = map.getMapDifficultyLevel();
+                        ps.setObject(8, mapDifficulty.toString());
+                    }
+
+                    @Override
+                    public void cleanup() {
+
+                    }
                 }
+                ,
+                map.getTourDate(),
+                map.getNumberOfSpots(),
+                map.getParticipationCosts(),
+                map.getCreationDate(),
+                map.getExpirationDate()
         );
+
     }
 
     @Override
@@ -71,6 +113,15 @@ public class JdbcMapRepository implements MapRepository{
                 }
                 map.setOwnerId(rs.getLong("owner_id"));
                 map.setTourId(rs.getLong("tour_id"));
+                map.setLength(rs.getInt("length"));
+                map.setDuration(rs.getInt("duration"));
+                map.setDriverStartingPoint(rs.getString("driver_starting_point"));
+                map.setMapDifficultyLevel(MapDifficulty.valueOf(rs.getString("map_difficulty_level")));
+                map.setTourDate(rs.getTimestamp("tour_date").toLocalDateTime());
+                map.setNumberOfSpots(rs.getInt("number_of_spots"));
+                map.setParticipationCosts(rs.getInt("participation_costs"));
+                map.setCreationDate(rs.getTimestamp("creation_date").toLocalDateTime());
+                map.setExpirationDate(rs.getTimestamp("expiration_date").toLocalDateTime());
                 maps.add(map);
             }
         }

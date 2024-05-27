@@ -18,13 +18,22 @@ public class MapService {
         this.mapRepository = mapRepository;
     }
 
-    public ResponseEntity<Integer> saveMap(MapRequest request) {
+    public ResponseEntity<Integer> saveMap(MapRequest request) throws SQLException {
         Integer m = mapRepository.saveMap(
                 new Map(
                         request.getOwnerId(),
                         request.getStartPlace(),
                         request.getEndPlace(),
-                        request.getWaypoints()
+                        request.getWaypoints(),
+                        request.getLength(),
+                        request.getDuration(),
+                        request.getDriverStartingPoint(),
+                        request.getMapDifficultyLevel(),
+                        request.getTourDate(),
+                        request.getNumberOfSpots(),
+                        request.getParticipationCosts(),
+                        request.getCreationDate(),
+                        request.getExpirationDate()
                 )
         );
         return ResponseEntity.ok(m);
