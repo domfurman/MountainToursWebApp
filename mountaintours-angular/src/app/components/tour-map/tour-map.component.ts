@@ -24,8 +24,8 @@ export class TourMapComponent implements OnInit{
   API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
   map!: L.Map;
   routeLayer: any;
-
   waypoints: [number, number][] = [];
+
 
 
   constructor(private cdr: ChangeDetectorRef) {
@@ -35,6 +35,7 @@ export class TourMapComponent implements OnInit{
     this.cdr.detectChanges()
     this.configMap();
     this.route();
+
   }
 
 
@@ -164,6 +165,5 @@ export class TourMapComponent implements OnInit{
       console.log(ex)
     }
   }
-
 
 }

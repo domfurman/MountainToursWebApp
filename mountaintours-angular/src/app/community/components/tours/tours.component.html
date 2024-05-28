@@ -1,8 +1,14 @@
 <p>tours works!</p>
 <div *ngFor="let route of routes$ | async; let i = index">
-  <h1>Owner: {{route.owner?.firstName}}</h1>
-  <h2>Tour Date: {{route.tourDate}}</h2>
-  <app-tour-map [mapDetails]="route"></app-tour-map>
+  <div *ngIf="route.owner?.id !== currenUser?.id">
+    <h1>Owner: {{route.owner?.firstName}}</h1>
+    <h2>Tour Date: {{route.tourDate}}</h2>
+    <h2>Exp Date: {{route.expirationDate}}</h2>
+    <app-tour-map [mapDetails]="route"></app-tour-map>
+    <div>
+      <button (click)="addParticipant(route.tourId, currenUser.id)">Participate</button>
+    </div>
+  </div>
 </div>
 
 <!--<app-tour-map></app-tour-map>-->

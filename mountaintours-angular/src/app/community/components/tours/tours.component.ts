@@ -15,6 +15,7 @@ import {AuthService} from "../../../services/auth.service";
 export class ToursComponent implements OnInit{
   routes$!: Observable<any>;
   map!: L.Map;
+  currenUser: User = new User();
 
 
   constructor(private mapService: MapService, private authService: AuthService) {
@@ -22,7 +23,7 @@ export class ToursComponent implements OnInit{
   }
 
   ngOnInit(): void {
-
+    this.retrieveUserData();
     }
 
 
@@ -37,6 +38,21 @@ export class ToursComponent implements OnInit{
         return forkJoin(userObservables); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
       })
     );
+  }
+
+  retrieveUserData() {
+    this.authService.getPrincipal().subscribe((user => {
+      this.currenUser = user
+      console.log(this.currenUser)
+    }))
+  }
+
+  addParticipant(tourId: number, participantId: number) {
+    this.mapService.addParticipant(tourId, participantId).subscribe(() => {
+      console.log("participant added successfully");
+    }, error => {
+      console.error("error adding participant", error);
+    })
   }
 
 }

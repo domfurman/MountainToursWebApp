@@ -18,4 +18,11 @@ export class MapService {
   addNewRoute(mapDetails: MapDetails): Observable<MapDetails> {
     return this.http.post<MapDetails>(`${this.basicUrl}/api/save-map`, mapDetails);
   }
+
+  addParticipant(tourId: number, participantId: number): Observable<void> {
+    return this.http.post<void>(`${this.basicUrl}/api/tours/${tourId}/participants/${participantId}`, {
+      tourId,
+      participantId
+    })
+  }
 }
