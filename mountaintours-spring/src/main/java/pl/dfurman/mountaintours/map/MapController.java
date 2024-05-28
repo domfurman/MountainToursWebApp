@@ -27,4 +27,9 @@ public class MapController {
         return mapService.findAll();
     }
 
+    @GetMapping(path = "api/routes-by-participant/{participantId}")
+    public List<Map> findAllByRoutesByParticipantId(@PathVariable Long participantId) throws SQLException {
+        return mapService.findAllByRoutesByParticipantId(participantId);
+    }
+
 }

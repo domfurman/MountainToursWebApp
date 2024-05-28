@@ -159,4 +159,58 @@ public class JdbcMapRepository implements MapRepository{
                 new Object[]{tourId}, Integer.class);
         return count != null && count > 0;
     }
+
+    @Override
+    public List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException {
+        List<Map> maps = new ArrayList<>();
+        try (Connection conn = jdbcTemplate.getDataSource().getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT t.* FROM tours t JOIN tour_participants tp ON t.tour_id = tp.tour_id JOIN users u ON u.id = tp.participant_id WHERE u.id=?");
+        ) {
+            ps.setLong(1, participantId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Map map = new Map();
+
+                    Array startPlaceArray = rs.getArray("startplace");
+                    Array endPlaceArray = rs.getArray("endplace");
+                    Array waypointsArray = rs.getArray("waypoints");
+
+                    if (startPlaceArray != null) {
+                        map.setStartPlace(convertToPrimitive((Double[]) startPlaceArray.getArray()));
+                    }
+                    if (endPlaceArray != null) {
+                        map.setEndPlace(convertToPrimitive((Double[]) endPlaceArray.getArray()));
+                    }
+                    if (waypointsArray != null) {
+                        Object[] waypointsObjects = (Object[]) waypointsArray.getArray();
+                        if (waypointsObjects != null) {
+                            List<double[]> waypointList = new ArrayList<>();
+                            for (Object waypointObject : waypointsObjects) {
+                                if (waypointObject instanceof Object[]) {
+                                    Double[] waypoint = Arrays.copyOf((Object[]) waypointObject, ((Object[]) waypointObject).length, Double[].class);
+                                    waypointList.add(convertToPrimitive(waypoint));
+                                }
+                            }
+                            map.setWaypoints(waypointList);
+                        }
+                    }
+                    map.setOwnerId(rs.getLong("owner_id"));
+                    map.setTourId(rs.getLong("tour_id"));
+                    map.setLength(rs.getInt("length"));
+                    map.setDuration(rs.getInt("duration"));
+                    map.setDriverStartingPoint(rs.getString("driver_starting_point"));
+                    map.setMapDifficultyLevel(MapDifficulty.valueOf(rs.getString("map_difficulty_level")));
+                    map.setTourDate(rs.getTimestamp("tour_date").toLocalDateTime());
+                    map.setNumberOfSpots(rs.getInt("number_of_spots"));
+                    map.setParticipationCosts(rs.getInt("participation_costs"));
+                    map.setCreationDate(rs.getTimestamp("creation_date").toLocalDateTime());
+                    map.setExpirationDate(rs.getTimestamp("expiration_date").toLocalDateTime());
+                    maps.add(map);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maps;
+    }
 }

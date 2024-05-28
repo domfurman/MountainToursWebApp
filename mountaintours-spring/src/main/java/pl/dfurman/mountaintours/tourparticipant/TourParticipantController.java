@@ -4,6 +4,7 @@ import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,5 +30,10 @@ public class TourParticipantController {
     @GetMapping(path ="/api/number-of-participants/tour/{tourId}")
     public int getNumberOfParticipantsForTour(@PathVariable Long tourId) throws SQLException{
         return tourParticipantService.getNumberOfParticipantsForTour(tourId);
+    }
+
+    @GetMapping(path = "/api/tour/{tourId}/participant{participantId}")
+    public boolean isParticipant(@PathVariable Long tourId, @PathVariable Long participantId) throws SQLException {
+        return tourParticipantService.isParticipant(tourId, participantId);
     }
 }

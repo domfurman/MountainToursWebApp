@@ -44,4 +44,8 @@ public class MapService {
     public List<Map> findAll() throws SQLException {
         return mapRepository.findAll();
     }
+
+    public List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException{
+        return mapRepository.findAllByRoutesByParticipantId(participantId);
+    }
 }

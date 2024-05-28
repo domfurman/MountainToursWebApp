@@ -10,7 +10,7 @@ public interface MapRepository {
 
     List<Map> findAll() throws SQLException;
 
-//    int saveMap2(Map map) throws SQLException;
-
     boolean existsById(Long tourId);
+
+    List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException;
 }

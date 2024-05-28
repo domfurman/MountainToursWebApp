@@ -20,4 +20,11 @@ public class JdbcTourParticipant implements TourParticipantDAO{
     public int getNumberOfParticipantsForTour(Long tourId) throws SQLException {
         return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tour_participants WHERE tour_id = ?",Integer.class, tourId);
     }
+
+    @Override
+    public boolean isParticipant(Long tourId, Long participantId) throws SQLException {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tour_participants WHERE tour_id = ? AND participant_id = ?",
+                Integer.class, tourId, participantId);
+        return count == 1;
+    }
 }
