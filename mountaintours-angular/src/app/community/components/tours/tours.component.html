@@ -1,4 +1,4 @@
-<p>tours works!</p>
+<app-navbar></app-navbar>
 <div *ngFor="let route of routes$ | async; let i = index">
   <div *ngIf="route.owner?.id !== currentUser?.id">
     <h1>Owner: {{route.owner?.firstName}}</h1>

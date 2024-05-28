@@ -6,6 +6,7 @@ import {ToursComponent} from "./components/tours/tours.component";
 import {MapComponent} from "../shared/components/map/map.component";
 import { RoutePlanningComponent } from './components/route-planning/route-planning.component';
 import {TourMapComponent} from "../shared/components/tour-map/tour-map.component";
+import {NavbarComponent} from "../shared/components/navbar/navbar.component";
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import {TourMapComponent} from "../shared/components/tour-map/tour-map.component
     CommunityRoutingModule,
     MapComponent,
     TourMapComponent,
+    NavbarComponent,
   ]
 })
 export class CommunityModule { }
