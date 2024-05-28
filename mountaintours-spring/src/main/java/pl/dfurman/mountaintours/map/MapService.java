@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.dfurman.mountaintours.map.maprepository.JdbcMapRepository;
 
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class MapService {
     }
 
     public ResponseEntity<Integer> saveMap(MapRequest request) throws SQLException {
+        LocalDateTime creationDate = LocalDateTime.now();
         Integer m = mapRepository.saveMap(
                 new Map(
                         request.getOwnerId(),
@@ -32,8 +34,8 @@ public class MapService {
                         request.getTourDate(),
                         request.getNumberOfSpots(),
                         request.getParticipationCosts(),
-                        request.getCreationDate(),
-                        request.getExpirationDate()
+                        creationDate,
+                        request.getTourDate().minusDays(3)
                 )
         );
         return ResponseEntity.ok(m);

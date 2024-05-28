@@ -55,4 +55,11 @@ public class JdbcUserRepository  implements UserRepository{
             return Optional.of(users.get(0));
         }
     }
+
+    @Override
+    public boolean existsById(Long userId) {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE id = ?",
+                new Object[]{userId}, Integer.class);
+        return count != null && count > 0;
+    }
 }

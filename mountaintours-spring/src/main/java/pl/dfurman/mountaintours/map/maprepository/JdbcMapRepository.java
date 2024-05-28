@@ -89,7 +89,7 @@ public class JdbcMapRepository implements MapRepository{
     public List<Map> findAll() throws SQLException {
         List<Map> maps = new ArrayList<>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection();
-            PreparedStatement ps = conn.prepareStatement("SELECT * FROM tours");
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM tours ORDER BY tour_date");
             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Map map = new Map();
@@ -135,5 +135,12 @@ public class JdbcMapRepository implements MapRepository{
         return Arrays.stream(array)
                 .mapToDouble(Double::doubleValue)
                 .toArray();
+    }
+
+    @Override
+    public boolean existsById(Long tourId) {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tours WHERE tour_id = ?",
+                new Object[]{tourId}, Integer.class);
+        return count != null && count > 0;
     }
 }

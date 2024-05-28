@@ -12,4 +12,6 @@ public interface UserRepository {
     Optional<User> findById(int id);
 
     Optional<User> getUserInfoByTourOwnerId(int tourId);
+
+    boolean existsById(Long userId);
 }
