@@ -15,4 +15,9 @@ public class JdbcTourParticipant implements TourParticipantDAO{
     public int addParticipant(Long tourId, Long participantId) throws SQLException {
         return jdbcTemplate.update("INSERT INTO tour_participants (tour_id, participant_id) VALUES (?, ?)", tourId, participantId);
     }
+
+    @Override
+    public int getNumberOfParticipantsForTour(Long tourId) throws SQLException {
+        return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM tour_participants WHERE tour_id = ?",Integer.class, tourId);
+    }
 }

@@ -30,4 +30,8 @@ public class TourParticipantService {
 
         return jdbcTourParticipant.addParticipant(tourId, participantId);
     }
+
+    public int getNumberOfParticipantsForTour(Long tourId) throws SQLException{
+        return jdbcTourParticipant.getNumberOfParticipantsForTour(tourId);
+    }
 }
