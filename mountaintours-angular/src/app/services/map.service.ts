@@ -25,4 +25,8 @@ export class MapService {
       participantId
     })
   }
+
+  getNumberOfParticipantsForTour(tourId: number): Observable<number> {
+    return this.http.get<number>(`${this.basicUrl}/api/number-of-participants/tour/${tourId}`)
+  }
 }

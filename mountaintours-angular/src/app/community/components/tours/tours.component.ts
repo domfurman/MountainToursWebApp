@@ -15,7 +15,8 @@ import {AuthService} from "../../../services/auth.service";
 export class ToursComponent implements OnInit{
   routes$!: Observable<any>;
   map!: L.Map;
-  currenUser: User = new User();
+  currentUser: User = new User();
+  participantCounts: {[key: number]: number} = {};
 
 
   constructor(private mapService: MapService, private authService: AuthService) {
@@ -24,6 +25,7 @@ export class ToursComponent implements OnInit{
 
   ngOnInit(): void {
     this.retrieveUserData();
+
     }
 
 
@@ -42,8 +44,8 @@ export class ToursComponent implements OnInit{
 
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
-      this.currenUser = user
-      console.log(this.currenUser)
+      this.currentUser = user
+      console.log(this.currentUser)
     }))
   }
 
@@ -53,6 +55,12 @@ export class ToursComponent implements OnInit{
     }, error => {
       console.error("error adding participant", error);
     })
+  }
+
+  getNumberOfParticipantsForTour(tourId: number): void {
+    this.mapService.getNumberOfParticipantsForTour(tourId).subscribe((data: number) => {
+      this.participantCounts[tourId] = data;
+    });
   }
 
 }
