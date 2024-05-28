@@ -37,7 +37,18 @@ export class ToursComponent implements OnInit{
             map(user => ({ ...route, owner: user }))
           )
         );
-        return forkJoin(userObservables); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
+        return forkJoin(userObservables).pipe(
+          switchMap(routesWithUsers => {
+            const participantObservables = routesWithUsers.map(route =>
+              this.mapService.getNumberOfParticipantsForTour(route.tourId).pipe(
+                map(count => {
+                  this.participantCounts[route.tourId] = count;
+                  return route
+                })
+              ));
+            return forkJoin(participantObservables)
+          })
+        ); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
       })
     );
   }
@@ -52,6 +63,7 @@ export class ToursComponent implements OnInit{
   addParticipant(tourId: number, participantId: number) {
     this.mapService.addParticipant(tourId, participantId).subscribe(() => {
       console.log("participant added successfully");
+      this.getNumberOfParticipantsForTour(tourId);
     }, error => {
       console.error("error adding participant", error);
     })
