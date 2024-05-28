@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import {authenticationGuard} from "./core/guard/authentication.guard";
-import {HomeComponent} from "./components/home/home.component";
-import {LoginComponent} from "./components/login/login.component";
+import {HomeComponent} from "./shared/components/home/home.component";
+import {LoginComponent} from "./shared/components/login/login.component";
 
 export const routes: Routes = [
   {path: '', canActivate: [authenticationGuard], children: [

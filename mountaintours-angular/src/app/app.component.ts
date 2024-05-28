@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {MapComponent} from "./components/map/map.component";
+import {MapComponent} from "./shared/components/map/map.component";
 import {RouterOutlet} from "@angular/router";
 
 @Component({

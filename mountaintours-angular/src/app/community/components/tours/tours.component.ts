@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {MapDetails} from "../../../models/map-details";
-import {MapService} from "../../../services/map.service";
+import {MapDetails} from "../../../shared/models/map-details";
+import {MapService} from "../../../shared/services/map.service";
 import * as L from "leaflet";
 import {GeoJSON} from "geojson";
 import {Observable, map, switchMap, forkJoin} from "rxjs";
-import {User} from "../../../models/user";
-import {AuthService} from "../../../services/auth.service";
+import {User} from "../../../shared/models/user";
+import {AuthService} from "../../../shared/services/auth.service";
 
 @Component({
   selector: 'app-tours',
