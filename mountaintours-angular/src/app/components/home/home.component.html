@@ -6,17 +6,18 @@
 <!--<div>-->
 <!--  <p>please log in</p>-->
 <!--</div>-->
-<button (click)="navigateToTours()">
-  TOURS
-</button>
-<button (click)="navigateToRoutePlannig()">
-  ROUTE PLANNING
-</button>
+
 
 <div [hidden]="authenticated()">
-  <p>please log in</p>
+  <p>please <a (click)="navigateToLogin()">log in</a></p>
 </div>
 
 <div [hidden]="!authenticated()">
+  <button (click)="navigateToTours()">
+    TOURS
+  </button>
+  <button (click)="navigateToRoutePlanning()">
+    ROUTE PLANNING
+  </button>
   <p>Welcome {{user.firstName}} !</p>
 </div>

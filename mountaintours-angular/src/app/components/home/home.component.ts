@@ -33,11 +33,15 @@ export class HomeComponent implements OnInit{
   }
 
   navigateToTours() {
-    this.router.navigate(['/community/tours'])
+    this.router.navigate(['/community/tours']);
   }
 
-  navigateToRoutePlannig() {
-    this.router.navigate(['/community/route-planning'])
+  navigateToRoutePlanning() {
+    this.router.navigate(['/community/route-planning']);
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
   }
 
 }

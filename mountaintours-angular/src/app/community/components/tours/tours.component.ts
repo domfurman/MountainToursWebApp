@@ -13,10 +13,8 @@ import {AuthService} from "../../../services/auth.service";
   styleUrl: './tours.component.scss'
 })
 export class ToursComponent implements OnInit{
-  mapList: MapDetails[] = [];
   routes$!: Observable<any>;
   map!: L.Map;
-  tourOwner!: User;
 
 
   constructor(private mapService: MapService, private authService: AuthService) {
@@ -24,14 +22,9 @@ export class ToursComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    // this.loadAllMaps()
-    // console.log(this.routes$)
-    // console.log(this.mapList);
+
     }
 
-  // loadMaps() {
-  //   return this.mapService.getAllRoutes();
-  // }
 
   loadMaps(): Observable<any[]> {
     return this.mapService.getAllRoutes().pipe(
@@ -44,12 +37,6 @@ export class ToursComponent implements OnInit{
         return forkJoin(userObservables); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
       })
     );
-  }
-
-  loadTourOwnerInfo(tourOwnerId: number) {
-    return this.authService.getUserInfoByTourOwnerId(tourOwnerId).subscribe((user: User) => {
-      this.tourOwner = user;
-    });
   }
 
 }
