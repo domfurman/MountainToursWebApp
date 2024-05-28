@@ -3,7 +3,7 @@ import {MapDetails} from "../../../shared/models/map-details";
 import {MapService} from "../../../shared/services/map.service";
 import * as L from "leaflet";
 import {GeoJSON} from "geojson";
-import {Observable, map, switchMap, forkJoin} from "rxjs";
+import {Observable, map, switchMap, forkJoin, Subscription} from "rxjs";
 import {User} from "../../../shared/models/user";
 import {AuthService} from "../../../shared/services/auth.service";
 
@@ -17,6 +17,7 @@ export class ToursComponent implements OnInit{
   map!: L.Map;
   currentUser: User = new User();
   participantCounts: {[key: number]: number} = {};
+  isParticipant: boolean = false;
 
 
   constructor(private mapService: MapService, private authService: AuthService) {
@@ -25,7 +26,6 @@ export class ToursComponent implements OnInit{
 
   ngOnInit(): void {
     this.retrieveUserData();
-
     }
 
 
@@ -73,6 +73,12 @@ export class ToursComponent implements OnInit{
     this.mapService.getNumberOfParticipantsForTour(tourId).subscribe((data: number) => {
       this.participantCounts[tourId] = data;
     });
+  }
+
+  isRouteParticipant(tourId: number, userId: number): Subscription {
+    return this.mapService.isParticipant(tourId, userId).subscribe((result: boolean) => {
+      this.isParticipant = result;
+    })
   }
 
 }

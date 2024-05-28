@@ -19,8 +19,8 @@ export class MapService {
     return this.http.post<MapDetails>(`${this.basicUrl}/api/save-map`, mapDetails);
   }
 
-  addParticipant(tourId: number, participantId: number): Observable<void> {
-    return this.http.post<void>(`${this.basicUrl}/api/tours/${tourId}/participants/${participantId}`, {
+  addParticipant(tourId: number, participantId: number): Observable<number> {
+    return this.http.post<number>(`${this.basicUrl}/api/tours/${tourId}/participants/${participantId}`, {
       tourId,
       participantId
     })
@@ -29,4 +29,14 @@ export class MapService {
   getNumberOfParticipantsForTour(tourId: number): Observable<number> {
     return this.http.get<number>(`${this.basicUrl}/api/number-of-participants/tour/${tourId}`)
   }
+
+  isParticipant(tourId: number, participantId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.basicUrl}/api/tour/${tourId}/participant/${participantId}`)
+  }
+
+  getRoutesByParticipantId(participantId: number): Observable<MapDetails[]> {
+    return this.http.get<MapDetails[]>(`${this.basicUrl}/api/routes-by-participant/${participantId}`)
+  }
+
+
 }

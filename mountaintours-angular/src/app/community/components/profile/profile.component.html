@@ -1,0 +1,8 @@
+<app-navbar></app-navbar>
+<h1>Hi {{currentUser.firstName}}!</h1>
+<button (click)="showRoutesAsParticipantFunc()">Show routes I particiapte in</button>
+<div [hidden]="showRoutesAsParticipant">
+  <div *ngFor="let route of routes$ | async">
+    <app-tour-map [mapDetails]="route"></app-tour-map>
+  </div>
+</div>

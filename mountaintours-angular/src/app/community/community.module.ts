@@ -7,12 +7,14 @@ import {MapComponent} from "../shared/components/map/map.component";
 import { RoutePlanningComponent } from './components/route-planning/route-planning.component';
 import {TourMapComponent} from "../shared/components/tour-map/tour-map.component";
 import {NavbarComponent} from "../shared/components/navbar/navbar.component";
+import {ProfileComponent} from "./components/profile/profile.component";
 
 
 @NgModule({
   declarations: [
     ToursComponent,
-    RoutePlanningComponent
+    RoutePlanningComponent,
+    ProfileComponent
   ],
   imports: [
     CommonModule,
