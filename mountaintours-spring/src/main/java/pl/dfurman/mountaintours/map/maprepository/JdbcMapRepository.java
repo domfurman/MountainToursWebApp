@@ -105,11 +105,23 @@ public class JdbcMapRepository implements MapRepository{
                     map.setEndPlace(convertToPrimitive((Double[]) endPlaceArray.getArray()));
                 }
                 if (waypointsArray != null) {
-                    Double[][] waypoints = (Double[][]) waypointsArray.getArray();
-                    List<double[]> waypointList = Arrays.stream(waypoints)
-                            .map(array -> convertToPrimitive(array))
-                            .collect(Collectors.toList());
-                    map.setWaypoints(waypointList);
+//                    Double[][] waypoints = (Double[][]) waypointsArray.getArray();
+                    Object[] waypointsObjects = (Object[]) waypointsArray.getArray();
+                    if (waypointsObjects != null) {
+//                        List<double[]> waypointList = Arrays.stream(waypoints)
+//                                .map(array -> convertToPrimitive(array))
+//                                .collect(Collectors.toList());
+//                        map.setWaypoints(waypointList);
+                        List<double[]> waypointList = new ArrayList<>();
+                        for (Object waypointObject : waypointsObjects) {
+                            if (waypointObject instanceof Object[]) {
+                                Double[] waypoint = Arrays.copyOf((Object[]) waypointObject, ((Object[]) waypointObject).length, Double[].class);
+                                waypointList.add(convertToPrimitive(waypoint));
+                            }
+                        }
+                        map.setWaypoints(waypointList);
+                    }
+
                 }
                 map.setOwnerId(rs.getLong("owner_id"));
                 map.setTourId(rs.getLong("tour_id"));
@@ -126,15 +138,19 @@ public class JdbcMapRepository implements MapRepository{
             }
         }
         catch (SQLException e) {
-
+            e.printStackTrace();
         }
         return maps;
     }
 
     private double[] convertToPrimitive(Double[] array) {
-        return Arrays.stream(array)
-                .mapToDouble(Double::doubleValue)
-                .toArray();
+//        return Arrays.stream(array)
+//                .mapToDouble(Double::doubleValue)
+//                .toArray();
+        if (array == null) {
+            return null;
+        }
+        return Arrays.stream(array).mapToDouble(o -> o instanceof Double ? (Double) o : Double.NaN).toArray();
     }
 
     @Override
