@@ -29,4 +29,8 @@ public class InMemorySessionRegistry {
                 Base64.getEncoder().encode(UUID.randomUUID().toString().getBytes(StandardCharsets.UTF_8))
         );
     }
+
+    public void removeSession(String sessionId) {
+        SESSIONS.remove(sessionId);
+    }
 }

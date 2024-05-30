@@ -3,6 +3,8 @@ package pl.dfurman.mountaintours.login;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,5 +43,13 @@ public class LoginController {
         responseDTO.setSessionId(sessionId);
 
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("api/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        String sessionId = request.getHeader(HttpHeaders.AUTHORIZATION);
+        sessionRegistry.removeSession(sessionId);
+        SecurityContextHolder.clearContext();
+        return new ResponseEntity<String>("Logout succesfull", HttpStatus.OK);
     }
 }

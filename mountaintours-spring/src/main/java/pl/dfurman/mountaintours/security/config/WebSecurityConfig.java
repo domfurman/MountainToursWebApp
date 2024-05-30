@@ -85,6 +85,7 @@ public class WebSecurityConfig {
                 )
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(Customizer.withDefaults())
+                .logout((logout) -> logout.logoutUrl("api/logout"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class)
                 /*.securityContext((context) -> context

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {User} from "../models/user";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Router} from "@angular/router";
-import {map, Observable} from "rxjs";
+import {map, Observable, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -23,21 +23,20 @@ export class AuthService {
       'username' : username,
       'password' : password
     }
-    return this.http.post<any>(`${this.basicUrl}/api/login`, creds);
+    return this.http.post<any>(`${this.basicUrl}/api/login`, creds).pipe(
+      tap(() => {
+        this.authenticated = true;
+      })
+    );
   }
 
-  findUserByEmail(email: string): Observable<User> {
-    return this.http.get<User>(`${this.basicUrl}/api/currentuser`, { params: { email } });
-  }
-
-  getList() {
-    return this.http.get<any>(`${this.basicUrl}/api/list`).subscribe(res => {
-      if (res) {
-        console.log(res)
-      } else {
-        console.error()
-      }
-    })
+  logout() {
+    return this.http.post(`${this.basicUrl}/api/logout`, {}, {responseType: 'text'}).pipe(
+      tap(() => {
+        this.authenticated = false;
+        sessionStorage.removeItem('token');
+      })
+    )
   }
 
   getPrincipal() {
@@ -72,5 +71,9 @@ export class AuthService {
 
   getUserInfoByTourOwnerId(tourOwnerId: number): Observable<User> {
     return this.http.get<User>(`${this.basicUrl}/api/user-by-tour-owner-id/${tourOwnerId}`)
+  }
+
+  isAuthenticated(): boolean {
+    return this.authenticated;
   }
 }

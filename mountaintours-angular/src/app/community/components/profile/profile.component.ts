@@ -5,6 +5,7 @@ import {forkJoin, map, Observable, switchMap} from "rxjs";
 import {MapDetails} from "../../../shared/models/map-details";
 import {MapService} from "../../../shared/services/map.service";
 import {TourMapComponent} from "../../../shared/components/tour-map/tour-map.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -18,7 +19,7 @@ export class ProfileComponent implements OnInit{
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
-  constructor(private authService: AuthService, private mapService: MapService) {
+  constructor(private authService: AuthService, private mapService: MapService, private router: Router) {
 
   }
 
@@ -69,7 +70,15 @@ export class ProfileComponent implements OnInit{
     } else {
       return
     }
+  }
 
+  logout() {
+    this.authService.logout().subscribe(() => {
+      console.log("success logout");
+      this.router.navigate(['/home]']);
+    }, error => {
+      console.error("error logout", error)
+    });
   }
 
 }

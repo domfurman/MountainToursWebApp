@@ -3,12 +3,14 @@ import {User} from "../../models/user";
 import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {NavbarComponent} from "../navbar/navbar.component";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    NavbarComponent
+    NavbarComponent,
+    NgIf
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
@@ -22,10 +24,11 @@ export class HomeComponent implements OnInit{
 
   ngOnInit() {
     this.retrieveUserData();
+    console.log(this.authenticated())
   }
 
   authenticated() {
-    return this.authService.authenticated;
+    return this.authService.isAuthenticated();
   }
 
   retrieveUserData() {
