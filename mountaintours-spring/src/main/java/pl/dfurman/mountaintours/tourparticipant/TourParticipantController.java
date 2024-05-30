@@ -31,7 +31,7 @@ public class TourParticipantController {
         return tourParticipantService.getNumberOfParticipantsForTour(tourId);
     }
 
-    @GetMapping(path = "/api/tour/{tourId}/participant{participantId}")
+    @GetMapping(path = "/api/tour/{tourId}/participant/{participantId}")
     public boolean isParticipant(@PathVariable Long tourId, @PathVariable Long participantId) throws SQLException {
         return tourParticipantService.isParticipant(tourId, participantId);
     }
