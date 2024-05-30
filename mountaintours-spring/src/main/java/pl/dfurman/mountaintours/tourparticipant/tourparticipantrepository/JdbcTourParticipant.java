@@ -1,10 +1,13 @@
 package pl.dfurman.mountaintours.tourparticipant.tourparticipantrepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import pl.dfurman.mountaintours.user.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Repository
 public class JdbcTourParticipant implements TourParticipantDAO{
@@ -33,5 +36,12 @@ public class JdbcTourParticipant implements TourParticipantDAO{
         return jdbcTemplate.update("""
         DELETE FROM tour_participants WHERE tour_id = ? AND participant_id = ?
         """, tourId, participantId);
+    }
+
+    @Override
+    public List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException {
+        return jdbcTemplate.query("""
+                SELECT u.* FROM users u JOIN tour_participants tp ON tp.participant_id = u.id WHERE tp.tour_id = ?
+                """, BeanPropertyRowMapper.newInstance(User.class), tourId);
     }
 }

@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
+import pl.dfurman.mountaintours.user.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @RestController
 public class TourParticipantController {
@@ -37,5 +39,10 @@ public class TourParticipantController {
     @DeleteMapping(path = "/api/resign/tour/{tourId}/participant/{participantId}")
     public int resignFromTour(@PathVariable Long tourId, @PathVariable Long participantId) throws SQLException{
         return tourParticipantService.resignFromTour(tourId, participantId);
+    }
+
+    @GetMapping(path = "api/participants-info/tour/{tourId}")
+    public List<User> getAllParticipantsInfoByTourId(@PathVariable Long tourId) throws SQLException {
+        return tourParticipantService.getAllParticipantsInfoByTourId(tourId);
     }
 }

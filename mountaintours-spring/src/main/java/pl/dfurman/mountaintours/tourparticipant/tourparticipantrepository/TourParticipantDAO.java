@@ -1,6 +1,9 @@
 package pl.dfurman.mountaintours.tourparticipant.tourparticipantrepository;
 
+import pl.dfurman.mountaintours.user.User;
+
 import java.sql.SQLException;
+import java.util.List;
 
 public interface TourParticipantDAO {
     int addParticipant(Long tourId, Long participantId) throws SQLException;
@@ -10,4 +13,6 @@ public interface TourParticipantDAO {
     boolean isParticipant(Long tourId, Long participantId) throws SQLException;
 
     int resignFromTour(Long tourId, Long participantId) throws SQLException;
+
+    List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException;
 }

@@ -32,4 +32,9 @@ public class MapController {
         return mapService.findAllByRoutesByParticipantId(participantId);
     }
 
+    @GetMapping(path = "api/routes-by-owner/{ownerId}")
+    public List<Map> findAllRoutesByOwnerId(@PathVariable Long ownerId) throws SQLException {
+        return mapService.findAllRoutesByOwnerId(ownerId);
+    }
+
 }

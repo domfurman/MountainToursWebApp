@@ -48,4 +48,8 @@ public class MapService {
     public List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException{
         return mapRepository.findAllByRoutesByParticipantId(participantId);
     }
+
+    public List<Map> findAllRoutesByOwnerId(Long ownerId) throws SQLException {
+        return mapRepository.findAllRoutesByOwnerId(ownerId);
+    }
 }

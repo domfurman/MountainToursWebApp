@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.dfurman.mountaintours.map.maprepository.JdbcMapRepository;
 import pl.dfurman.mountaintours.tourparticipant.tourparticipantrepository.JdbcTourParticipant;
+import pl.dfurman.mountaintours.user.User;
 import pl.dfurman.mountaintours.user.userrepository.JdbcUserRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @Service
 public class TourParticipantService {
@@ -41,5 +43,9 @@ public class TourParticipantService {
 
     public int resignFromTour(Long tourId, Long participantId) throws SQLException{
         return jdbcTourParticipant.resignFromTour(tourId, participantId);
+    }
+
+    public List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException {
+        return jdbcTourParticipant.getAllParticipantsInfoByTourId(tourId);
     }
 }
