@@ -32,7 +32,7 @@ export class MapService {
   }
 
   isParticipant(tourId: number, participantId: number): Observable<boolean> {
-    return this.http.get<boolean>(`${this.basicUrl}/api/resign/tour/${tourId}/participant/${participantId}`);
+    return this.http.get<boolean>(`${this.basicUrl}/api/tour/${tourId}/participant/${participantId}`);
   }
 
   getRoutesByParticipantId(participantId: number): Observable<MapDetails[]> {
