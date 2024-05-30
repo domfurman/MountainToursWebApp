@@ -269,5 +269,12 @@ public class JdbcMapRepository implements MapRepository{
         return maps;
     }
 
+    @Override
+    public int deleteTour(Long tourId, Long ownerId) throws SQLException {
+        return jdbcTemplate.update("""
+        DELETE FROM tours WHERE tour_id = ? AND owner_id = ?
+        """, tourId, ownerId);
+    }
+
 
 }

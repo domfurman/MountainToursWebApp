@@ -2,6 +2,7 @@ package pl.dfurman.mountaintours.map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
@@ -35,6 +36,11 @@ public class MapController {
     @GetMapping(path = "api/routes-by-owner/{ownerId}")
     public List<Map> findAllRoutesByOwnerId(@PathVariable Long ownerId) throws SQLException {
         return mapService.findAllRoutesByOwnerId(ownerId);
+    }
+
+    @DeleteMapping(path = "api/delete/tour/{tourId}/owner/{ownerId}")
+    public int deleteTour(@PathVariable Long tourId,@PathVariable Long ownerId) throws SQLException {
+        return mapService.deleteTour(tourId, ownerId);
     }
 
 }

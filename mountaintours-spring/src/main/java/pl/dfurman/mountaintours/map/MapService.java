@@ -52,4 +52,8 @@ public class MapService {
     public List<Map> findAllRoutesByOwnerId(Long ownerId) throws SQLException {
         return mapRepository.findAllRoutesByOwnerId(ownerId);
     }
+
+    public int deleteTour(Long tourId, Long ownerId) throws SQLException {
+        return mapRepository.deleteTour(tourId, ownerId);
+    }
 }

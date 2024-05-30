@@ -15,4 +15,6 @@ public interface MapRepository {
     List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException;
 
     List<Map> findAllRoutesByOwnerId(Long ownerId) throws SQLException;
+
+    int deleteTour(Long tourId, Long ownerId) throws SQLException;
 }
