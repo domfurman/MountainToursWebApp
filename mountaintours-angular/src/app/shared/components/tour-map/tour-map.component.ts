@@ -25,6 +25,9 @@ export class TourMapComponent implements OnInit{
   map!: L.Map;
   routeLayer: any;
   waypoints: [number, number][] = [];
+  startMarker: L.Marker | null = null;
+  endMarker: L.Marker | null = null;
+  waypointsMarkers: L.Marker[]= [];
 
 
 
@@ -109,6 +112,22 @@ export class TourMapComponent implements OnInit{
     new LogoControl().addTo(this.map)
   }
 
+  setMarkerIcon() {
+    const locationIcon = L.icon({
+      iconUrl: 'assets/markers/location-pin.png',
+      iconRetinaUrl: 'assets/markers/location-pin.png',
+      // shadowUrl: 'assets/markers/location-pin.png',
+      iconSize: [25, 30],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    })
+
+    L.Marker.prototype.options.icon = locationIcon;
+
+    return locationIcon;
+  }
+
   bbox(coords: [number, number][]): LatLngBoundsLiteral {
     let minLatitude = Infinity;
     let minLongitude = Infinity;
@@ -133,6 +152,25 @@ export class TourMapComponent implements OnInit{
     const start = L.latLng(this.mapDetails.startPlace[0], this.mapDetails.startPlace[1]);
     const end = L.latLng(this.mapDetails.endPlace[0], this.mapDetails.endPlace[1]);
     const waypoints = this.mapDetails.waypoints;
+
+    this.startMarker = L.marker([this.mapDetails.startPlace[0], this.mapDetails.startPlace[1]], { icon: this.setMarkerIcon() })
+      .addTo(this.map)
+      .bindPopup("Start")
+
+    this.endMarker = L.marker([this.mapDetails.endPlace[0], this.mapDetails.endPlace[1]], { icon: this.setMarkerIcon() })
+      .addTo(this.map)
+      .bindPopup("End")
+
+    const waypointMarkers = this.mapDetails.waypoints;
+    waypointMarkers.forEach((waypoint) => {
+      let marker = L.marker([waypoint[1], waypoint[0]], {icon: this.setMarkerIcon()})
+        .addTo(this.map)
+        .bindPopup("Waypoint")
+      this.waypointsMarkers.push(marker);
+      console.log(waypoint);
+    })
+
+
 
     try {
       const url = new URL(`https://api.mapy.cz/v1/routing/route`);
