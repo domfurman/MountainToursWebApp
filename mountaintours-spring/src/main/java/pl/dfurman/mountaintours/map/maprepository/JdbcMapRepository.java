@@ -164,7 +164,7 @@ public class JdbcMapRepository implements MapRepository{
     public List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException {
         List<Map> maps = new ArrayList<>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection();
-             PreparedStatement ps = conn.prepareStatement("SELECT t.* FROM tours t JOIN tour_participants tp ON t.tour_id = tp.tour_id JOIN users u ON u.id = tp.participant_id WHERE u.id=?");
+             PreparedStatement ps = conn.prepareStatement("SELECT t.* FROM tours t JOIN tour_participants tp ON t.tour_id = tp.tour_id JOIN users u ON u.id = tp.participant_id WHERE u.id=? ORDER BY tour_date");
         ) {
             ps.setLong(1, participantId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -216,7 +216,7 @@ public class JdbcMapRepository implements MapRepository{
 
     @Override
     public List<Map> findAllRoutesByOwnerId(Long ownerId) throws SQLException {
-        String sql = "SELECT t.* FROM tours t JOIN users u ON t.owner_id = u.id WHERE u.id = ?";
+        String sql = "SELECT t.* FROM tours t JOIN users u ON t.owner_id = u.id WHERE u.id = ? ORDER BY tour_date";
         List<Map> maps = new ArrayList<>();
         try (Connection conn = jdbcTemplate.getDataSource().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);

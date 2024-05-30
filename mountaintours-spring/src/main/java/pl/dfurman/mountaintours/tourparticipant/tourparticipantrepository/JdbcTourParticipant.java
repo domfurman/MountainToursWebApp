@@ -41,7 +41,7 @@ public class JdbcTourParticipant implements TourParticipantDAO{
     @Override
     public List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException {
         return jdbcTemplate.query("""
-                SELECT u.* FROM users u JOIN tour_participants tp ON tp.participant_id = u.id WHERE tp.tour_id = ?
+                SELECT u.* FROM users u JOIN tour_participants tp ON tp.participant_id = u.id WHERE tp.tour_id = ? ORDER BY tour_date
                 """, BeanPropertyRowMapper.newInstance(User.class), tourId);
     }
 }
