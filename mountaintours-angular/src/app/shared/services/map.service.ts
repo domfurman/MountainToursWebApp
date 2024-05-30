@@ -23,19 +23,23 @@ export class MapService {
     return this.http.post<number>(`${this.basicUrl}/api/tours/${tourId}/participants/${participantId}`, {
       tourId,
       participantId
-    })
+    });
   }
 
   getNumberOfParticipantsForTour(tourId: number): Observable<number> {
-    return this.http.get<number>(`${this.basicUrl}/api/number-of-participants/tour/${tourId}`)
+    return this.http.get<number>(`${this.basicUrl}/api/number-of-participants/tour/${tourId}`);
   }
 
   isParticipant(tourId: number, participantId: number): Observable<boolean> {
-    return this.http.get<boolean>(`${this.basicUrl}/api/tour/${tourId}/participant/${participantId}`)
+    return this.http.get<boolean>(`${this.basicUrl}/api/resign/tour/${tourId}/participant/${participantId}`);
   }
 
   getRoutesByParticipantId(participantId: number): Observable<MapDetails[]> {
-    return this.http.get<MapDetails[]>(`${this.basicUrl}/api/routes-by-participant/${participantId}`)
+    return this.http.get<MapDetails[]>(`${this.basicUrl}/api/routes-by-participant/${participantId}`);
+  }
+
+  resignFromTour(tourId: number, participantId: number): Observable<number> {
+    return this.http.delete<number>(`${this.basicUrl}/api/resign/tour/${tourId}/participant/${participantId}`)
   }
 
 

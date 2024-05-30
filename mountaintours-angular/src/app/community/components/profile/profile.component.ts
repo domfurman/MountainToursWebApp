@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AuthService} from "../../../shared/services/auth.service";
 import {User} from "../../../shared/models/user";
 import {forkJoin, map, Observable, switchMap} from "rxjs";
 import {MapDetails} from "../../../shared/models/map-details";
 import {MapService} from "../../../shared/services/map.service";
+import {TourMapComponent} from "../../../shared/components/tour-map/tour-map.component";
 
 @Component({
   selector: 'app-profile',
@@ -14,6 +15,8 @@ export class ProfileComponent implements OnInit{
   currentUser: User = new User;
   routes$!: Observable<any>;
   showRoutesAsParticipant: boolean = false;
+
+  @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
   constructor(private authService: AuthService, private mapService: MapService) {
 
@@ -46,5 +49,27 @@ export class ProfileComponent implements OnInit{
 
   showRoutesAsParticipantFunc() {
     this.showRoutesAsParticipant = !this.showRoutesAsParticipant;
+    if (this.showRoutesAsParticipant) {
+      setTimeout(() => {
+        this.tourMaps.forEach(tourMap => tourMap.invalidateSize());
+      }, 10)
+    }
   }
+
+  resignFromTour(tourId: number, participantId: number) {
+    if(confirm("Jesteś pewny?")) {
+      this.mapService.resignFromTour(tourId, participantId).subscribe(() => {
+        console.log('Resign success');
+        this.routes$ = this.routes$.pipe(
+          map((routes: MapDetails[]) => routes.filter(route => route.tourId !== tourId))
+        );
+      }, error => {
+        console.error("Error during resigning", error);
+      });
+    } else {
+      return
+    }
+
+  }
+
 }

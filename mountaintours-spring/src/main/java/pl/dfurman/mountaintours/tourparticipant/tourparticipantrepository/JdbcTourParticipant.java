@@ -27,4 +27,11 @@ public class JdbcTourParticipant implements TourParticipantDAO{
                 Integer.class, tourId, participantId);
         return count == 1;
     }
+
+    @Override
+    public int resignFromTour(Long tourId, Long participantId) throws SQLException {
+        return jdbcTemplate.update("""
+        DELETE FROM tour_participants WHERE tour_id = ? AND participant_id = ?
+        """, tourId, participantId);
+    }
 }

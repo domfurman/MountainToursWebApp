@@ -8,4 +8,6 @@ public interface TourParticipantDAO {
     int getNumberOfParticipantsForTour(Long tourId) throws SQLException;
 
     boolean isParticipant(Long tourId, Long participantId) throws SQLException;
+
+    int resignFromTour(Long tourId, Long participantId) throws SQLException;
 }

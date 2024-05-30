@@ -13,4 +13,6 @@ public interface MapRepository {
     boolean existsById(Long tourId);
 
     List<Map> findAllByRoutesByParticipantId(Long participantId) throws SQLException;
+
+
 }

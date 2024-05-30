@@ -5,10 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 
@@ -35,5 +32,10 @@ public class TourParticipantController {
     @GetMapping(path = "/api/tour/{tourId}/participant{participantId}")
     public boolean isParticipant(@PathVariable Long tourId, @PathVariable Long participantId) throws SQLException {
         return tourParticipantService.isParticipant(tourId, participantId);
+    }
+
+    @DeleteMapping(path = "/api/resign/tour/{tourId}/participant/{participantId}")
+    public int resignFromTour(@PathVariable Long tourId, @PathVariable Long participantId) throws SQLException{
+        return tourParticipantService.resignFromTour(tourId, participantId);
     }
 }

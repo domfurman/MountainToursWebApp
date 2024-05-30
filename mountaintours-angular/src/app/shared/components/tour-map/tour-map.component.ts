@@ -38,7 +38,6 @@ export class TourMapComponent implements OnInit{
     this.cdr.detectChanges()
     this.configMap();
     this.route();
-
   }
 
 
@@ -110,7 +109,43 @@ export class TourMapComponent implements OnInit{
     });
 
     new LogoControl().addTo(this.map)
+    this.fitMapToBounds()
   }
+
+  invalidateSize(): void {
+    if (this.map) {
+      this.map.invalidateSize();
+    }
+  }
+
+  fitMapToBounds(): void {
+    const bounds = L.latLngBounds([
+      [this.mapDetails.startPlace[0], this.mapDetails.startPlace[1]] as [number, number],
+      [this.mapDetails.endPlace[0], this.mapDetails.endPlace[1]] as [number, number],
+      ...this.mapDetails.waypoints.map(waypoint => [waypoint[0], waypoint[1]] as [number, number])
+    ]);
+    this.map.fitBounds(bounds);
+  }
+
+  // fitMapToBounds(): void {
+  //   const allCoordinates: [number, number][] = [
+  //     [this.mapDetails.startPlace[0], this.mapDetails.startPlace[1]] as [number, number],
+  //     [this.mapDetails.endPlace[0], this.mapDetails.endPlace[1]] as [number, number],
+  //     ...this.mapDetails.waypoints.map(waypoint => [waypoint[0], waypoint[1]] as [number, number])
+  //   ];
+  //
+  //   // Filter out any coordinates that are not valid (not arrays of two numbers)
+  //   const validCoordinates = allCoordinates.filter(coord =>
+  //     Array.isArray(coord) && coord.length === 2 && typeof coord[0] === 'number' && typeof coord[1] === 'number'
+  //   );
+  //
+  //   if (validCoordinates.length > 0) {
+  //     const bounds = L.latLngBounds(validCoordinates);
+  //     this.map.fitBounds(bounds);
+  //   } else {
+  //     console.warn('No valid coordinates to fit bounds');
+  //   }
+  // }
 
   setMarkerIcon() {
     const locationIcon = L.icon({
@@ -170,8 +205,6 @@ export class TourMapComponent implements OnInit{
       console.log(waypoint);
     })
 
-
-
     try {
       const url = new URL(`https://api.mapy.cz/v1/routing/route`);
 
@@ -198,6 +231,7 @@ export class TourMapComponent implements OnInit{
       this.routeLayer = L.geoJSON(json.geometry, {}).addTo(this.map);
 
       const bboxCoords = this.bbox(json.geometry.geometry.coordinates);
+      // const bboxCoords = L.geoJSON(json.geometry).getBounds();
       this.map.fitBounds(bboxCoords, {padding: [40, 40]});
     } catch (ex) {
       console.log(ex)

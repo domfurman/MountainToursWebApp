@@ -38,4 +38,8 @@ public class TourParticipantService {
     public boolean isParticipant(Long tourId, Long participantId) throws SQLException{
         return jdbcTourParticipant.isParticipant(tourId, participantId);
     }
+
+    public int resignFromTour(Long tourId, Long participantId) throws SQLException{
+        return jdbcTourParticipant.resignFromTour(tourId, participantId);
+    }
 }

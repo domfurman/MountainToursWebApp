@@ -5,6 +5,7 @@
   <div [hidden]="showRoutesAsParticipant">
     <div *ngFor="let route of routes$ | async" class="tour">
       <app-tour-map [mapDetails]="route"></app-tour-map>
+      <button type="submit" (click)="resignFromTour(route.tourId, currentUser.id)">Zrezygnuj</button>
     </div>
   </div>
 </div>
