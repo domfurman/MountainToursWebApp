@@ -15,6 +15,7 @@ import {Router} from "@angular/router";
 export class ProfileComponent implements OnInit{
   currentUser: User = new User;
   routes$!: Observable<any>;
+  toursAsOwner$!: Observable<any>;
   showRoutesAsParticipant: boolean = false;
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
@@ -40,11 +41,25 @@ export class ProfileComponent implements OnInit{
     );
   }
 
+  loadRoutesByOwnerId(): Observable<any[]> {
+    return this.mapService.findAllRoutesByOwnerId(this.currentUser.id).pipe(
+      switchMap((routes: MapDetails[]) => {
+        const participantObservables = routes.map(route =>
+        this.mapService.getAllParticipantsInfoByTourId(route.tourId).pipe(
+          map(users => ({...route, participants: users}))
+        )
+        );
+        return forkJoin(participantObservables)
+      })
+    );
+  }
+
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
       this.currentUser = user;
       console.log(this.currentUser);
       this.routes$ = this.loadMaps();
+      this.toursAsOwner$ = this.loadRoutesByOwnerId();
     }))
   }
 
@@ -52,9 +67,13 @@ export class ProfileComponent implements OnInit{
     this.showRoutesAsParticipant = !this.showRoutesAsParticipant;
     if (this.showRoutesAsParticipant) {
       setTimeout(() => {
-        this.tourMaps.forEach(tourMap => tourMap.invalidateSize());
-      }, 10)
+        this.invalidateTourMapSize();
+      }, 0)
     }
+  }
+
+  invalidateTourMapSize() {
+    this.tourMaps.forEach(tourMap => tourMap.invalidateSize());
   }
 
   resignFromTour(tourId: number, participantId: number) {

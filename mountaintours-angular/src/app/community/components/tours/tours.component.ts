@@ -63,31 +63,6 @@ export class ToursComponent implements OnInit{
     );
   }
 
-
-  // loadMaps(): Observable<any[]> {
-  //   return this.mapService.getAllRoutes().pipe(
-  //     switchMap((routes: MapDetails[]) => {
-  //       const userObservables = routes.map(route =>
-  //         this.authService.getUserInfoByTourOwnerId(route.ownerId).pipe(
-  //           map(user => ({ ...route, owner: user }))
-  //         )
-  //       );
-  //       return forkJoin(userObservables).pipe(
-  //         switchMap(routesWithUsers => {
-  //           const participantObservables = routesWithUsers.map(route =>
-  //             this.mapService.getNumberOfParticipantsForTour(route.tourId).pipe(
-  //               map(count => {
-  //                 this.participantCounts[route.tourId] = count;
-  //                 return route
-  //               })
-  //             ));
-  //           return forkJoin(participantObservables)
-  //         })
-  //       ); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
-  //     })
-  //   );
-  // }
-
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
       this.currentUser = user
