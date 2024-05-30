@@ -104,13 +104,17 @@ export class ToursComponent implements OnInit{
   }
 
   addParticipant(tourId: number, participantId: number) {
-    this.mapService.addParticipant(tourId, participantId).subscribe(() => {
-      console.log("participant added successfully");
-      this.updateRoutes(tourId, participantId)
-      // this.getNumberOfParticipantsForTour(tourId);
-    }, error => {
-      console.error("error adding participant", error);
-    })
+    if (confirm("Jesteś pewny?")) {
+      this.mapService.addParticipant(tourId, participantId).subscribe(() => {
+        console.log("participant added successfully");
+        this.updateRoutes(tourId, participantId)
+        // this.getNumberOfParticipantsForTour(tourId);
+      }, error => {
+        console.error("error adding participant", error);
+      })
+    } else {
+      return
+    }
   }
 
   getNumberOfParticipantsForTour(tourId: number): void {

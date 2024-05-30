@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
 <div *ngFor="let route of routes$ | async; let i = index">
+  <ng-container *ngIf="!route.isParticipant">
   <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday">
     <h1>{{route.isParticipant}}</h1>
     <h1>Owner: {{route.owner?.firstName}}</h1>
@@ -8,7 +9,9 @@
     <h2>Exp Date: {{route.expDateConvert}}</h2>
     <h3>{{route.tourId}}</h3>
     <h3>{{currentUser.id}}</h3>
+
     <app-tour-map [mapDetails]="route"></app-tour-map>
+
     <div>
       <p>Participants: {{participantCounts[route.tourId] || 0}}/{{route.numberOfSpots}}</p>
       <ng-container *ngIf="participantCounts[route.tourId] >= route.numberOfSpots || route.isParticipant; else alreadyParticipant">
@@ -24,33 +27,8 @@
       </ng-container>
     </div>
   </div>
+  </ng-container>
 </div>
-<!--<div *ngFor="let route of routes$ | async; let i = index">-->
-<!--  <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday">-->
-<!--    <h1>{{route.isParticipant}}</h1>-->
-<!--    <h1>Owner: {{route.owner?.firstName}}</h1>-->
-<!--    <h2>Tour Date: {{route.tourDateConvert | date: 'dd-MM-yyyy'}}</h2>-->
-<!--    <h2>Tour Hour: {{route.tourDateConvert | date: 'HH:mm'}}</h2>-->
-<!--    <h2>Exp Date: {{route.expDateConvert}}</h2>-->
-<!--    <h3>{{route.tourId}}</h3>-->
-<!--    <h3>{{currentUser.id}}</h3>-->
-<!--    <app-tour-map [mapDetails]="route"></app-tour-map>-->
-<!--    <div>-->
-<!--      <p>Participants: {{participantCounts[route.tourId] || 0}}/{{route.numberOfSpots}}</p>-->
-<!--      <ng-container *ngIf="participantCounts[route.tourId] >= route.numberOfSpots || route.isParticipant; else alreadyParticipant">-->
-<!--        <button (click)="addParticipant(route.tourId, currentUser.id)" disabled>Participate</button>-->
-<!--      </ng-container>-->
-
-<!--      <ng-template #alreadyParticipant>-->
-<!--        <button (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>-->
-<!--      </ng-template>-->
-
-<!--      <ng-container *ngIf="route.isParticipant">-->
-<!--        <p>You already participate in this tour</p>-->
-<!--      </ng-container>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
 
 
 
