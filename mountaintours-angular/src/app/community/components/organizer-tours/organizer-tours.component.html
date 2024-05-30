@@ -1,0 +1,10 @@
+<app-navbar></app-navbar>
+<div>
+  <h1>Trasy, których jesteś organizatorem</h1>
+  <div *ngFor="let tour of toursAsOwner$ | async">
+    <app-tour-map [mapDetails]="tour"></app-tour-map>
+    <div *ngFor="let participant of tour.participants">
+      <h3>{{ participant.firstName }}</h3>
+    </div>
+  </div>
+</div>

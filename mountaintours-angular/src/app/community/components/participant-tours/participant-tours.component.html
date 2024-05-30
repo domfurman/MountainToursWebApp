@@ -1,0 +1,14 @@
+<app-navbar></app-navbar>
+<!--<div *ngIf="!isParticipantInAnyRoute; else noTours">-->
+<!--  <h1>Nie jestes zapisany na żadną wycieczke</h1>-->
+<!--</div>-->
+<!--<ng-template #noTours>-->
+  <h1>Wycieczki, w których uczestniczysz</h1>
+  <div *ngFor="let route of routes$ | async" class="tour">
+    <app-tour-map [mapDetails]="route"></app-tour-map>
+    <button type="submit" (click)="resignFromTour(route.tourId, currentUser.id)">Zrezygnuj</button>
+  </div>
+<!--</ng-template>-->
+
+
+

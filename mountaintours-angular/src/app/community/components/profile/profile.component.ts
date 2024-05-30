@@ -14,9 +14,6 @@ import {Router} from "@angular/router";
 })
 export class ProfileComponent implements OnInit{
   currentUser: User = new User;
-  routes$!: Observable<any>;
-  toursAsOwner$!: Observable<any>;
-  showRoutesAsParticipant: boolean = false;
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
@@ -28,67 +25,11 @@ export class ProfileComponent implements OnInit{
     this.retrieveUserData();
   }
 
-  loadMaps(): Observable<any[]> {
-    return this.mapService.getRoutesByParticipantId(this.currentUser.id).pipe(
-      switchMap((routes: MapDetails[]) => {
-        const userObservables = routes.map(route =>
-          this.authService.getUserInfoByTourOwnerId(route.ownerId).pipe(
-            map(user => ({ ...route, owner: user }))
-          )
-        );
-        return forkJoin(userObservables); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
-      })
-    );
-  }
-
-  loadRoutesByOwnerId(): Observable<any[]> {
-    return this.mapService.findAllRoutesByOwnerId(this.currentUser.id).pipe(
-      switchMap((routes: MapDetails[]) => {
-        const participantObservables = routes.map(route =>
-        this.mapService.getAllParticipantsInfoByTourId(route.tourId).pipe(
-          map(users => ({...route, participants: users}))
-        )
-        );
-        return forkJoin(participantObservables)
-      })
-    );
-  }
-
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
       this.currentUser = user;
       console.log(this.currentUser);
-      this.routes$ = this.loadMaps();
-      this.toursAsOwner$ = this.loadRoutesByOwnerId();
     }))
-  }
-
-  showRoutesAsParticipantFunc() {
-    this.showRoutesAsParticipant = !this.showRoutesAsParticipant;
-    if (this.showRoutesAsParticipant) {
-      setTimeout(() => {
-        this.invalidateTourMapSize();
-      }, 0)
-    }
-  }
-
-  invalidateTourMapSize() {
-    this.tourMaps.forEach(tourMap => tourMap.invalidateSize());
-  }
-
-  resignFromTour(tourId: number, participantId: number) {
-    if(confirm("Jesteś pewny?")) {
-      this.mapService.resignFromTour(tourId, participantId).subscribe(() => {
-        console.log('Resign success');
-        this.routes$ = this.routes$.pipe(
-          map((routes: MapDetails[]) => routes.filter(route => route.tourId !== tourId))
-        );
-      }, error => {
-        console.error("Error during resigning", error);
-      });
-    } else {
-      return
-    }
   }
 
   logout() {

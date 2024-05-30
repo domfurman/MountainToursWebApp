@@ -1,15 +1,10 @@
-<app-navbar></app-navbar>
+
 <h1>Greeting!</h1>
 <div *ngIf="!authenticated()">
   <p>please <a (click)="navigateToLogin()">log in</a></p>
 </div>
 
 <div *ngIf="authenticated()">
-  <button (click)="navigateToTours()">
-    TOURS
-  </button>
-  <button (click)="navigateToRoutePlanning()">
-    ROUTE PLANNING
-  </button>
+  <app-navbar></app-navbar>
   <p>Welcome {{user.firstName}} !</p>
 </div>

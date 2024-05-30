@@ -8,13 +8,17 @@ import { RoutePlanningComponent } from './components/route-planning/route-planni
 import {TourMapComponent} from "../shared/components/tour-map/tour-map.component";
 import {NavbarComponent} from "../shared/components/navbar/navbar.component";
 import {ProfileComponent} from "./components/profile/profile.component";
+import { OrganizerToursComponent } from './components/organizer-tours/organizer-tours.component';
+import { ParticipantToursComponent } from './components/participant-tours/participant-tours.component';
 
 
 @NgModule({
   declarations: [
     ToursComponent,
     RoutePlanningComponent,
-    ProfileComponent
+    ProfileComponent,
+    OrganizerToursComponent,
+    ParticipantToursComponent
   ],
   imports: [
     CommonModule,

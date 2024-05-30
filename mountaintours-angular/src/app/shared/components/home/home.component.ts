@@ -24,7 +24,7 @@ export class HomeComponent implements OnInit{
 
   ngOnInit() {
     this.retrieveUserData();
-    console.log(this.authenticated())
+    // console.log(this.authenticated())
   }
 
   authenticated() {
@@ -36,14 +36,6 @@ export class HomeComponent implements OnInit{
       this.user = user
       console.log(this.user)
     }))
-  }
-
-  navigateToTours() {
-    this.router.navigate(['/community/tours']);
-  }
-
-  navigateToRoutePlanning() {
-    this.router.navigate(['/community/route-planning']);
   }
 
   navigateToLogin() {

@@ -40,15 +40,15 @@ export class MapService {
   }
 
   resignFromTour(tourId: number, participantId: number): Observable<number> {
-    return this.http.delete<number>(`${this.basicUrl}/api/resign/tour/${tourId}/participant/${participantId}`)
+    return this.http.delete<number>(`${this.basicUrl}/api/resign/tour/${tourId}/participant/${participantId}`);
   }
 
   findAllRoutesByOwnerId(ownerId: number): Observable<MapDetails[]> {
-    return this.http.get<MapDetails[]>(`${this.basicUrl}/api/routes-by-owner/${ownerId}`)
+    return this.http.get<MapDetails[]>(`${this.basicUrl}/api/routes-by-owner/${ownerId}`);
   }
 
   getAllParticipantsInfoByTourId(tourId: number): Observable<User[]> {
-    return this.http.get<User[]>(`${this.basicUrl}/api/participants-info/tour/${tourId}`)
+    return this.http.get<User[]>(`${this.basicUrl}/api/participants-info/tour/${tourId}`);
   }
 
 
