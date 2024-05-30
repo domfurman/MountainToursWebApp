@@ -51,5 +51,9 @@ export class MapService {
     return this.http.get<User[]>(`${this.basicUrl}/api/participants-info/tour/${tourId}`);
   }
 
+  deleteTour(tourId: number, ownerId: number): Observable<number> {
+    return this.http.delete<number>(`${this.basicUrl}/api/delete/tour/${tourId}/owner/${ownerId}`);
+  }
+
 
 }

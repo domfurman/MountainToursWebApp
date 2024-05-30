@@ -28,6 +28,7 @@ export class OrganizerToursComponent implements OnInit{
     this.retrieveUserData();
   }
 
+
   loadRoutesByOwnerId(): Observable<any[]> {
     return this.mapService.findAllRoutesByOwnerId(this.currentUser.id).pipe(
       switchMap((routes: MapDetails[]) => {
@@ -49,11 +50,19 @@ export class OrganizerToursComponent implements OnInit{
     }))
   }
 
-  invalidateTourMapSize() {
-    this.tourMaps.forEach(tourMap => tourMap.invalidateSize());
-  }
 
   deleteTour(tourId: number, ownerId: number) {
+    if(confirm("Jesteś pewny?")) {
+      this.mapService.deleteTour(tourId, ownerId).subscribe(() => {
+        console.log("delete successful")
+        this.toursAsOwner$ = this.toursAsOwner$.pipe(
+          map((tours: MapDetails[]) => tours.filter(tour => tour.tourId !== tourId))
+        )
+      }, error => {
+        console.error("error on delete", error)
+      });
+    } else {
+      return
+    }
   }
-
 }
