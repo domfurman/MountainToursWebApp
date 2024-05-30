@@ -1,6 +1,7 @@
 <app-navbar></app-navbar>
 <div *ngFor="let route of routes$ | async; let i = index">
-  <div *ngIf="route.owner?.id !== currentUser?.id">
+  <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday">
+    <h1>{{route.isPastToday}}</h1>
     <h1>Owner: {{route.owner?.firstName}}</h1>
     <h2>Tour Date: {{route.tourDate}}</h2>
     <h2>Exp Date: {{route.expirationDate}}</h2>

@@ -18,6 +18,7 @@ export class ToursComponent implements OnInit{
   currentUser: User = new User();
   participantCounts: {[key: number]: number} = {};
   isParticipant: boolean = false;
+  todaysDate = new Date();
 
 
   constructor(private mapService: MapService, private authService: AuthService) {
@@ -28,7 +29,6 @@ export class ToursComponent implements OnInit{
     this.retrieveUserData();
     }
 
-
   loadMaps(): Observable<any[]> {
     return this.mapService.getAllRoutes().pipe(
       switchMap((routes: MapDetails[]) => {
@@ -37,21 +37,56 @@ export class ToursComponent implements OnInit{
             map(user => ({ ...route, owner: user }))
           )
         );
+
         return forkJoin(userObservables).pipe(
           switchMap(routesWithUsers => {
             const participantObservables = routesWithUsers.map(route =>
               this.mapService.getNumberOfParticipantsForTour(route.tourId).pipe(
                 map(count => {
                   this.participantCounts[route.tourId] = count;
-                  return route
+                  return route;
                 })
-              ));
-            return forkJoin(participantObservables)
+              )
+            );
+
+            return forkJoin(participantObservables).pipe(
+              map(routesWithParticipants => {
+                return routesWithParticipants.map(route => ({
+                  ...route,
+                  isPastToday: this.isExpDatePastToday(route.expirationDate.toString())
+                }));
+              })
+            );
           })
-        ); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
+        );
       })
     );
   }
+
+
+  // loadMaps(): Observable<any[]> {
+  //   return this.mapService.getAllRoutes().pipe(
+  //     switchMap((routes: MapDetails[]) => {
+  //       const userObservables = routes.map(route =>
+  //         this.authService.getUserInfoByTourOwnerId(route.ownerId).pipe(
+  //           map(user => ({ ...route, owner: user }))
+  //         )
+  //       );
+  //       return forkJoin(userObservables).pipe(
+  //         switchMap(routesWithUsers => {
+  //           const participantObservables = routesWithUsers.map(route =>
+  //             this.mapService.getNumberOfParticipantsForTour(route.tourId).pipe(
+  //               map(count => {
+  //                 this.participantCounts[route.tourId] = count;
+  //                 return route
+  //               })
+  //             ));
+  //           return forkJoin(participantObservables)
+  //         })
+  //       ); //forkJoin czeka na skonczenie sie requestu do zebrania danych o userze i laczy to do jednego observable
+  //     })
+  //   );
+  // }
 
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
@@ -79,6 +114,13 @@ export class ToursComponent implements OnInit{
     return this.mapService.isParticipant(tourId, userId).subscribe((result: boolean) => {
       this.isParticipant = result;
     })
+  }
+
+  isExpDatePastToday(expirationDate: string) {
+    const backendExpirationDate = new Date(expirationDate);
+    const currentDate = new Date();
+
+    return backendExpirationDate < currentDate;
   }
 
 }
