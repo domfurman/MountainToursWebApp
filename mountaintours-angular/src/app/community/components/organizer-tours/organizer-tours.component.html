@@ -1,6 +1,7 @@
 <app-navbar></app-navbar>
 <h1>Trasy, których jesteś organizatorem</h1>
 <div *ngFor="let tour of toursAsOwner$ | async">
+  <h1>Tour date: {{tour.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>
   <app-tour-map [mapDetails]="tour"></app-tour-map>
   <button (click)="deleteTour(tour.tourId, currentUser.id)">Delete tour</button>
   <div *ngFor="let participant of tour.participants">

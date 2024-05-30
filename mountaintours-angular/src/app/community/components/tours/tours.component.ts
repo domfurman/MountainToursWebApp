@@ -6,6 +6,7 @@ import {GeoJSON} from "geojson";
 import {Observable, map, switchMap, forkJoin, Subscription} from "rxjs";
 import {User} from "../../../shared/models/user";
 import {AuthService} from "../../../shared/services/auth.service";
+import {CommunityService} from "../../services/community.service";
 
 @Component({
   selector: 'app-tours',
@@ -21,7 +22,7 @@ export class ToursComponent implements OnInit{
   todaysDate = new Date();
 
 
-  constructor(private mapService: MapService, private authService: AuthService) {
+  constructor(private mapService: MapService, private authService: AuthService, private communityService: CommunityService) {
     this.routes$ = this.loadMaps();
   }
 
@@ -53,7 +54,9 @@ export class ToursComponent implements OnInit{
               map(routesWithParticipants => {
                 return routesWithParticipants.map(route => ({
                   ...route,
-                  isPastToday: this.isExpDatePastToday(route.expirationDate.toString())
+                  isPastToday: this.communityService.isExpDatePastToday(route.expirationDate.toString()),
+                  tourDateConvert: this.communityService.convertDate(route.tourDate.toString()),
+                  expDateConvert: this.communityService.convertDate(route.expirationDate.toString())
                 }));
               })
             );
@@ -91,11 +94,6 @@ export class ToursComponent implements OnInit{
     })
   }
 
-  isExpDatePastToday(expirationDate: string) {
-    const backendExpirationDate = new Date(expirationDate);
-    const currentDate = new Date();
 
-    return backendExpirationDate < currentDate;
-  }
 
 }

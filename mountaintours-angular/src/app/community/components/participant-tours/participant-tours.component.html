@@ -5,6 +5,7 @@
 <!--<ng-template #noTours>-->
   <h1>Wycieczki, w których uczestniczysz</h1>
   <div *ngFor="let route of routes$ | async" class="tour">
+    <h1>Tour date: {{route.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>
     <app-tour-map [mapDetails]="route"></app-tour-map>
     <button type="submit" (click)="resignFromTour(route.tourId, currentUser.id)">Zrezygnuj</button>
   </div>

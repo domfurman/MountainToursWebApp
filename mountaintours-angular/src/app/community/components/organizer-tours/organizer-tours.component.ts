@@ -6,6 +6,7 @@ import {AuthService} from "../../../shared/services/auth.service";
 import {MapService} from "../../../shared/services/map.service";
 import {Router} from "@angular/router";
 import {MapDetails} from "../../../shared/models/map-details";
+import {CommunityService} from "../../services/community.service";
 
 @Component({
   selector: 'app-organizer-tours',
@@ -20,7 +21,7 @@ export class OrganizerToursComponent implements OnInit{
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
-  constructor(private authService: AuthService, private mapService: MapService, private router: Router) {
+  constructor(private authService: AuthService, private mapService: MapService, private router: Router, private communityService: CommunityService) {
 
   }
 
@@ -37,7 +38,15 @@ export class OrganizerToursComponent implements OnInit{
             map(users => ({...route, participants: users}))
           )
         );
-        return forkJoin(participantObservables)
+        return forkJoin(participantObservables).pipe(
+          map(routesWithParticipants => {
+            return routesWithParticipants.map(route => ({
+              ...route,
+              tourDateConvert: this.communityService.convertDate(route.tourDate.toString()),
+              expDateConvert: this.communityService.convertDate(route.expirationDate.toString())
+            }));
+          })
+        );
       })
     );
   }
