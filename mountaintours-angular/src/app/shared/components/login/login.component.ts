@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {Credentials} from "../../interfaces/credentials";
 import {RegistrationCredentials} from "../../interfaces/registration-credentials";
 import {AuthService} from "../../services/auth.service";
@@ -9,10 +9,11 @@ import {FormsModule} from "@angular/forms";
   selector: 'app-login',
   standalone: true,
   imports: [
-    FormsModule
+    FormsModule,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class LoginComponent {
 
