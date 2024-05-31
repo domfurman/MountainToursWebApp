@@ -16,7 +16,8 @@ export class NavbarComponent {
 
   isDropdownActive: boolean = false;
 
-  dropdown() {
+  dropdown(event: Event) {
+    event.preventDefault();
     this.isDropdownActive = !this.isDropdownActive;
   }
 

@@ -1,91 +1,78 @@
+
 $body-bg-color: #d9cece;
 
-body {
-  background-color: $body-bg-color;
+.bg-images {
+  //background-color: $body-bg-color;
+  ////transition: background-image 0.5s ease-in-out;
+  //transition: background-image 0.5s ease-in-out, background-size 0.5s ease-in-out, background-position 0.5s ease-in-out;
+  //background-position: 50% 25%;
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out, background-size 0.5s ease-in-out, background-position 0.5s ease-in-out;
+  width: 100%;
+  height: 100vh;
 }
 
-#loginForm {
+.welcome-message {
+  text-align: center;
+}
+
+.fade {
+  opacity: 0;
+}
+
+#loginForm, #registrationForm {
+
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 30%;
+  z-index: 1;
+  opacity: 0.85;
+
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   background-color: #ffffff;
   padding: 30px;
-  width: 450px;
+  width: 100%;
+  //max-width: 450px;
   border-radius: 20px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 ::placeholder {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: inherit;
 }
 
-.form button {
-  align-self: flex-end;
-}
-
-.flex-column > label {
-  color: #151717;
-  font-weight: 600;
-}
-
-.inputForm {
-  border: 2px solid #ecedec;
+.input-group-text {
+  background-color: transparent;
+  border-right: white;
   border-radius: 10px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  padding-left: 10px;
-  transition: 0.2s ease-in-out;
-  box-sizing: border-box; /* Ensure padding and border are included in the element's total width and height */
 }
 
-.input {
-  margin-left: 10px;
-  border-radius: 10px;
-  border: none;
-  flex-grow: 1; /* Use flex-grow to make the input take available space */
-  height: 100%; /* Ensure the input height matches the container */
-  box-sizing: border-box; /* Ensure padding and border are included in the input's total width and height */
+.input-group .form-control {
+  border-radius: 0 10px 10px 0;
 }
 
-.input:focus {
-  outline: none;
+input-group .form-control:focus {
+  box-shadow: none;
 }
 
-.inputForm:focus-within {
-  border: 2px solid #2d79f3;
+.form-check-input {
+  margin-right: 0.5rem;
 }
 
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-  justify-content: space-between;
+.change-form {
+    color: #2d79f3;
+    font-weight: 500;
+    cursor: pointer;
 }
 
-.flex-row > div > label {
-  font-size: 14px;
-  color: black;
-  font-weight: 400;
-}
-
-.span {
-  font-size: 14px;
-  margin-left: 5px;
-  color: #2d79f3;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.button-submit {
+#btn-sign-in, #btn-sign-up {
   margin: 20px 0 10px 0;
   background-color: #151717;
   border: none;
@@ -98,14 +85,7 @@ body {
   cursor: pointer;
 }
 
-.p {
-  text-align: center;
-  color: black;
-  font-size: 14px;
-  margin: 5px 0;
-}
-
-.btn {
+#btn-apple.custom-btn, #btn-google.custom-btn {
   margin-top: 10px;
   width: 100%;
   height: 50px;
@@ -119,8 +99,45 @@ body {
   background-color: white;
   cursor: pointer;
   transition: 0.2s ease-in-out;
+
+  &:hover {
+    border-color: #2d79f3;
+  }
+}
+.btn-outline-secondary {
+  border: 1px solid #c8c8c9;
+  background-color: white;
+  &:hover {
+    border-color: #2d79f3;
+  }
 }
 
-.btn:hover {
-  border: 1px solid #2d79f3;
+@media (max-width: 768px) {
+  #loginForm, #registrationForm {
+    width: 90%;
+  }
+  .form {
+    padding: 20px; /* Reduce padding on smaller screens */
+  }
+
+  .inputForm {
+    height: 40px; /* Reduce height of input forms */
+  }
+
+  .button-submit {
+    height: 40px; /* Reduce height of submit button */
+  }
+
+  .btn {
+    height: 40px; /* Reduce height of buttons */
+  }
 }
+//.text-center a {
+//  color: #2d79f3;
+//  cursor: pointer;
+//}
+//
+//.text-center a:hover {
+//  text-decoration: underline;
+//}
+
