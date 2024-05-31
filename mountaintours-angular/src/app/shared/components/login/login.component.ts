@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit{
 
   ngOnInit(): void {
     this.switchBackgroundImage();
-    interval(5000).subscribe(() => {
+    interval(10000).subscribe(() => {
       this.switchBackgroundImage();
     });
     this.renderer.listen(this.bgImagesRef.nativeElement, 'click', (event: MouseEvent) => {

@@ -1,0 +1,29 @@
+.fixed-top.brand {
+  display: flex;
+  align-items: center;
+  //margin-left: 1%;
+  //margin-top: 0.5%;
+  //z-index: 1000;
+  width: 20%;
+}
+
+nav.navbar {
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+}
+
+@media (max-width: 768px) {
+  nav.navbar {
+    align-items: end;
+  }
+  .fixed-top.brand {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    //margin-top: 0.5%;
+    //z-index: 1000;
+    width:90%;
+  }
+}
+

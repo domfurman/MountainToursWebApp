@@ -3,6 +3,7 @@
 
   <div id="loginForm" [hidden]="showLoginForm" (click)="handleFormClick()">
     <form class="form" #loginForm="ngForm" (ngSubmit)="userLogin()">
+      <img src="assets/logo/logo.png">
       <h3 class="welcome-message">Log in and dive into your journey.</h3>
       <div class="form-group mb-3">
         <label for="username">Email</label>
@@ -63,6 +64,7 @@
 
   <div id="registrationForm" [hidden]="!showLoginForm">
     <form class="form" #registrationForm="ngForm" (ngSubmit)="userRegistration()">
+      <img src="assets/logo/logo.png">
       <h3 class="welcome-message">Join us and begin your adventure.</h3>
       <div class="form-group mb-3">
         <label for="firstName">Password</label>
