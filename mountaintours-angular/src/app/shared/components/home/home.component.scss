@@ -1,3 +1,147 @@
 .content {
-  margin-top: 40px;
+  //margin-top: 40px;
+  width: 100%;
+
 }
+
+#slides {
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.5s ease-in-out, background-size 0.5s ease-in-out, background-position 0.5s ease-in-out;
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .slogan {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+  .slogan h1 {
+    color: white;
+    position: relative;
+    top: auto;
+    start: auto;
+    translate: none;
+  }
+}
+@keyframes typing {
+  0.0000%, 31.3488% { content: ""; }
+  1.1395%, 30.2093% { content: "M"; }
+  2.2791%, 29.0698% { content: "Ma"; }
+  3.4186%, 28.9302% { content: "Mak"; }
+  4.5581%, 27.7907% { content: "Make"; }
+  5.6977%, 26.6512% { content: "Make "; }
+  6.8372%, 25.5116% { content: "Make m"; }
+  7.9767%, 24.3721% { content: "Make me"; }
+  9.1163%, 23.2326% { content: "Make mem"; }
+  10.2558%, 22.0930% { content: "Make memo"; }
+  11.5558%, 21.0030% { content: "Make memor"; }
+  12.2558%, 20.0930% { content: "Make memori"; }
+  13.2558%, 19.0930% { content: "Make memorie"; }
+  14.2558%, 18.0930% { content: "Make memories"; }
+  15.2558%, 17.0930% { content: "Make memories."; }
+
+  34.7674%, 53.2791% { content: ""; }
+  35.9070%, 52.1395% { content: "E"; }
+  36.0465%, 51.0000% { content: "Ex"; }
+  37.1860%, 50.8605% { content: "Exp"; }
+  38.3256%, 49.7209% { content: "Expl"; }
+  39.4651%, 48.5814% { content: "Explo"; }
+  40.6047%, 47.4419% { content: "Explor"; }
+  41.4247%, 46.4419% { content: "Explore"; }
+  42.7037%, 45.4419% { content: "Explore."; }
+  //
+  54.6977%, 69.5116% { content: ""; }
+  55.8372%, 68.6512%{ content: "M"; }
+  56.9767%, 67.7907%{ content: "Me"; }
+  57.1163%, 66.9302%{ content: "Mee"; }
+  58.2558%, 65.0698% { content: "Meet"; }
+  59.3953%, 64.2093%{ content: "Meet."; }
+  //
+  74.6279%, 96.8605% { content: "E"; }
+  75.7674%, 95.7209% { content: "Ex"; }
+  76.9070%, 94.5814% { content: "Exp"; }
+  77.0465%, 93.4419% { content: "Expe"; }
+  78.1860%, 92.3023% { content: "Exper"; }
+  79.3256%, 91.1628% { content: "Experi"; }
+  80.3256%, 90.1628% { content: "Experie"; }
+  81.3256%, 89.1628% { content: "Experien"; }
+  82.3256%, 88.1628% { content: "Experienc"; }
+  83.3256%, 87.1628% { content: "Experience"; }
+  84.3256%, 86.1628% { content: "Experience."; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.typewriter {
+  --caret: currentcolor;
+  font-size: xxx-large;
+}
+
+.typewriter::before {
+  content: "";
+  animation: typing 13.5s infinite;
+}
+
+.typewriter::after {
+  content: "";
+  border-right: 1px solid var(--caret);
+  animation: blink 0.5s linear infinite;
+}
+
+.typewriter.thick::after {
+  border-right: 1ch solid var(--caret);
+}
+
+.typewriter.nocaret::after {
+  border-right: 0;
+}
+
+
+@media (prefers-reduced-motion) {
+  .typewriter::after {
+    animation: none;
+  }
+
+  @keyframes sequencePopup {
+    0%, 100% { content: "Make memories."; }
+    25% { content: "Explore."; }
+    50% { content: "Meet."; }
+    75% { content: "Experience."; }
+  }
+
+  .typewriter::before {
+    content: "Make memories.";
+    animation: sequencePopup 12s linear infinite;
+  }
+}
+//.slogan {
+//  z-index: 1;
+//}
+//.fade-out {
+//  opacity: 0;
+//  transition: opacity 0.5s ease-in-out;
+//}
+@media (max-width: 992px) {
+  .content {
+    margin-top: calc(60px); /* Example: Navbar height (56px) + additional space (1rem) */
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-top: calc(60px); /* Adjust as needed */
+  }
+}
+
+
+

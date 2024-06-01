@@ -5,6 +5,7 @@ import {AuthService} from "../../services/auth.service";
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {interval} from "rxjs";
+import {SharedService} from "../../services/shared.service";
 
 @Component({
   selector: 'app-login',
@@ -53,7 +54,7 @@ export class LoginComponent implements OnInit{
   //   "https://images.unsplash.com/photo-1507975140808-424c25c0c3a7?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 ]
 
-  constructor(private appService: AuthService, private router: Router, private renderer: Renderer2, private elementRef: ElementRef) {
+  constructor(private appService: AuthService, private router: Router, private renderer: Renderer2, private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -139,15 +140,6 @@ export class LoginComponent implements OnInit{
   }
 
   preloadImages(images: string[]): Promise<void[]> {
-    const promises: Promise<void>[] = [];
-    images.forEach((image) => {
-      const promise = new Promise<void>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.src = image;
-      });
-      promises.push(promise);
-    });
-    return Promise.all(promises);
+    return this.sharedService.preloadImages(images);
   }
 }
