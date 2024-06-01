@@ -410,29 +410,48 @@ export class MapComponent implements OnInit{
 
   addWaypoint() {
     let myDiv = document.getElementsByClassName('waypoints')[0];
-    const waypointItem = document.createElement('div');
-    waypointItem.className = 'waypoint-item';
-    const uniqueId = `waypoint-${this.waypointCounter++}`;
-    waypointItem.innerHTML = `
-    <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Waypoint">
-    <button class="remove-waypoint-btn">Remove</button>`;
-    myDiv.appendChild(waypointItem);
-    this.autocomplete(uniqueId, (data) => {
-      this.addWaypointToList(data, waypointItem);
-    });
-    // let myDiv = document.getElementsByClassName('waypoints')[0];
-    // const input = document.createElement('input');
-    // const uniqueId = `waypoint-${this.waypointCounter++}`;
-    // input.id = uniqueId;
-    // input.type = 'text';
-    // input.autocomplete = 'off';
-    // input.autocapitalize = 'off';
-    // input.spellcheck = false;
-    // input.dir = 'ltr';
-    // input.placeholder = 'Waypoint';
-    // myDiv.appendChild(input)
+
+    if (myDiv) {
+      const waypointItem = document.createElement('div');
+      waypointItem.className = 'waypoint-item';
+      const uniqueId = `waypoint-${this.waypointCounter++}`;
+      waypointItem.innerHTML = `
+       <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Waypoint">
+       <button class="remove-waypoint-btn">Remove</button>`;
+      myDiv.appendChild(waypointItem);
+      waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
+            // console.log('XD')
+            // this.map.removeLayer(waypointMarker);
+            myDiv.removeChild(waypointItem);
+            // this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
+            // this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
+          });
+
+      this.autocomplete(uniqueId, (data) => {
+        this.addWaypointToList(data, waypointItem);
+      });
+    }
+
+
+    // if (waypointList) {
+    //   const waypointItem = document.createElement('div');
+    //   waypointItem.className = 'waypoint-item';
+    //   const uniqueId = `waypoint-${this.waypointCounter++}`;
+    //   waypointItem.innerHTML = `
+    //   <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" value="${name}">
+    //   <button class="remove-waypoint-btn">Remove</button>`;
+    //   waypointList.appendChild(waypointItem);
     //
-    // this.autocomplete(input.id, this.addWaypointToList.bind(this));
+    //   waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
+    //     console.log('XD')
+    //     this.map.removeLayer(waypointMarker);
+    //     waypointList.removeChild(waypointItem);
+    //     this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
+    //     this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
+    //   });
+    // }
+
+
   }
 
   addWaypointToList(data: { lat: number; lon: number; name: string } ,waypointItem: HTMLElement) {
@@ -446,11 +465,12 @@ export class MapComponent implements OnInit{
     const removeBtn = waypointItem.querySelector('.remove-waypoint-btn');
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
+        // console.log('XD')
         this.map.removeLayer(waypointMarker);
-        const waypointList = document.getElementsByClassName('waypoints')[0];
-        if (waypointList) {
-          waypointList.removeChild(waypointItem);
-        }
+        // const waypointList = document.getElementsByClassName('waypoints')[0];
+        // if (waypointList) {
+        //   waypointList.removeChild(waypointItem);
+        // }
         this.waypoints = this.waypoints.filter(point => point[0] !== data.lon || point[1] !== data.lat);
         this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
       });
@@ -548,6 +568,7 @@ export class MapComponent implements OnInit{
       waypointList.appendChild(waypointItem);
 
       waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
+        console.log('XD')
         this.map.removeLayer(waypointMarker);
         waypointList.removeChild(waypointItem);
         this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
@@ -555,105 +576,6 @@ export class MapComponent implements OnInit{
       });
     }
   }
-
-  // autocomplete(): void {
-  //   const inputElem = document.querySelector("#autoComplete") as HTMLInputElement | null;
-  //
-  //   if (!inputElem) {
-  //     console.error('Input element not found');
-  //     return;
-  //   }
-  //
-  //   const autoCompleteJS = new AutoComplete({
-  //     selector: () => inputElem,
-  //     placeHolder: "Enter your address...",
-  //     searchEngine: (query: string, record: any) => `<mark>${record}</mark>`,
-  //     data: {
-  //       keys: ["value"],
-  //       src: async (query: string) => {
-  //         try {
-  //           const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
-  //           const jsonData = await fetchData.json();
-  //           return jsonData.items.map((item: any) => ({
-  //             value: item.name,
-  //             data: item,
-  //           }));
-  //         } catch (exc) {
-  //           console.log(exc);
-  //           return [];
-  //         }
-  //       },
-  //       cache: false,
-  //     },
-  //     resultItem: {
-  //       element: (item: HTMLElement, data: any) => {
-  //         const itemData = data.value.data;
-  //         const desc = document.createElement("div");
-  //         desc.style.overflow = "hidden";
-  //         desc.style.whiteSpace = "nowrap";
-  //         desc.style.textOverflow = "ellipsis";
-  //         desc.innerHTML = `${itemData.label}, ${itemData.location}`;
-  //         item.append(desc);
-  //       },
-  //       highlight: true
-  //     },
-  //     resultsList: {
-  //       element: (list: HTMLElement, data: { results: any[], query: string }) => {
-  //         list.style.maxHeight = "max-content";
-  //         list.style.overflow = "hidden";
-  //
-  //         if (!data.results.length) {
-  //           const message = document.createElement("div");
-  //           message.setAttribute("class", "no_result");
-  //           message.style.padding = "5px";
-  //           message.innerHTML = `<span>Found No Results for "${data.query}"</span>`;
-  //           list.prepend(message);
-  //         } else {
-  //           const logoHolder = document.createElement("div");
-  //           const text = document.createElement("span");
-  //           const img = new Image();
-  //
-  //           logoHolder.style.padding = "5px";
-  //           logoHolder.style.display = "flex";
-  //           logoHolder.style.alignItems = "center";
-  //           logoHolder.style.justifyContent = "end";
-  //           logoHolder.style.gap = "5px";
-  //           logoHolder.style.fontSize = "12px";
-  //           text.textContent = "Powered by";
-  //           img.src = "https://api.mapy.cz/img/api/logo-small.svg";
-  //           img.style.width = "60px";
-  //           logoHolder.append(text, img);
-  //           list.append(logoHolder);
-  //         }
-  //       },
-  //       noResults: true,
-  //     },
-  //   });
-  //
-  //   inputElem.addEventListener("selection", (event: any) => {
-  //     const origData = event.detail.selection.value.data;
-  //     // console.log(origData);
-  //     // console.log(typeof origData.position.lat === 'number')
-  //     // this.startPlace = [parseFloat(origData.position.lat), parseFloat(origData.position.lon)]
-  //     inputElem.value = origData.name;
-  //
-  //     const lat = parseFloat(origData.position.lat);
-  //     const lon = parseFloat(origData.position.lon);
-  //
-  //     if (isNaN(lat) || isNaN(lon)) {
-  //       console.error("Invalid latitude or longitude");
-  //       return;
-  //     }
-  //
-  //     L.marker([lat, lon], {icon: this.setMarkerIcon()}).addTo(this.map);
-  //     const currentZoom = this.map.getZoom();
-  //
-  //     const bboxCoords = this.bbox([[lon, lat]]);
-  //     this.map.fitBounds(bboxCoords, { padding: [100, 100], maxZoom: currentZoom });
-  //   });
-  // }
-
-
   getStartPlace() {
     return this.startPlace;
   }

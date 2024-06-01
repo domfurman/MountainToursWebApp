@@ -12,7 +12,6 @@
   <div>
     <button (click)="route()">Show route</button>
   </div>
-  <button (click)="console()">check type</button>
   <button (click)="saveRoute()">Save route</button>
   <div>
     <form #mapForm="ngForm" (ngSubmit)="onSubmit() ">
@@ -36,7 +35,6 @@
         <label>What are the participation costs?</label>
         <input type="number" placeholder="Enter participation costs" name="participationCosts" [(ngModel)]="mapAdditionalInfo.participationCosts">
       </div>
-      <button type="submit">Submit</button>
     </form>
   </div>
   <div class="map-frame">
