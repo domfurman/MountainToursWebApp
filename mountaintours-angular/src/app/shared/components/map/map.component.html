@@ -1,45 +1,74 @@
-<div class="map-container">
-  <div class="autoComplete_wrapper">
-    <input id="startAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Start">
-  </div>
-  <a (click)="addWaypoint()">Dodaj przystanek</a>
-  <div class="waypoints">
+<div class="map-container container">
 
-  </div>
-  <div class="autoComplete_wrapper">
-    <input id="endAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="End">
-  </div>
-  <div>
-    <button (click)="route()">Show route</button>
-  </div>
-  <button (click)="saveRoute()">Save route</button>
-  <div>
-    <form #mapForm="ngForm" (ngSubmit)="onSubmit() ">
-      <div>
-        <label>Where are you starting your journey from?</label>
-        <input type="text" placeholder="Enter journey's starting point" name="driverStartingPoint" [(ngModel)]="mapAdditionalInfo.driverStartingPoint">
-      </div>
-      <div>
-        <label>What is the difficulty level?</label>
-        <input type="text" placeholder="Select difficulty level" name="difficultyLevel" [(ngModel)]="mapAdditionalInfo.difficultyLevel">
-      </div>
-      <div>
-        <label>What is the tour date?</label>
-        <input type="datetime-local" placeholder="Select tour date" name="tourDate" [(ngModel)]="mapAdditionalInfo.tourDate">
-      </div>
-      <div>
-        <label>How many people can you take?</label>
-        <input type="number" placeholder="Enter number of spots" name="numberOfSpots" [(ngModel)]="mapAdditionalInfo.numberOfSpots">
-      </div>
-      <div>
-        <label>What are the participation costs?</label>
-        <input type="number" placeholder="Enter participation costs" name="participationCosts" [(ngModel)]="mapAdditionalInfo.participationCosts">
-      </div>
-    </form>
-  </div>
-  <div class="map-frame">
+  <div class="map-frame left-side row">
     <div id="map"></div>
   </div>
+
+  <div class="right-side justify-content-center">
+
+    <div class="point-wrapper">
+      <div class="autoComplete_wrapper col-6">
+        <input id="startAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Start">
+      </div>
+      <a (click)="addWaypoint()">Dodaj przystanek</a>
+
+      <div class="waypoints"></div>
+
+      <div class="autoComplete_wrapper col-6">
+        <input id="endAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="End">
+      </div>
+    </div>
+
+    <div id="map-info-form" class="map-info-wrapper">
+      <form #mapForm="ngForm" (ngSubmit)="onSubmit() ">
+        <div class="form-group mb3">
+          <label>Where are you starting your journey from?</label>
+          <div class="input-group">
+            <input type="text" placeholder="Enter journey's starting point" name="driverStartingPoint" [(ngModel)]="mapAdditionalInfo.driverStartingPoint">
+          </div>
+        </div>
+
+        <div class="form-group mb3">
+          <label>What is the difficulty level?</label>
+          <div class="input-group">
+            <input type="text" placeholder="Select difficulty level" name="difficultyLevel" [(ngModel)]="mapAdditionalInfo.difficultyLevel">
+          </div>
+        </div>
+
+        <div class="form-group mb3">
+          <label>What is the tour date?</label>
+          <div class="input-group">
+            <input type="datetime-local" placeholder="Select tour date" name="tourDate" [(ngModel)]="mapAdditionalInfo.tourDate">
+          </div>
+        </div>
+
+        <div class="form-group mb3">
+          <label>How many people can you take?</label>
+          <div class="input-group">
+            <input type="number" placeholder="Enter number of spots" name="numberOfSpots" [(ngModel)]="mapAdditionalInfo.numberOfSpots">
+          </div>
+        </div>
+
+        <div class="form-group mb3">
+          <label>What are the participation costs?</label>
+          <div class="input-group">
+            <input type="number" placeholder="Enter participation costs" name="participationCosts" [(ngModel)]="mapAdditionalInfo.participationCosts">
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="buttons">
+      <div>
+        <button (click)="route()">Show route</button>
+      </div>
+      <div>
+        <button (click)="saveRoute()">Save route</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 

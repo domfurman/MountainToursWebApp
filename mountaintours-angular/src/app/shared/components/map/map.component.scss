@@ -1,17 +1,31 @@
-.map-container {
+:host {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  height: 90vh;
+  width: 100%;
+}
+
+.map-container.container {
+  //flex: 1;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  height: calc(100vh - 40px);
 }
 
 .map-frame {
-  width: 50%;
-  height: 70%;
-  margin: 20px auto;
+  flex: 1 1 60%;
+  //width: 100%;
+  height: 100%;
+  //margin: 20px auto;
   border: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
 }
 
 #map {
@@ -19,27 +33,27 @@
   height: 100%;
 }
 
-//.map-container {
-//  position: absolute;
-//  top: 50px;
-//  left: 0;
-//  right: 0;
-//  bottom: 0;
-//  margin: 30px;
-//}
-//
-//.map-frame {
-//  width: 50%;
-//  height: 70%;
-//  margin: 20px auto;
-//  border: 1px solid #ccc;
-//  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-//}
-//
-//#map {
-//  width: 100%;
-//  height: 100%;
-//}
+.left-side {
+  flex: 1 1 60%;
+  //padding: 10px;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+}
+
+.right-side {
+  flex: 1 1 40%; /* Adjust the size of the right side */
+  padding: 10px; /* Optional: Add some padding */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Add space between elements */
+  overflow-y: auto;
+  justify-content: center;
+  width: 100%;
+  //border: 1px solid black;
+  height: 100%;
+}
 
 .parameters {
   margin: auto;
@@ -56,3 +70,35 @@
   color: #888;
   opacity: 1;
 }
+
+.point-wrapper, .map-info-wrapper, .buttons, .input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+}
+
+.point-wrapper, .map-info-wrapper, .buttons {
+  //border: 1px solid black;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 8px;
+  //border-radius: 0 10px 10px 0;
+  border-radius: 10px;
+}
+
+input {
+  border-color: #888888;
+  //border-radius: 10px;
+}
+
+.input-group {
+
+  box-shadow: none;
+}
+
