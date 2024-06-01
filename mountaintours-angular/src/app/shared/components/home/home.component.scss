@@ -4,7 +4,29 @@
 
 }
 
-#slides {
+.button-wrapper {
+  text-align: center;
+  //margin-top: 20px; /* Adjust as needed */
+  float: left;
+  width: 10%;
+}
+
+.btn-primary {
+  //padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#login-home-button {
+  background-color: #151717;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  width: 100%;
+  height: 150%;
+}
+
+#slides, #slidesNA {
   background-size: cover;
   background-position: center;
   transition: background-image 0.5s ease-in-out, background-size 0.5s ease-in-out, background-position 0.5s ease-in-out;
@@ -21,6 +43,7 @@
     justify-content: center;
     height: 100%;
     width: 100%;
+    flex-direction: column;
   }
   .slogan h1 {
     color: white;
@@ -135,11 +158,26 @@
   .content {
     margin-top: calc(60px); /* Example: Navbar height (56px) + additional space (1rem) */
   }
+  #login-home-button {
+    width: 100%;
+  }
+  .button-wrapper {
+    text-align: center;
+    //margin-top: 20px; /* Adjust as needed */
+    float: left;
+    width: 25%;
+  }
 }
 
 @media (max-width: 768px) {
   .content {
     margin-top: calc(60px); /* Adjust as needed */
+  }
+  .button-wrapper {
+    text-align: center;
+    //margin-top: 20px; /* Adjust as needed */
+    float: left;
+    width: 35%;
   }
 }
 

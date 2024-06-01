@@ -21,15 +21,20 @@
 <!--  </div>-->
 <!--</div>-->
 <app-navbar #navbar></app-navbar>
-<div class="content" #slidesImages>
-  <div class="container-fluid" id="slides">
-    <div class="slogan">
-      <h1 aria-label="Make memories."><span class="typewriter" ></span></h1>
-    </div>
-  </div>
-  <div class="container">
-    <div class="content-body">
+  <div class="content" #slidesImages>
+    <div class="container-fluid" id="slides">
+      <div class="slogan">
+        <h1 aria-label="Make memories."><span class="typewriter" ></span></h1>
+        <div class="button-wrapper" [hidden]="authenticated()">
+          <button class="btn-primary" id="login-home-button" (click)="navigateToLogin()">Log in</button>
+        </div>
+      </div>
 
     </div>
+    <div class="container">
+      <div class="content-body">
+
+      </div>
+    </div>
   </div>
-</div>
+
