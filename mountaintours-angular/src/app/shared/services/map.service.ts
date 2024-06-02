@@ -59,5 +59,13 @@ export class MapService {
     return this.http.get<string[]>(`${this.basicUrl}/api/map-difficulties`);
   }
 
+  isUserParticipantInAnyTour(participantId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.basicUrl}/api/is-participant-in-any-tour/participant/${participantId}`)
+  }
+
+  isUserOrganizingAnyTour(ownerId: number): Observable<boolean> {
+    return this.http.get<boolean>(`${this.basicUrl}/api/is-organizing-any-tour/owner/${ownerId}`)
+  }
+
 
 }

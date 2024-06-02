@@ -1,15 +1,89 @@
 <app-navbar></app-navbar>
-<!--<div *ngIf="!isParticipantInAnyRoute; else noTours">-->
-<!--  <h1>Nie jestes zapisany na żadną wycieczke</h1>-->
-<!--</div>-->
-<!--<ng-template #noTours>-->
-  <h1>Wycieczki, w których uczestniczysz</h1>
-  <div *ngFor="let route of routes$ | async" class="tour">
-    <h1>Tour date: {{route.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>
-    <app-tour-map [mapDetails]="route"></app-tour-map>
-    <button type="submit" (click)="resignFromTour(route.tourId, currentUser.id)">Zrezygnuj</button>
+<ng-container *ngIf="isParticipantInAnyRoute; else notParticipant">
+  <div *ngFor="let route of routes$ | async">
+    <div class="single-tour container-fluid row justify-content-between">
+      <div class="left-side" id="tour-map">
+        <app-tour-map [mapDetails]="route"></app-tour-map>
+      </div>
+      <div class="right-side container" id="info">
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details overview">
+            <h3>Quick overview</h3>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details">
+            <p>Tour by <span>{{route.owner?.firstName}}</span></p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details">
+            <p>Starting point is <span>{{route.driverStartingPoint}}</span></p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-4 tour-details">
+            <p><i class="fa-regular fa-calendar-days"></i>{{route.tourDateConvert | date: 'dd-MM-yyyy'}}</p>
+          </div>
+          <div class="col-4 tour-details">
+            <p><i class="fa-regular fa-clock"></i>{{route.tourDateConvert | date: 'HH:mm'}}</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-3 tour-details">
+            <p><i class="fa-solid fa-route"></i>{{route.length / 1000 | number: '1.2-2'}}km</p>
+          </div>
+          <div class="col-3 tour-details">
+            <p><i class="fa-regular fa-hourglass"></i>{{route.duration | duration}}h</p>
+          </div>
+          <div class="col-3 tour-details">
+            <p><i class="fa-solid fa-mountain-sun"></i>{{route.mapDifficultyLevel}}</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details">
+            <p><i class="fa-regular fa-money-bill-1"></i>{{route.participationCosts}} PLN per person</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center" >
+          <div class="col-6"  id="resign-btn-wrapper">
+            <button type="submit" id="resign-btn" (click)="resignFromTour(route.tourId, currentUser.id)">Resign</button>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
   </div>
-<!--</ng-template>-->
+</ng-container>
+
+<ng-template #notParticipant>
+<!--  <h1>not a participant</h1>-->
+  <div class="container not-participant align-items-center">
+
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h2>You are not participating in any tour.</h2>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-6 btn-to-tours-wrapper">
+        <button id="btn-to-tours" (click)="navigateToTours()">Go to tours</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
 
 
 

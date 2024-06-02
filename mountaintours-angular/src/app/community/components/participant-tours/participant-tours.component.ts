@@ -20,7 +20,7 @@ export class ParticipantToursComponent implements OnInit{
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
-  constructor(private authService: AuthService, private mapService: MapService, private communityService: CommunityService) {
+  constructor(private authService: AuthService, private mapService: MapService, private communityService: CommunityService, private router: Router) {
 
   }
 
@@ -57,6 +57,7 @@ export class ParticipantToursComponent implements OnInit{
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
       this.currentUser = user;
+      this.isUserParticipantInAnyTour(this.currentUser.id);
       console.log(this.currentUser);
       this.routes$ = this.loadMaps();
     }))
@@ -72,11 +73,22 @@ export class ParticipantToursComponent implements OnInit{
         this.routes$ = this.routes$.pipe(
           map((routes: MapDetails[]) => routes.filter(route => route.tourId !== tourId))
         );
+        this.isUserParticipantInAnyTour(participantId);
       }, error => {
         console.error("Error during resigning", error);
       });
     } else {
       return
     }
+  }
+
+  isUserParticipantInAnyTour(participantId: number) {
+    this.mapService.isUserParticipantInAnyTour(participantId).subscribe((result: boolean) => {
+      this.isParticipantInAnyRoute = result;
+    });
+  }
+
+  navigateToTours() {
+    this.router.navigate(['/community/tours']);
   }
 }

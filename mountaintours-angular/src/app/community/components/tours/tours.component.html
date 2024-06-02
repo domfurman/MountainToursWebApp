@@ -34,7 +34,7 @@
 </div>
 <ng-container *ngFor="let route of routes$ | async; let i = index">
   <ng-container *ngIf="!route.isParticipant">
-    <div class="single-tour container-fluid row justify-content-between">
+    <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday" class="single-tour container-fluid row justify-content-between">
         <div class="left-side" id="tour-map">
           <app-tour-map [mapDetails]="route"></app-tour-map>
         </div>
