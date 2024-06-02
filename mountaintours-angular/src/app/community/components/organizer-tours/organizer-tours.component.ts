@@ -15,9 +15,8 @@ import {CommunityService} from "../../services/community.service";
 })
 export class OrganizerToursComponent implements OnInit{
   currentUser: User = new User;
-  routes$!: Observable<any>;
   toursAsOwner$!: Observable<any>;
-  showRoutesAsParticipant: boolean = false;
+  isOrganizingAnyTours: boolean = false;
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
@@ -54,6 +53,7 @@ export class OrganizerToursComponent implements OnInit{
   retrieveUserData() {
     this.authService.getPrincipal().subscribe((user => {
       this.currentUser = user;
+      this.isUserOrganizingAnyTour(this.currentUser.id);
       console.log(this.currentUser);
       this.toursAsOwner$ = this.loadRoutesByOwnerId();
     }))
@@ -67,11 +67,22 @@ export class OrganizerToursComponent implements OnInit{
         this.toursAsOwner$ = this.toursAsOwner$.pipe(
           map((tours: MapDetails[]) => tours.filter(tour => tour.tourId !== tourId))
         )
+        this.isUserOrganizingAnyTour(ownerId);
       }, error => {
         console.error("error on delete", error)
       });
     } else {
       return
     }
+  }
+
+  isUserOrganizingAnyTour(ownerId: number) {
+    this.mapService.isUserOrganizingAnyTour(ownerId).subscribe((result: boolean) => {
+      this.isOrganizingAnyTours = result;
+    })
+  }
+
+  navigateToRoutePlanning() {
+    this.router.navigate(['community/route-planning'])
   }
 }

@@ -23,6 +23,14 @@
   background-color: #f8f9fa;
   margin-top: 10px;
 }
+
+.container.tour-participant.align-items-center {
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  margin-top: 1%;
+  width: 60%;
+}
+
 #tour-map {
   width: 100%;
   height: 100%;
@@ -64,6 +72,12 @@
   border: none;
   background-color: #f8f9fa;
   border-bottom: 2px solid black;
+  &:hover {
+    border: none;
+    background-color: #f8f9fa;
+    border-bottom: 2px solid black;
+    cursor: default;
+  }
 }
 
 .col-6.tour-details, .col-4.tour-details, .col-3.tour-details {
@@ -89,6 +103,7 @@ p {
 #resign-btn-wrapper {
   border: none;
   background-color: #f8f9fa;
+  margin-top: 5%;
 }
 
 #resign-btn {
@@ -106,7 +121,8 @@ p {
   cursor: pointer;
   transition: 0.2s ease-in-out;
   &:hover {
-    border: 2px solid #2d79f3;
+    border: 2px solid #f52525;
+    background-color: #ee3b3b;
   }
 }
 i {

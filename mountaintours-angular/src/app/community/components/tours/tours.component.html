@@ -29,8 +29,14 @@
 <!--  </div>-->
 <!--  </ng-container>-->
 <!--</div>-->
-<div class="explore-tours">
-  <h1>Explore tours!</h1>
+<div class="container tours align-items-center">
+
+  <div class="row justify-content-center">
+    <div class="col-6 slogan">
+      <h2>Find Your Next Tour</h2>
+    </div>
+  </div>
+
 </div>
 <ng-container *ngFor="let route of routes$ | async; let i = index">
   <ng-container *ngIf="!route.isParticipant">

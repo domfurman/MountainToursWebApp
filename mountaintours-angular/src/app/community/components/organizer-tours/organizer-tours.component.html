@@ -1,10 +1,101 @@
 <app-navbar></app-navbar>
-<h1>Trasy, których jesteś organizatorem</h1>
-<div *ngFor="let tour of toursAsOwner$ | async">
-  <h1>Tour date: {{tour.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>
-  <app-tour-map [mapDetails]="tour"></app-tour-map>
-  <button (click)="deleteTour(tour.tourId, currentUser.id)">Delete tour</button>
-  <div *ngFor="let participant of tour.participants">
-    <h3>{{ participant.firstName }}</h3>
+<!--<h1>Trasy, których jesteś organizatorem</h1>-->
+<!--<div *ngFor="let tour of toursAsOwner$ | async">-->
+<!--  <h1>Tour date: {{tour.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>-->
+<!--  <app-tour-map [mapDetails]="tour"></app-tour-map>-->
+<!--  <button (click)="deleteTour(tour.tourId, currentUser.id)">Delete tour</button>-->
+<!--  <div *ngFor="let participant of tour.participants">-->
+<!--    <h3>{{ participant.firstName }}</h3>-->
+<!--  </div>-->
+<!--</div>-->
+
+<ng-container *ngIf="isOrganizingAnyTours; else notOrganizing">
+
+  <div class="container tour-organizer align-items-center">
+
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h2>Tours you are organising</h2>
+      </div>
+    </div>
+
   </div>
-</div>
+
+  <div *ngFor="let tour of toursAsOwner$ | async">
+    <div class="single-tour container-fluid row justify-content-between">
+      <div class="left-side" id="tour-map">
+        <app-tour-map [mapDetails]="tour"></app-tour-map>
+      </div>
+      <div class="right-side container" id="info">
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details overview">
+            <h3>Quick overview</h3>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-6 tour-details">
+            <p>You are driving from <span>{{tour.driverStartingPoint}}</span></p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-4 tour-details">
+            <p><i class="fa-regular fa-calendar-days"></i>{{tour.tourDateConvert | date: 'dd-MM-yyyy'}}</p>
+          </div>
+          <div class="col-4 tour-details">
+            <p><i class="fa-regular fa-clock"></i>{{tour.tourDateConvert | date: 'HH:mm'}}</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-3 tour-details">
+            <p><i class="fa-solid fa-tour"></i>{{tour.length / 1000 | number: '1.2-2'}}km</p>
+          </div>
+          <div class="col-3 tour-details">
+            <p><i class="fa-regular fa-hourglass"></i>{{tour.duration | duration}}h</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center participants-wrapper">
+          <div class="col-6 tour-details participants">
+            <h5>Participants</h5>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div *ngFor="let participant of tour.participants" class="col-3 tour-details">
+            <p><i class="fa-solid fa-user"></i>{{participant.firstName}}</p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center delete-wrapper" >
+          <div class="col-6"  id="delete-btn-wrapper">
+            <button type="submit" id="delete-btn" (click)="deleteTour(tour.tourId, currentUser.id)">Delete tour</button>
+          </div>
+        </div>
+
+
+
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #notOrganizing>
+  <div class="container not-organizer align-items-center">
+
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h2>You are not organising any tour.</h2>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-6 btn-to-route-planning-wrapper">
+        <button id="btn-to-route-planning" (click)="navigateToRoutePlanning()">Plan a tour</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

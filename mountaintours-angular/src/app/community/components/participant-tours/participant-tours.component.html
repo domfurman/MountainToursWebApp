@@ -1,5 +1,16 @@
 <app-navbar></app-navbar>
 <ng-container *ngIf="isParticipantInAnyRoute; else notParticipant">
+
+  <div class="container tour-participant align-items-center">
+
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h2>Tours you participate in</h2>
+      </div>
+    </div>
+
+  </div>
+
   <div *ngFor="let route of routes$ | async">
     <div class="single-tour container-fluid row justify-content-between">
       <div class="left-side" id="tour-map">
