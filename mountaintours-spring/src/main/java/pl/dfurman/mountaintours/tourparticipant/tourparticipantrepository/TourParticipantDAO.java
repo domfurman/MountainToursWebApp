@@ -15,4 +15,6 @@ public interface TourParticipantDAO {
     int resignFromTour(Long tourId, Long participantId) throws SQLException;
 
     List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException;
+
+    boolean isParticipantInAnyTour(Long participantId) throws SQLException;
 }

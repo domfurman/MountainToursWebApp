@@ -45,4 +45,9 @@ public class TourParticipantController {
     public List<User> getAllParticipantsInfoByTourId(@PathVariable Long tourId) throws SQLException {
         return tourParticipantService.getAllParticipantsInfoByTourId(tourId);
     }
+
+    @GetMapping(path = "/api/is-participant-in-any-tour/participant/{participantId}")
+    public boolean isParticipantInAnyTour(@PathVariable Long participantId) throws SQLException {
+        return tourParticipantService.isParticipantInAnyTour(participantId);
+    }
 }

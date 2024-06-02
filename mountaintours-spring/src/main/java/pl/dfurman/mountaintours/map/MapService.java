@@ -56,4 +56,8 @@ public class MapService {
     public int deleteTour(Long tourId, Long ownerId) throws SQLException {
         return mapRepository.deleteTour(tourId, ownerId);
     }
+
+    public boolean isOrganizingAnyTour(Long ownerId) throws SQLException {
+        return mapRepository.isOrganizingAnyTour(ownerId);
+    }
 }

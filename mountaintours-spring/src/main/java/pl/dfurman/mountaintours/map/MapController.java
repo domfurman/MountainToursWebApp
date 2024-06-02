@@ -48,4 +48,9 @@ public class MapController {
         return MapDifficulty.values();
     }
 
+    @GetMapping(path = "api/is-organizing-any-tour/owner/{ownerId}")
+    public boolean isOrganizingAnyTour(@PathVariable Long ownerId) throws SQLException {
+        return mapService.isOrganizingAnyTour(ownerId);
+    }
+
 }

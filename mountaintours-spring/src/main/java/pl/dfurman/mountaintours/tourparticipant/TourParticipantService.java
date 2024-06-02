@@ -48,4 +48,8 @@ public class TourParticipantService {
     public List<User> getAllParticipantsInfoByTourId(Long tourId) throws SQLException {
         return jdbcTourParticipant.getAllParticipantsInfoByTourId(tourId);
     }
+
+    public boolean isParticipantInAnyTour(Long participantId) throws SQLException {
+        return jdbcTourParticipant.isParticipantInAnyTour(participantId);
+    }
 }

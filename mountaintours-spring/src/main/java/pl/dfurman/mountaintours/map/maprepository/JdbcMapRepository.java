@@ -276,5 +276,15 @@ public class JdbcMapRepository implements MapRepository{
         """, tourId, ownerId);
     }
 
+    @Override
+    public boolean isOrganizingAnyTour(Long ownerId) throws SQLException {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM tours WHERE owner_id = ?",
+                Integer.class,
+                ownerId
+        );
+        return count != null && count > 0;
+    }
+
 
 }

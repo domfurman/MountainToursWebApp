@@ -44,4 +44,14 @@ public class JdbcTourParticipant implements TourParticipantDAO{
                 SELECT u.* FROM users u JOIN tour_participants tp ON tp.participant_id = u.id WHERE tp.tour_id = ?
                 """, BeanPropertyRowMapper.newInstance(User.class), tourId);
     }
+
+    @Override
+    public boolean isParticipantInAnyTour(Long participantId) throws SQLException {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM tour_participants WHERE participant_id = ?",
+                Integer.class,
+                participantId
+        );
+        return count != null && count > 0;
+    }
 }
