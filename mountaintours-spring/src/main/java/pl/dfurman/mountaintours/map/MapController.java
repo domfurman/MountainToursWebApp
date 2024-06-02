@@ -43,4 +43,9 @@ public class MapController {
         return mapService.deleteTour(tourId, ownerId);
     }
 
+    @GetMapping(path = "api/map-difficulties")
+    public MapDifficulty[] getMapDifficulties() {
+        return MapDifficulty.values();
+    }
+
 }
