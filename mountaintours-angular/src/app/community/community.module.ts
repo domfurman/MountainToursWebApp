@@ -10,6 +10,8 @@ import {NavbarComponent} from "../shared/components/navbar/navbar.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import { OrganizerToursComponent } from './components/organizer-tours/organizer-tours.component';
 import { ParticipantToursComponent } from './components/participant-tours/participant-tours.component';
+import {DurationPipe} from "../shared/pipes/duration.pipe";
+import {DaysDifferencePipe} from "../shared/pipes/days-difference.pipe";
 
 
 @NgModule({
@@ -18,7 +20,7 @@ import { ParticipantToursComponent } from './components/participant-tours/partic
     RoutePlanningComponent,
     ProfileComponent,
     OrganizerToursComponent,
-    ParticipantToursComponent
+    ParticipantToursComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +28,8 @@ import { ParticipantToursComponent } from './components/participant-tours/partic
     MapComponent,
     TourMapComponent,
     NavbarComponent,
+    DurationPipe,
+    DaysDifferencePipe,
   ]
 })
 export class CommunityModule { }

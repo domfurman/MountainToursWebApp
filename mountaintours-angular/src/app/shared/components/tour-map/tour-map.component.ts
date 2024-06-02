@@ -202,7 +202,7 @@ export class TourMapComponent implements OnInit{
         .addTo(this.map)
         .bindPopup("Waypoint")
       this.waypointsMarkers.push(marker);
-      console.log(waypoint);
+      // console.log(waypoint);
     })
 
     try {
@@ -223,7 +223,7 @@ export class TourMapComponent implements OnInit{
 
       const response = await axios.get(url.toString(), {params});
       const json = response.data
-      console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
+      // console.log(`length: ${json.length / 1000} km`, `duration: ${Math.floor(json.duration / 60)}m ${json.duration % 60}s`);
 
       if (this.routeLayer) {
         this.map.removeLayer(this.routeLayer);

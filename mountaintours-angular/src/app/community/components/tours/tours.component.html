@@ -1,34 +1,169 @@
 <app-navbar></app-navbar>
-<div *ngFor="let route of routes$ | async; let i = index">
-  <ng-container *ngIf="!route.isParticipant">
-  <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday">
-    <h1>{{route.isParticipant}}</h1>
-    <h1>Owner: {{route.owner?.firstName}}</h1>
-    <h2>Tour Date: {{route.tourDateConvert | date: 'dd-MM-yyyy'}}</h2>
-    <h2>Tour Hour: {{route.tourDateConvert | date: 'HH:mm'}}</h2>
-    <h2>Exp Date: {{route.expDateConvert}}</h2>
-    <h3>{{route.tourId}}</h3>
-    <h3>{{currentUser.id}}</h3>
+<!--<div *ngFor="let route of routes$ | async; let i = index">-->
+<!--  <ng-container *ngIf="!route.isParticipant">-->
+<!--  <div *ngIf="route.owner?.id !== currentUser?.id && !route.isPastToday">-->
+<!--    <h1>{{route.isParticipant}}</h1>-->
+<!--    <h1>Owner: {{route.owner?.firstName}}</h1>-->
+<!--    <h2>Tour Date: {{route.tourDateConvert | date: 'dd-MM-yyyy'}}</h2>-->
+<!--    <h2>Tour Hour: {{route.tourDateConvert | date: 'HH:mm'}}</h2>-->
+<!--    <h2>Exp Date: {{route.expDateConvert}}</h2>-->
+<!--    <h3>{{route.tourId}}</h3>-->
+<!--    <h3>{{currentUser.id}}</h3>-->
 
-    <app-tour-map [mapDetails]="route"></app-tour-map>
+<!--    <app-tour-map [mapDetails]="route"></app-tour-map>-->
 
-    <div>
-      <p>Participants: {{participantCounts[route.tourId] || 0}}/{{route.numberOfSpots}}</p>
-      <ng-container *ngIf="participantCounts[route.tourId] >= route.numberOfSpots || route.isParticipant; else alreadyParticipant">
-        <button (click)="addParticipant(route.tourId, currentUser.id)" disabled>Participate</button>
-      </ng-container>
+<!--    <div>-->
+<!--      <p>Participants: {{participantCounts[route.tourId] || 0}}/{{route.numberOfSpots}}</p>-->
+<!--      <ng-container *ngIf="participantCounts[route.tourId] >= route.numberOfSpots || route.isParticipant; else alreadyParticipant">-->
+<!--        <button (click)="addParticipant(route.tourId, currentUser.id)" disabled>Participate</button>-->
+<!--      </ng-container>-->
 
-      <ng-template #alreadyParticipant>
-        <button (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>
-      </ng-template>
+<!--      <ng-template #alreadyParticipant>-->
+<!--        <button (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>-->
+<!--      </ng-template>-->
 
-      <ng-container *ngIf="route.isParticipant">
-        <p>You already participate in this tour</p>
-      </ng-container>
-    </div>
-  </div>
-  </ng-container>
+<!--      <ng-container *ngIf="route.isParticipant">-->
+<!--        <p>You already participate in this tour</p>-->
+<!--      </ng-container>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  </ng-container>-->
+<!--</div>-->
+<div class="explore-tours">
+  <h1>Explore tours!</h1>
 </div>
+<ng-container *ngFor="let route of routes$ | async; let i = index">
+  <ng-container *ngIf="!route.isParticipant">
+    <div class="single-tour container-fluid row justify-content-between">
+        <div class="left-side" id="tour-map">
+          <app-tour-map [mapDetails]="route"></app-tour-map>
+        </div>
+        <div class="right-side container" id="info">
+
+          <div class="row justify-content-center">
+            <div class="col-6 tour-details">
+              <p>Tour by <span>{{route.owner?.firstName}}</span></p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-6 tour-details">
+              <p>Starting point is <span>{{route.driverStartingPoint}}</span></p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-4 tour-details">
+              <p><i class="fa-regular fa-calendar-days"></i>{{route.tourDateConvert | date: 'dd-MM-yyyy'}}</p>
+            </div>
+            <div class="col-4 tour-details">
+              <p><i class="fa-regular fa-clock"></i>{{route.tourDateConvert | date: 'HH:mm'}}</p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-3 tour-details">
+              <p><i class="fa-solid fa-route"></i>{{route.length / 1000 | number: '1.2-2'}}km</p>
+            </div>
+            <div class="col-3 tour-details">
+              <p><i class="fa-regular fa-hourglass"></i>{{route.duration | duration}}h</p>
+            </div>
+            <div class="col-3 tour-details">
+              <p><i class="fa-solid fa-mountain-sun"></i>{{route.mapDifficultyLevel}}</p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-6 tour-details">
+              <p><i class="fa-regular fa-money-bill-1"></i>{{route.participationCosts}} PLN per person</p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center" id="days-left">
+            <div class="col-6 tour-details">
+              <p>Participation ends in {{route.expDateConvert | daysDifference}} days</p>
+            </div>
+          </div>
+
+          <div class="row justify-content-center">
+            <div class="col-4 tour-details" id="participate-btn-wrapper">
+              <button id="participate-btn" (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>
+            </div>
+            <div class="col-4 tour-details" id="spots">
+              <p><i class="fa-solid fa-person"></i>{{participantCounts[route.tourId] || 0}} of {{route.numberOfSpots}}</p>
+            </div>
+          </div>
+
+        </div>
+    </div>
+  </ng-container>
+
+</ng-container>
+<!--<div *ngFor="let route of routes$ | async; let i = index" class="single-tour container-fluid row justify-content-between">-->
+
+<!--  <ng-container *ngIf="!route.isParticipant">-->
+<!--    <div class="left-side" id="tour-map">-->
+<!--      <app-tour-map [mapDetails]="route"></app-tour-map>-->
+<!--    </div>-->
+<!--    <div class="right-side container" id="info">-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-6 tour-details">-->
+<!--          <p>Tour by <span>{{route.owner?.firstName}}</span></p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-6 tour-details">-->
+<!--          <p>Starting point is <span>{{route.driverStartingPoint}}</span></p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-4 tour-details">-->
+<!--          <p><i class="fa-regular fa-calendar-days"></i>{{route.tourDateConvert | date: 'dd-MM-yyyy'}}</p>-->
+<!--        </div>-->
+<!--        <div class="col-4 tour-details">-->
+<!--          <p><i class="fa-regular fa-clock"></i>{{route.tourDateConvert | date: 'HH:mm'}}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-3 tour-details">-->
+<!--          <p><i class="fa-solid fa-route"></i>{{route.length / 1000 | number: '1.2-2'}}km</p>-->
+<!--        </div>-->
+<!--        <div class="col-3 tour-details">-->
+<!--          <p><i class="fa-regular fa-hourglass"></i>{{route.duration | duration}}h</p>-->
+<!--        </div>-->
+<!--        <div class="col-3 tour-details">-->
+<!--          <p><i class="fa-solid fa-mountain-sun"></i>{{route.mapDifficultyLevel}}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-6 tour-details">-->
+<!--          <p><i class="fa-regular fa-money-bill-1"></i>{{route.participationCosts}} PLN per person</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center" id="days-left">-->
+<!--        <div class="col-6 tour-details">-->
+<!--          <p>Participation ends in {{route.expDateConvert | daysDifference}} days</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="row justify-content-center">-->
+<!--        <div class="col-4 tour-details" id="participate-btn-wrapper">-->
+<!--          <button id="participate-btn" (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>-->
+<!--        </div>-->
+<!--        <div class="col-4 tour-details" id="spots">-->
+<!--          <p><i class="fa-solid fa-person"></i>{{participantCounts[route.tourId] || 0}} of {{route.numberOfSpots}}</p>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+<!--  </ng-container>-->
+<!--</div>-->
 
 
 

@@ -122,4 +122,6 @@ export class ToursComponent implements OnInit{
       this.participantCounts[tourId] = data;
     });
   }
+
+  protected readonly Math = Math;
 }
