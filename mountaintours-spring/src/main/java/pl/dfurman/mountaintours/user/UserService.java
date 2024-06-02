@@ -37,7 +37,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(encodedPassword);
 
         Integer u = userRepository.saveUser(user);
-//        return "sign up works";
         return ResponseEntity.ok(u);
     }
 

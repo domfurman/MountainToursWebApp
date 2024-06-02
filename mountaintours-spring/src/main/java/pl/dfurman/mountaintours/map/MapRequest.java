@@ -12,7 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class MapRequest {
-//    private Long tourId;
     private Long ownerId;
     private double[] startPlace;
     private double[] endPlace;

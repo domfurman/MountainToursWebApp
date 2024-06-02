@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-//@CrossOrigin(origins = "http://localhost:4200")
 public class MapController {
     private final MapService mapService;
 

@@ -66,7 +66,6 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        SecurityContextRepository repository = new HttpSessionSecurityContextRepository();
         http
                 .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests((authorize) -> authorize
@@ -74,12 +73,13 @@ public class WebSecurityConfig {
                         .requestMatchers( "/api/registration",
                                 "/*.bundle.*",
                                 "/login",
-                                "api/login",
-                                "/","api/save-map",
-                                "api/find-all-maps" ,
-                                "api/user-by-tour-owner-id/**",
-                                "api/tours/*/participants/**",
-                                "api/number-of-participants/tour/**")
+                                "api/login"
+//                                "/","api/save-map",
+//                                "api/find-all-maps" ,
+//                                "api/user-by-tour-owner-id/**",
+//                                "api/tours/*/participants/**",
+//                                "api/number-of-participants/tour/**"
+                        )
                         .permitAll()
                         .anyRequest().authenticated()
                 )

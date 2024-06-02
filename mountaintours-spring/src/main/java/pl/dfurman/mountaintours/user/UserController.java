@@ -33,7 +33,6 @@ public class UserController {
         }
         HttpHeaders headers = new HttpHeaders();
         headers.add("Access-Control-Allow-Origin", "http://localhost:4200");
-//        return (ResponseEntity<?>) ResponseEntity.internalServerError();
         return ResponseEntity.ok().headers(headers).body(user);
     }
 
@@ -48,11 +47,6 @@ public class UserController {
         return user;
     }
 
-//    @GetMapping(path = "api/user-by-tour-id/{tourId}")
-//    public ResponseEntity<User> getUserInfoByTicketId(@PathVariable("tourId") int tourId) {
-//        User user = userService.getUserInfoByTourId(tourId);
-//        return new ResponseEntity<>(user, HttpStatus.OK);
-//    }
     @GetMapping(path = "/api/user-by-tour-owner-id/{tourOwnerId}")
     public User getUserInfoByTicketId(@PathVariable("tourOwnerId") int tourOwnerId) {
         return userService.getUserInfoByTourOwnerId(tourOwnerId);
