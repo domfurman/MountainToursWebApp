@@ -5,6 +5,10 @@
   width: 100%;
 }
 
+.leaflet-top leaflet-right.leaflet-control-layers leaflet-control.leaflet-control-layers-toggle {
+  z-index: 1;
+}
+
 .map-container.container {
   //flex: 1;
 
@@ -22,6 +26,7 @@
   height: 100%;
   //margin: 20px auto;
   border: 1px solid #ccc;
+  border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
@@ -29,6 +34,8 @@
 }
 
 #map {
+  z-index: 1;
+  border-radius: 20px;
   width: 100%;
   height: 100%;
 }
@@ -42,12 +49,12 @@
 }
 
 .right-side {
-  flex: 1 1 40%; /* Adjust the size of the right side */
-  padding: 10px; /* Optional: Add some padding */
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  flex: 1 1 40%;
+  padding: 10px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Add space between elements */
+  gap: 20px;
   overflow-y: auto;
   justify-content: center;
   width: 100%;
@@ -85,20 +92,111 @@
   border-radius: 20px;
 }
 
-.input-group input {
+.input-group input, #startAutoComplete, #endAutoComplete {
   width: 100%;
   padding: 8px;
+  border: 1px solid #888;
   //border-radius: 0 10px 10px 0;
   border-radius: 10px;
 }
 
-input {
-  border-color: #888888;
-  //border-radius: 10px;
+.input-group input:focus, #startAutoComplete:focus, #endAutoComplete:focus {
+  outline: none;
+  border-color: #2d79f3;
 }
 
-.input-group {
+.add-waypoint {
+  padding: 5px;
+}
 
-  box-shadow: none;
+.buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#btn-route, #btn-save {
+  //margin-top: 10px;
+  width: 100%;
+  height: 50px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 500;
+  gap: 10px;
+  border: 1px solid #ededef;
+  background-color: white;
+  cursor: pointer;
+  transition: 0.2s ease-in-out;
+  &:hover {
+    border-color: #2d79f3;
+  }
+}
+
+.difficulty-options {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+}
+
+.difficulty-options .btn {
+  cursor: pointer;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid #888;
+  background-color: white;
+  &:hover {
+    border-color: #2d79f3;
+  }
+}
+
+.btn input {
+  border-right: 10px;
+}
+
+.difficulty-options .btn input[type="radio"] {
+  display: none;
+}
+
+.difficulty-options .btn.active {
+  background-color: #007bff;
+  color: white;
+}
+
+@media (max-width: 991.98px) {
+  .map-container.container {
+    margin-top: calc(60px);
+  }
+}
+
+@media (max-width: 768px) {
+  .map-container.container {
+    display: flex;
+    flex-direction: column;
+    //height: 200vh;
+  }
+  .right-side {
+    height: auto;
+    padding: 10px;
+    //margin-top: 1000px;
+    //height: 150px;
+  }
+
+  .map-frame {
+    height: 300px;
+  }
+
+  .point-wrapper {
+    width: 100%;
+    margin-top: 250px;
+  }
+
+}
+@media (max-width: 360px) {
+  .point-wrapper {
+    width: 100%;
+    margin-top: 300px;
+  }
 }
 

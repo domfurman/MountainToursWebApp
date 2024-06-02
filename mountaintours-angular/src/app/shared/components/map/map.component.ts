@@ -11,10 +11,11 @@ import {AuthService} from "../../services/auth.service";
 import {User} from "../../models/user";
 import {FormsModule} from "@angular/forms";
 import {MapAdditionalInfo} from "../../interfaces/map-additional-info";
+import {NgForOf} from "@angular/common";
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, NgForOf],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss'
 })
@@ -44,6 +45,7 @@ export class MapComponent implements OnInit{
     numberOfSpots: 0,
     participationCosts: 0
   }
+  mapDifficulties: string[] = [];
 
   waypointCounter = 0;
 
@@ -53,12 +55,13 @@ export class MapComponent implements OnInit{
   ngOnInit(): void {
     this.retrieveUserData();
     this.configMap();
-    // this.setupFormListener();
     this.autocomplete('startAutoComplete', this.setStartPlace.bind(this));
     this.autocomplete('endAutoComplete', this.setEndPlace.bind(this));
     this.map.on('click', (event: L.LeafletMouseEvent) => {
       this.reverseGeocode(event);
     });
+    this.getDifficulties();
+
   }
 
   console() {
@@ -76,12 +79,6 @@ export class MapComponent implements OnInit{
 
   configMap() {
     this.map = L.map('map').setView([50.049683, 19.944544], 16 );
-
-    // L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
-    //   minZoom: 0,
-    //   maxZoom: 19,
-    //   attribution: '<a href="https://api.mapy.cz/copyright" target="_blank">&copy; Seznam.cz a.s. a další</a>',
-    // }).addTo(this.map);
 
     const tileLayers = {
       'Basic': L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
@@ -148,8 +145,6 @@ export class MapComponent implements OnInit{
     });
 
     new LogoControl().addTo(this.map)
-    // this.route();
-    // this.setMarkerIcon();
   }
 
   setMarkerIcon() {
@@ -344,6 +339,14 @@ export class MapComponent implements OnInit{
         element: (list: HTMLElement, data: { results: any[], query: string }) => {
           list.style.maxHeight = "max-content";
           list.style.overflow = "hidden";
+          list.style.position = 'absolute';
+          list.style.zIndex = '1000';
+          list.style.backgroundColor = "white";
+          const inputField = document.querySelector('.autoComplete_wrapper input') as HTMLElement;
+          const inputWidth = inputField.offsetWidth;
+          list.style.width = `${inputWidth}px`;
+          list.style.borderRadius = '10px';
+          list.style.border = '1px solid #2d79f3';
 
           if (!data.results.length) {
             const message = document.createElement("div");
@@ -411,49 +414,61 @@ export class MapComponent implements OnInit{
   addWaypoint() {
     let myDiv = document.getElementsByClassName('waypoints')[0];
 
+    const inputField = document.querySelector('.autoComplete_wrapper input') as HTMLElement;
+    const inputWidth = inputField.offsetWidth;
+
     if (myDiv) {
       const waypointItem = document.createElement('div');
       waypointItem.className = 'waypoint-item';
+      waypointItem.style.display = 'flex';
+      waypointItem.style.flexDirection = 'row'
+      waypointItem.style.width = `${inputWidth}`;
+      waypointItem.style.paddingBottom = '5px'
       const uniqueId = `waypoint-${this.waypointCounter++}`;
-      waypointItem.innerHTML = `
-       <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Waypoint">
-       <button class="remove-waypoint-btn">Remove</button>`;
+      const inputElement = document.createElement('input');
+      inputElement.id = uniqueId;
+      inputElement.type = 'text';
+      inputElement.setAttribute('dir', 'ltr');
+      inputElement.setAttribute('spellcheck', 'false');
+      inputElement.setAttribute('autocorrect', 'off');
+      inputElement.setAttribute('autocomplete', 'off');
+      inputElement.setAttribute('autocapitalize', 'off');
+      inputElement.placeholder = 'Waypoint';
+      inputElement.style.flex = '1';
+      inputElement.style.padding = '8px';
+      inputElement.style.border = '1px solid #888';
+      inputElement.style.borderRadius = '5px 0 0 5px';
+      inputElement.style.marginRight = '-1px';
+      waypointItem.appendChild(inputElement);
+
+      const removeButton = document.createElement('button');
+      removeButton.className = 'remove-waypoint-btn';
+      removeButton.textContent = 'Remove';
+      removeButton.style.padding = '8px 12px';
+      removeButton.style.backgroundColor = 'white';
+      removeButton.style.color = 'black';
+      removeButton.style.border = '1px solid #888';
+      removeButton.style.borderRadius = '0 5px 5px 0';
+      removeButton.style.cursor = 'pointer';
+      removeButton.style.transition = 'background-color 0.3s';
+      removeButton.addEventListener('click', () => {
+        myDiv.removeChild(waypointItem);
+      });
+      removeButton.addEventListener('mouseover', () => {
+        removeButton.style.borderColor = '#c82333';
+      });
+      removeButton.addEventListener('mouseout', () => {
+        removeButton.style.borderColor = '#888';
+      });
+      waypointItem.appendChild(removeButton);
+
       myDiv.appendChild(waypointItem);
-      waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
-            // console.log('XD')
-            // this.map.removeLayer(waypointMarker);
-            myDiv.removeChild(waypointItem);
-            // this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
-            // this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
-          });
 
       this.autocomplete(uniqueId, (data) => {
         this.addWaypointToList(data, waypointItem);
       });
     }
-
-
-    // if (waypointList) {
-    //   const waypointItem = document.createElement('div');
-    //   waypointItem.className = 'waypoint-item';
-    //   const uniqueId = `waypoint-${this.waypointCounter++}`;
-    //   waypointItem.innerHTML = `
-    //   <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" value="${name}">
-    //   <button class="remove-waypoint-btn">Remove</button>`;
-    //   waypointList.appendChild(waypointItem);
-    //
-    //   waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
-    //     console.log('XD')
-    //     this.map.removeLayer(waypointMarker);
-    //     waypointList.removeChild(waypointItem);
-    //     this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
-    //     this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
-    //   });
-    // }
-
-
   }
-
   addWaypointToList(data: { lat: number; lon: number; name: string } ,waypointItem: HTMLElement) {
     const waypointMarker = L.marker([data.lat, data.lon], { icon: this.setMarkerIcon() })
       .addTo(this.map)
@@ -465,12 +480,7 @@ export class MapComponent implements OnInit{
     const removeBtn = waypointItem.querySelector('.remove-waypoint-btn');
     if (removeBtn) {
       removeBtn.addEventListener('click', () => {
-        // console.log('XD')
         this.map.removeLayer(waypointMarker);
-        // const waypointList = document.getElementsByClassName('waypoints')[0];
-        // if (waypointList) {
-        //   waypointList.removeChild(waypointItem);
-        // }
         this.waypoints = this.waypoints.filter(point => point[0] !== data.lon || point[1] !== data.lat);
         this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
       });
@@ -557,23 +567,60 @@ export class MapComponent implements OnInit{
     this.waypoints.push([lon, lat]);
     this.waypointsMarkers.push(waypointMarker);
 
+    const inputField = document.querySelector('.autoComplete_wrapper input') as HTMLElement;
+    const inputWidth = inputField.offsetWidth;
+
     const waypointList = document.getElementsByClassName('waypoints')[0];
     if (waypointList) {
       const waypointItem = document.createElement('div');
       waypointItem.className = 'waypoint-item';
-      const uniqueId = `waypoint-${this.waypointCounter++}`;
-      waypointItem.innerHTML = `
-      <input id="${uniqueId}" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" value="${name}">
-      <button class="remove-waypoint-btn">Remove</button>`;
+      waypointItem.style.display = 'flex';
+      waypointItem.style.flexDirection = 'row';
+      waypointItem.style.width = `${inputWidth}px`;
+      waypointItem.style.paddingBottom = '5px';
       waypointList.appendChild(waypointItem);
 
-      waypointItem.querySelector('.remove-waypoint-btn')?.addEventListener('click', () => {
+      const uniqueId = `waypoint-${this.waypointCounter++}`;
+      const inputElement = document.createElement('input');
+      inputElement.id = uniqueId;
+      inputElement.type = 'text';
+      inputElement.setAttribute('dir', 'ltr');
+      inputElement.setAttribute('spellcheck', 'false');
+      inputElement.setAttribute('autocorrect', 'off');
+      inputElement.setAttribute('autocomplete', 'off');
+      inputElement.setAttribute('autocapitalize', 'off');
+      inputElement.value = name;
+      inputElement.style.flex = '1';
+      inputElement.style.padding = '8px';
+      inputElement.style.border = '1px solid #888';
+      inputElement.style.borderRadius = '5px 0 0 5px';
+      inputElement.style.marginRight = '-1px';
+      waypointItem.appendChild(inputElement);
+
+      const removeButton = document.createElement('button');
+      removeButton.className = 'remove-waypoint-btn';
+      removeButton.textContent = 'Remove';
+      removeButton.style.padding = '8px 12px';
+      removeButton.style.backgroundColor = 'white';
+      removeButton.style.color = 'black';
+      removeButton.style.border = '1px solid #888';
+      removeButton.style.borderRadius = '0 5px 5px 0';
+      removeButton.style.cursor = 'pointer';
+      removeButton.style.transition = 'background-color 0.3s';
+      removeButton.addEventListener('click', () => {
         console.log('XD')
         this.map.removeLayer(waypointMarker);
         waypointList.removeChild(waypointItem);
         this.waypoints = this.waypoints.filter(point => point[0] !== lon || point[1] !== lat);
         this.waypointsMarkers = this.waypointsMarkers.filter(marker => marker !== waypointMarker);
       });
+      removeButton.addEventListener('mouseover', () => {
+        removeButton.style.borderColor = '#c82333';
+      });
+      removeButton.addEventListener('mouseout', () => {
+        removeButton.style.borderColor = '#888';
+      });
+      waypointItem.appendChild(removeButton);
     }
   }
   getStartPlace() {
@@ -619,5 +666,11 @@ export class MapComponent implements OnInit{
 
   onSubmit() {
     console.log(this.mapDetails);
+  }
+
+  getDifficulties() {
+    return this.mapService.getMapDifficulties().subscribe(data => {
+      this.mapDifficulties = data;
+    });
   }
 }

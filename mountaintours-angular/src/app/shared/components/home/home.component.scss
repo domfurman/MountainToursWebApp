@@ -6,7 +6,6 @@
 
 .button-wrapper {
   text-align: center;
-  //margin-top: 20px; /* Adjust as needed */
   float: left;
   width: 10%;
 }
@@ -156,14 +155,14 @@
 //}
 @media (max-width: 992px) {
   .content {
-    margin-top: calc(60px); /* Example: Navbar height (56px) + additional space (1rem) */
+    margin-top: calc(60px);
   }
   #login-home-button {
     width: 100%;
   }
   .button-wrapper {
     text-align: center;
-    //margin-top: 20px; /* Adjust as needed */
+
     float: left;
     width: 25%;
   }
@@ -171,11 +170,10 @@
 
 @media (max-width: 768px) {
   .content {
-    margin-top: calc(60px); /* Adjust as needed */
+    margin-top: calc(60px);
   }
   .button-wrapper {
     text-align: center;
-    //margin-top: 20px; /* Adjust as needed */
     float: left;
     width: 35%;
   }

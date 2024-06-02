@@ -10,7 +10,10 @@
       <div class="autoComplete_wrapper col-6">
         <input id="startAutoComplete" type="text" dir="ltr" spellcheck=false autocorrect="off" autocomplete="off" autocapitalize="off" placeholder="Start">
       </div>
-      <a (click)="addWaypoint()">Dodaj przystanek</a>
+
+      <div class="add-waypoint">
+        <a (click)="addWaypoint()">Add waypoint</a>
+      </div>
 
       <div class="waypoints"></div>
 
@@ -30,8 +33,12 @@
 
         <div class="form-group mb3">
           <label>What is the difficulty level?</label>
-          <div class="input-group">
-            <input type="text" placeholder="Select difficulty level" name="difficultyLevel" [(ngModel)]="mapAdditionalInfo.difficultyLevel">
+          <div class="input-group difficulty-options">
+            <label *ngFor="let difficulty of mapDifficulties" class="btn"
+                   [class.active]="mapAdditionalInfo.difficultyLevel === difficulty">
+              <input type="radio" name="difficultyLevel" [(ngModel)]="mapAdditionalInfo.difficultyLevel"
+                     [value]="difficulty" autocomplete="off">{{ difficulty }}
+            </label>
           </div>
         </div>
 
@@ -59,12 +66,12 @@
       </form>
     </div>
 
-    <div class="buttons">
-      <div>
-        <button (click)="route()">Show route</button>
+    <div class="buttons container">
+      <div >
+        <button class="btn-primary" id="btn-route" (click)="route()">Show route</button>
       </div>
       <div>
-        <button (click)="saveRoute()">Save route</button>
+        <button class="btn-primary" id="btn-save" (click)="saveRoute()">Save route</button>
       </div>
     </div>
   </div>

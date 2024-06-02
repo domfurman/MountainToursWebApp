@@ -21,46 +21,21 @@
 }
 
 .img-fluid {
-  max-height: 60px; /* Adjust based on your logo height preference */
+  max-height: 60px;
   height: auto;
 }
-
-//@media (max-width: 992px) {
-//  nav.navbar {
-//    align-items: end;
-//  }
-//  .fixed-top.brand {
-//    display: flex;
-//    align-items: center;
-//    margin-left: auto;
-//    //margin-top: 0.5%;
-//    //z-index: 1000;
-//    width:50%;
-//  }
-//}
-
-//@media (max-width: 768px) {
-//  nav.navbar {
-//    align-items: end;
-//  }
-//  .fixed-top.brand {
-//    display: flex;
-//    align-items: center;
-//    margin-left: auto;
-//    //margin-top: 0.5%;
-//    //z-index: 1000;
-//    width:90%;
-//  }
-//}
+.navbar-nav .dropdown-menu {
+  z-index: 1100;
+}
 
 @media (min-width: 992px) {
   .fixed-top.brand {
-    width: 20%; /* Adjust width for larger screens */
+    width: 20%;
   }
 }
 
 @media (max-width: 991.98px) {
   .fixed-top.brand {
-    width: 100%; /* Full width for smaller screens */
+    width: 100%;
   }
 }

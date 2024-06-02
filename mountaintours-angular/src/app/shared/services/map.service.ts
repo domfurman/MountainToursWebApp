@@ -55,5 +55,9 @@ export class MapService {
     return this.http.delete<number>(`${this.basicUrl}/api/delete/tour/${tourId}/owner/${ownerId}`);
   }
 
+  getMapDifficulties(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.basicUrl}/api/map-difficulties`);
+  }
+
 
 }
