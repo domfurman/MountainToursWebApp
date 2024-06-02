@@ -6,6 +6,7 @@ import {NavbarComponent} from "../navbar/navbar.component";
 import {NgIf} from "@angular/common";
 import {SharedService} from "../../services/shared.service";
 import {interval} from "rxjs";
+import Typed from 'typed.js';
 
 @Component({
   selector: 'app-home',
@@ -44,6 +45,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     interval(10000).subscribe(() => {
       this.switchImage();
     })
+    this.typed();
   }
 
   ngAfterViewInit() {
@@ -87,6 +89,16 @@ export class HomeComponent implements OnInit, AfterViewInit {
         bgImagesContainer.classList.remove('fade-out');
       }, 500);
     }
+  }
+
+  typed() {
+    let typed = new Typed('#typed', {
+      strings: ['Explore.','Make memories.', 'Experience.', 'Meet.'],
+      typeSpeed: 125,
+      loop: true,
+      backSpeed: 125,
+      backDelay: 500
+    })
   }
 
 }
