@@ -12,6 +12,7 @@ import {User} from "../../models/user";
 import {FormsModule} from "@angular/forms";
 import {MapAdditionalInfo} from "../../interfaces/map-additional-info";
 import {NgForOf} from "@angular/common";
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -671,6 +672,19 @@ export class MapComponent implements OnInit{
   getDifficulties() {
     return this.mapService.getMapDifficulties().subscribe(data => {
       this.mapDifficulties = data;
+    });
+  }
+
+  saveRouteAlert() {
+    Swal.fire({
+      title: 'Route added successfully',
+      // text: "You can now log in.",
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.saveRoute();
+      }
     });
   }
 }

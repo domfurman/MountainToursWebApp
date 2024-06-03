@@ -1,3 +1,11 @@
+<!--<div class="preloader-wrapper">-->
+<!--  <div class="d-flex justify-content-center">-->
+<!--    <div class="spinner-border" role="status">-->
+<!--      <span class="visually-hidden">Loading...</span>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
+
 <div class="bg-images" #bgImages (click)="handleBackgroundClick($event)">
 
 
@@ -31,7 +39,7 @@
       <!--      <a class="float-end" href="#">Forgot password?</a>-->
       <!--    </div>-->
 
-      <button class="btn" type="submit" id="btn-sign-in">Sign In</button>
+      <button class="btn" id="btn-sign-in" (click)="signInAlert()">Sign In</button>
       <p class="text-center mt-3">Don't have an account? <a class="change-form" (click)="changeForm()">Sign Up</a></p>
       <p class="text-center mt-2">Or With</p>
 
@@ -112,7 +120,7 @@
         </div>
       </div>
 
-      <button class="btn" type="submit" id="btn-sign-up">Sign Up</button>
+      <button class="btn" id="btn-sign-up" (click)="signUpAlert()">Sign Up</button>
       <p class="text-center mt-3">Already have an account? <a class="change-form" (click)="changeForm()">Sign In</a></p>
 
     </form>

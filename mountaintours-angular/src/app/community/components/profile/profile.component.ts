@@ -1,11 +1,9 @@
 import {Component, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {AuthService} from "../../../shared/services/auth.service";
 import {User} from "../../../shared/models/user";
-import {forkJoin, map, Observable, switchMap} from "rxjs";
-import {MapDetails} from "../../../shared/models/map-details";
-import {MapService} from "../../../shared/services/map.service";
 import {TourMapComponent} from "../../../shared/components/tour-map/tour-map.component";
 import {Router} from "@angular/router";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-profile',
@@ -35,9 +33,22 @@ export class ProfileComponent implements OnInit{
   logout() {
     this.authService.logout().subscribe(() => {
       console.log("success logout");
-      this.router.navigate(['/home]']);
+
     }, error => {
       console.error("error logout", error)
+    });
+  }
+
+  logoutAlert() {
+    Swal.fire({
+      title: 'Log out successful',
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.logout();
+        this.router.navigate(['/home]']);
+      }
     });
   }
 }

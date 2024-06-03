@@ -7,6 +7,7 @@ import {MapService} from "../../../shared/services/map.service";
 import {Router} from "@angular/router";
 import {MapDetails} from "../../../shared/models/map-details";
 import {CommunityService} from "../../services/community.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-participant-tours',
@@ -67,7 +68,7 @@ export class ParticipantToursComponent implements OnInit{
   }
 
   resignFromTour(tourId: number, participantId: number) {
-    if(confirm("Jesteś pewny?")) {
+    // if(confirm("Jesteś pewny?")) {
       this.mapService.resignFromTour(tourId, participantId).subscribe(() => {
         console.log('Resign success');
         this.routes$ = this.routes$.pipe(
@@ -77,9 +78,9 @@ export class ParticipantToursComponent implements OnInit{
       }, error => {
         console.error("Error during resigning", error);
       });
-    } else {
-      return
-    }
+    // } else {
+    //   return
+    // }
   }
 
   isUserParticipantInAnyTour(participantId: number) {
@@ -90,5 +91,23 @@ export class ParticipantToursComponent implements OnInit{
 
   navigateToTours() {
     this.router.navigate(['/community/tours']);
+  }
+
+  resignFromTourAlert(tourId: number, participantId: number) {
+
+    Swal.fire({
+      title: 'Resignation',
+      text: "Are you sure you want to resign?",
+      icon: 'question',
+      confirmButtonText: 'Yes',
+      showDenyButton: true,
+      denyButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.resignFromTour(tourId, participantId);
+      } else {
+        return;
+      }
+    });
   }
 }

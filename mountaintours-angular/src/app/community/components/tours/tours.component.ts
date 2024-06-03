@@ -7,6 +7,7 @@ import {Observable, map, switchMap, forkJoin, Subscription, mergeMap, BehaviorSu
 import {User} from "../../../shared/models/user";
 import {AuthService} from "../../../shared/services/auth.service";
 import {CommunityService} from "../../services/community.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-tours',
@@ -104,7 +105,7 @@ export class ToursComponent implements OnInit{
   }
 
   addParticipant(tourId: number, participantId: number) {
-    if (confirm("Jesteś pewny?")) {
+    // if (confirm("Jesteś pewny?")) {
       this.mapService.addParticipant(tourId, participantId).subscribe(() => {
         console.log("participant added successfully");
         this.updateRoutes(tourId, participantId)
@@ -112,14 +113,31 @@ export class ToursComponent implements OnInit{
       }, error => {
         console.error("error adding participant", error);
       })
-    } else {
-      return
-    }
+    // } else {
+    //   return
+    // }
   }
 
   getNumberOfParticipantsForTour(tourId: number): void {
     this.mapService.getNumberOfParticipantsForTour(tourId).subscribe((data: number) => {
       this.participantCounts[tourId] = data;
+    });
+  }
+
+  participateAlert(tourId: number, participantId: number) {
+    Swal.fire({
+      title: 'Participation',
+      text: "Do you want to participate in this tour?",
+      icon: 'question',
+      confirmButtonText: 'Yes, I want to',
+      showDenyButton: true,
+      denyButtonText: 'No, I don\'t want to'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.addParticipant(tourId, participantId);
+      } else {
+        return
+      }
     });
   }
 

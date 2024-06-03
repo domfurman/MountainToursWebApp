@@ -64,7 +64,7 @@
 
           <div class="row justify-content-center">
             <div class="col-4 tour-details" id="participate-btn-wrapper">
-              <button id="participate-btn" (click)="addParticipant(route.tourId, currentUser.id)">Participate</button>
+              <button id="participate-btn" (click)="participateAlert(route.tourId, currentUser.id)">Participate</button>
             </div>
             <div class="col-4 tour-details" id="spots">
               <p><i class="fa-solid fa-person"></i>{{participantCounts[route.tourId] || 0}} of {{route.numberOfSpots}}</p>

@@ -7,6 +7,7 @@ import {MapService} from "../../../shared/services/map.service";
 import {Router} from "@angular/router";
 import {MapDetails} from "../../../shared/models/map-details";
 import {CommunityService} from "../../services/community.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-organizer-tours',
@@ -61,7 +62,7 @@ export class OrganizerToursComponent implements OnInit{
 
 
   deleteTour(tourId: number, ownerId: number) {
-    if(confirm("Jesteś pewny?")) {
+    // if(confirm("Jesteś pewny?")) {
       this.mapService.deleteTour(tourId, ownerId).subscribe(() => {
         console.log("delete successful")
         this.toursAsOwner$ = this.toursAsOwner$.pipe(
@@ -71,9 +72,9 @@ export class OrganizerToursComponent implements OnInit{
       }, error => {
         console.error("error on delete", error)
       });
-    } else {
-      return
-    }
+    // } else {
+    //   return
+    // }
   }
 
   isUserOrganizingAnyTour(ownerId: number) {
@@ -84,5 +85,22 @@ export class OrganizerToursComponent implements OnInit{
 
   navigateToRoutePlanning() {
     this.router.navigate(['community/route-planning'])
+  }
+
+  deleteTourAlert(tourId: number, ownerId: number) {
+    Swal.fire({
+      title: 'Tour cancellation',
+      text: "Are you sure you want to cancel this tour?",
+      icon: 'warning',
+      confirmButtonText: 'Yes',
+      showDenyButton: true,
+      denyButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.deleteTour(tourId, ownerId);
+      } else {
+        return;
+      }
+    });
   }
 }

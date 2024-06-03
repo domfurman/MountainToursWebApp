@@ -6,6 +6,7 @@ import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {interval} from "rxjs";
 import {SharedService} from "../../services/shared.service";
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -58,6 +59,7 @@ export class LoginComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    // this.sharedService.preloader();
     this.switchBackgroundImage();
     interval(10000).subscribe(() => {
       this.switchBackgroundImage();
@@ -73,7 +75,7 @@ export class LoginComponent implements OnInit{
   userLogin() {
     this.appService.login(this.credentials.email, this.credentials.password).subscribe(res => {
       // console.log(res.sessionId);
-      alert('login successful')
+      // alert('login successful')
       this.sessionId = res.sessionId
       console.log(this.sessionId)
       sessionStorage.setItem(
@@ -81,11 +83,11 @@ export class LoginComponent implements OnInit{
         this.sessionId
       );
       // console.log(sessionStorage)
-      this.router.navigate(['/home'])
+
 
     }, error => {
       console.log('Login error: ', error)
-      alert('sth went wrong')
+      // alert('sth went wrong')
     })
   }
 
@@ -142,4 +144,53 @@ export class LoginComponent implements OnInit{
   preloadImages(images: string[]): Promise<void[]> {
     return this.sharedService.preloadImages(images);
   }
+
+  signInAlert() {
+    if (!this.credentials.email || !this.credentials.password) {
+      Swal.fire({
+        title: 'Error',
+        text: "Please fill in all fields.",
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return
+    }
+
+    Swal.fire({
+      title: 'Sign in successful',
+      // text: "You can now log in.",
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userLogin();
+        this.router.navigate(['/home']);
+      }
+    });
+  }
+
+  signUpAlert() {
+    if (!this.registrationCredentials.email || !this.registrationCredentials.firstName || !this.registrationCredentials.lastName || !this.registrationCredentials.password) {
+      Swal.fire({
+        title: 'Error',
+        text: "Please fill in all fields.",
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+      return
+    }
+
+    Swal.fire({
+      title: 'Sign up successful',
+      text: "You can now log in.",
+      icon: 'success',
+      confirmButtonText: 'OK',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userRegistration();
+        this.changeForm();
+      }
+    });
+  }
+
 }
