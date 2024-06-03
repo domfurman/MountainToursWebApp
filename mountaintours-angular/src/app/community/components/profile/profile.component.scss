@@ -1,11 +1,111 @@
-.my-tours {
-  border: solid black 3px;
-  width: 50%;
-  height: 50%;
+.container.profile-wrapper {
+  border: none;
+  background-color: #f8f9fa;
+  border-radius: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
-.tour {
+.col-3.avatar {
+  display: flex;
+  justify-content: end;
+}
+
+.avatar-img {
+  width: 50%;
+  height: 100%;
+}
+
+.col-6.user-info {
+  display: flex;
+  justify-content: start;
+  margin: auto;
+
+}
+
+p {
+  i {
+    margin-right: 8px;
+  }
+}
+
+.btn-logout-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  //margin: auto;
+}
+
+#btn-logout {
+  width: 70%;
+  border: none;
+  height: 50px;
+  border-radius: 20px;
+  transition: 0.2s ease-in-out;
+  background-color: #e7e7e7;
+  font-weight: 500;
+  &:hover {
+    cursor: pointer;
+    border: 2px solid #f52525;
+    background-color: #ee3b3b;
+    //transform: scale(1.05);
+    //will-change: transform;
+  }
+}
+
+.col-12 p {
+  position: relative;
+  cursor: pointer;
+  margin: 10px 0;
+}
+
+.col-12 p::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0;
+  height: 2px;
+  background: black;
+  transition: width 0.5s ease-in-out;
+}
+
+.col-12 p:hover::after {
   width: 100%;
-  height: 50%;
-  //border: solid black 1px;
+}
+
+@media (max-width: 767px) {
+  .container.profile-wrapper {
+    width: 90%;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .col-3.avatar,
+  .col-6.user-info,
+  .col-3.logout-wrapper {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 15px; /* Add some spacing between sections */
+  }
+
+  .col-3.avatar {
+    justify-content: center;
+  }
+
+  .col-6.user-info {
+    justify-content: center;
+  }
+
+  .btn-logout-wrapper {
+    justify-content: center;
+  }
+
+  #btn-logout {
+    width: 100%;
+  }
 }

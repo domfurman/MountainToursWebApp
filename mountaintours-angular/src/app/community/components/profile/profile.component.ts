@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit{
 
   @ViewChildren(TourMapComponent) tourMaps!: QueryList<TourMapComponent>;
 
-  constructor(private authService: AuthService, private mapService: MapService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
 
   }
 
