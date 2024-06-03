@@ -1,13 +1,4 @@
 <app-navbar></app-navbar>
-<!--<h1>Trasy, których jesteś organizatorem</h1>-->
-<!--<div *ngFor="let tour of toursAsOwner$ | async">-->
-<!--  <h1>Tour date: {{tour.tourDateConvert | date: 'dd-MM-yyyy'}}</h1>-->
-<!--  <app-tour-map [mapDetails]="tour"></app-tour-map>-->
-<!--  <button (click)="deleteTour(tour.tourId, currentUser.id)">Delete tour</button>-->
-<!--  <div *ngFor="let participant of tour.participants">-->
-<!--    <h3>{{ participant.firstName }}</h3>-->
-<!--  </div>-->
-<!--</div>-->
 
 <ng-container *ngIf="isOrganizingAnyTours; else notOrganizing">
 
@@ -51,7 +42,7 @@
 
         <div class="row justify-content-center">
           <div class="col-3 tour-details">
-            <p><i class="fa-solid fa-tour"></i>{{tour.length / 1000 | number: '1.2-2'}}km</p>
+            <p><i class="fa-solid fa-route"></i>{{tour.length / 1000 | number: '1.2-2'}}km</p>
           </div>
           <div class="col-3 tour-details">
             <p><i class="fa-regular fa-hourglass"></i>{{tour.duration | duration}}h</p>
