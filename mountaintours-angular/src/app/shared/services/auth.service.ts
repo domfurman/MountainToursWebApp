@@ -16,16 +16,13 @@ export class AuthService {
   constructor(private http: HttpClient, private router: Router) { }
 
   login(username: String, password: String){
-    // console.log();
-    const headers = new HttpHeaders({Authorization: 'Basic ' + btoa(username+":"+password)})
-    const options = {headers, withCredentials: true, responseType: 'text' as 'json'};
     const creds = {
       'username' : username,
       'password' : password
     }
     return this.http.post<any>(`${this.basicUrl}/api/login`, creds).pipe(
-      tap(() => {
-        this.authenticated = true;
+      tap(response => {
+        this.authenticated = !!(response && response.success);
       })
     );
   }
@@ -65,7 +62,6 @@ export class AuthService {
       'email': email,
       'password': password
     }
-
     return this.http.post<any>(`${this.basicUrl}/api/registration`, creds)
   }
 

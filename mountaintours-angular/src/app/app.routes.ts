@@ -7,8 +7,8 @@ export const routes: Routes = [
   {path: '', canActivate: [authenticationGuard], children: [
       {path: 'home', component: HomeComponent},
       {path: 'login', component: LoginComponent},
-      {path: 'community', loadChildren: () => import('./community/community.module').then(m => m.CommunityModule)},
+      {path: 'community', loadChildren: () => import('./community/community.module')
+          .then(m => m.CommunityModule)},
       {path: '**', redirectTo: 'home'}
     ]},
-
 ];

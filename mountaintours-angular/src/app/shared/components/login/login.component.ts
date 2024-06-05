@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit{
   //   "https://images.unsplash.com/photo-1507975140808-424c25c0c3a7?q=80&w=2076&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
 ]
 
-  constructor(private appService: AuthService, private router: Router, private renderer: Renderer2, private sharedService: SharedService) {
+  constructor(private authService: AuthService, private router: Router, private renderer: Renderer2, private sharedService: SharedService) {
   }
 
   ngOnInit(): void {
@@ -72,37 +72,60 @@ export class LoginComponent implements OnInit{
     });
   }
 
+  // userLogin() {
+  //   this.authService.login(this.credentials.email, this.credentials.password).subscribe(res => {
+  //     this.sessionId = res.sessionId
+  //     sessionStorage.setItem(
+  //       'token',
+  //       this.sessionId
+  //     );
+  //   }, error => {
+  //     console.log('Login error: ', error)
+  //   })
+  // }
   userLogin() {
-    this.appService.login(this.credentials.email, this.credentials.password).subscribe(res => {
-      // console.log(res.sessionId);
-      // alert('login successful')
-      this.sessionId = res.sessionId
-      console.log(this.sessionId)
-      sessionStorage.setItem(
-        'token',
-        this.sessionId
-      );
-      // console.log(sessionStorage)
-
-
+    this.authService.login(this.credentials.email, this.credentials.password).subscribe(res => {
+      if (this.authService.authenticated) {
+        this.sessionId = res.sessionId;
+        sessionStorage.setItem('token', this.sessionId);
+        Swal.fire({
+          title: 'Sign in successful',
+          icon: 'success',
+          confirmButtonText: 'OK',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/home']);
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Error',
+          text: "Invalid email or password.",
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
     }, error => {
-      console.log('Login error: ', error)
-      // alert('sth went wrong')
-    })
+      console.log('Login error: ', error);
+      Swal.fire({
+        title: 'Error',
+        text: "Login failed. Please try again.",
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    });
   }
 
   userRegistration() {
-    this.appService.registerUser(
+    this.authService.registerUser(
       this.registrationCredentials.firstName,
       this.registrationCredentials.lastName,
       this.registrationCredentials.email,
       this.registrationCredentials.password).subscribe(res => {
-      console.log('success')
       this.changeForm();
     }, error => {
       console.log(error)
     })
-
   }
 
   changeForm() {

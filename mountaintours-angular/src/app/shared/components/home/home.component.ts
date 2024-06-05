@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.switchImage();
     })
     this.typed();
+    console.log(this.authenticated());
   }
 
   ngAfterViewInit() {

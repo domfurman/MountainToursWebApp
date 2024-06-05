@@ -104,14 +104,14 @@ public class WebSecurityConfig {
     public AuthenticationManager authenticationManager(
             UserService userDetailsService,
             BCryptPasswordEncoder bCryptPasswordEncoder) {
-        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailsService);
-        authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
+                DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+                authenticationProvider.setUserDetailsService(userDetailsService);
+                authenticationProvider.setPasswordEncoder(bCryptPasswordEncoder);
 
-        ProviderManager providerManager = new ProviderManager(authenticationProvider);
-        providerManager.setEraseCredentialsAfterAuthentication(false);
+                ProviderManager providerManager = new ProviderManager(authenticationProvider);
+                providerManager.setEraseCredentialsAfterAuthentication(false);
 
-        return providerManager;
+                return providerManager;
     }
 
     /*@Autowired
