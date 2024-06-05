@@ -97,13 +97,6 @@ export class LoginComponent implements OnInit{
             this.router.navigate(['/home']);
           }
         });
-      } else {
-        Swal.fire({
-          title: 'Error',
-          text: "Invalid email or password.",
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
       }
     }, error => {
       console.log('Login error: ', error);
