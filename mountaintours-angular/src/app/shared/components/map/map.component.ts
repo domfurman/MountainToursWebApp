@@ -13,6 +13,7 @@ import {FormsModule} from "@angular/forms";
 import {MapAdditionalInfo} from "../../interfaces/map-additional-info";
 import {NgForOf} from "@angular/common";
 import Swal from 'sweetalert2';
+import {environment} from "../../../../environments/environment";
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -23,7 +24,7 @@ import Swal from 'sweetalert2';
 export class MapComponent implements OnInit{
   @Input() name: string = '';
 
-  API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
+  API_KEY = environment.apiKey;
   map!: L.Map;
   routeLayer: any;
   markersLayer: L.GeoJSON<GeoJSON.FeatureCollection<GeoJSON.Geometry>> | undefined;
@@ -62,7 +63,6 @@ export class MapComponent implements OnInit{
       this.reverseGeocode(event);
     });
     this.getDifficulties();
-
   }
 
   console() {
@@ -79,7 +79,7 @@ export class MapComponent implements OnInit{
 
 
   configMap() {
-    this.map = L.map('map').setView([50.049683, 19.944544], 16 );
+    this.map = L.map('map').setView([49.299030, 19.949047], 13);
 
     const tileLayers = {
       'Basic': L.tileLayer(`https://api.mapy.cz/v1/maptiles/basic/256/{z}/{x}/{y}?apikey=${this.API_KEY}`, {
@@ -311,7 +311,8 @@ export class MapComponent implements OnInit{
         keys: ["value"],
         src: async (query: string) => {
           try {
-            const fetchData = await fetch(`https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
+            const fetchData = await fetch(
+              `https://api.mapy.cz/v1/suggest?lang=pl&limit=5&apikey=${this.API_KEY}&query=${query}`);
             const jsonData = await fetchData.json();
             return jsonData.items.map((item: any) => ({
               value: item.name,
@@ -343,7 +344,8 @@ export class MapComponent implements OnInit{
           list.style.position = 'absolute';
           list.style.zIndex = '1000';
           list.style.backgroundColor = "white";
-          const inputField = document.querySelector('.autoComplete_wrapper input') as HTMLElement;
+          const inputField = document
+            .querySelector('.autoComplete_wrapper input') as HTMLElement;
           const inputWidth = inputField.offsetWidth;
           list.style.width = `${inputWidth}px`;
           list.style.borderRadius = '10px';
@@ -652,10 +654,10 @@ export class MapComponent implements OnInit{
     this.mapDetails.expirationDate = new Date;
     this.mapService.addNewRoute(this.mapDetails).subscribe(
       (result: MapDetails) => {
-        console.log('poszlo');
+        console.log('Success');
       },
       (error) => {
-        console.error('nie poszlo', error);
+        console.error('Error', error);
       }
     )
   }

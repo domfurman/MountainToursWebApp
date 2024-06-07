@@ -33,7 +33,6 @@ export class ProfileComponent implements OnInit{
   logout() {
     this.authService.logout().subscribe(() => {
       console.log("success logout");
-
     }, error => {
       console.error("error logout", error)
     });

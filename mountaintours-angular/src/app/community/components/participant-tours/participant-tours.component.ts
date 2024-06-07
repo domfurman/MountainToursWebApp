@@ -68,7 +68,6 @@ export class ParticipantToursComponent implements OnInit{
   }
 
   resignFromTour(tourId: number, participantId: number) {
-    // if(confirm("Jesteś pewny?")) {
       this.mapService.resignFromTour(tourId, participantId).subscribe(() => {
         console.log('Resign success');
         this.routes$ = this.routes$.pipe(
@@ -78,9 +77,6 @@ export class ParticipantToursComponent implements OnInit{
       }, error => {
         console.error("Error during resigning", error);
       });
-    // } else {
-    //   return
-    // }
   }
 
   isUserParticipantInAnyTour(participantId: number) {

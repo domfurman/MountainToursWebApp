@@ -62,7 +62,6 @@ export class OrganizerToursComponent implements OnInit{
 
 
   deleteTour(tourId: number, ownerId: number) {
-    // if(confirm("Jesteś pewny?")) {
       this.mapService.deleteTour(tourId, ownerId).subscribe(() => {
         console.log("delete successful")
         this.toursAsOwner$ = this.toursAsOwner$.pipe(
@@ -72,9 +71,6 @@ export class OrganizerToursComponent implements OnInit{
       }, error => {
         console.error("error on delete", error)
       });
-    // } else {
-    //   return
-    // }
   }
 
   isUserOrganizingAnyTour(ownerId: number) {

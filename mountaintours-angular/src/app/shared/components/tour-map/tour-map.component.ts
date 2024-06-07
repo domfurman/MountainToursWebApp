@@ -9,6 +9,7 @@ import {MapDetails} from "../../models/map-details";
 import {MapService} from "../../services/map.service";
 import {AuthService} from "../../services/auth.service";
 import {User} from "../../models/user";
+import {environment} from "../../../../environments/environment";
 @Component({
   selector: 'app-tour-map',
   standalone: true,
@@ -18,10 +19,9 @@ import {User} from "../../models/user";
 })
 export class TourMapComponent implements OnInit{
   @Input() mapDetails!: MapDetails;
-  // @Input() mapId!: string;
   @ViewChild('mapContainer') mapContainer!: ElementRef;
 
-  API_KEY = "RzwAWVCO0lNed8aeU4gR_nN5zFcmzmuG2EtCvQdCmZM";
+  API_KEY = environment.apiKey;
   map!: L.Map;
   routeLayer: any;
   waypoints: [number, number][] = [];
