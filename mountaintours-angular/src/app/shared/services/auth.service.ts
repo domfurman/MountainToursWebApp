@@ -10,6 +10,7 @@ import {map, Observable, tap} from "rxjs";
 export class AuthService {
 
   authenticated = false;
+  signUpSuccess = false;
   private basicUrl: string = 'http://localhost:8080'
   user: User = new User();
 

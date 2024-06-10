@@ -121,6 +121,44 @@ export class LoginComponent implements OnInit{
     })
   }
 
+
+  // userRegistration() {
+  //   this.authService.registerUser(
+  //     this.registrationCredentials.firstName,
+  //     this.registrationCredentials.lastName,
+  //     this.registrationCredentials.email,
+  //     this.registrationCredentials.password
+  //   ).subscribe(res => {
+  //     if (res.success) {
+  //       Swal.fire({
+  //         title: 'Sign up successful',
+  //         text: "You can now log in.",
+  //         icon: 'success',
+  //         confirmButtonText: 'OK',
+  //       }).then((result) => {
+  //         if (result.isConfirmed) {
+  //           this.changeForm();
+  //         }
+  //       });
+  //     } else {
+  //       Swal.fire({
+  //         title: 'Registration Failed',
+  //         text: res.message,
+  //         icon: 'error',
+  //         confirmButtonText: 'OK',
+  //       });
+  //     }
+  //   }, error => {
+  //     Swal.fire({
+  //       title: 'Registration Failed',
+  //       text: "There was an error with your registration. Please try again.",
+  //       icon: 'error',
+  //       confirmButtonText: 'OK',
+  //     });
+  //     console.log(error);
+  //   });
+  // }
+
   changeForm() {
     this.showLoginForm = !this.showLoginForm;
   }
@@ -159,30 +197,6 @@ export class LoginComponent implements OnInit{
 
   preloadImages(images: string[]): Promise<void[]> {
     return this.sharedService.preloadImages(images);
-  }
-
-  signInAlert() {
-    if (!this.credentials.email || !this.credentials.password) {
-      Swal.fire({
-        title: 'Error',
-        text: "Please fill in all fields.",
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-      return
-    }
-
-    Swal.fire({
-      title: 'Sign in successful',
-      // text: "You can now log in.",
-      icon: 'success',
-      confirmButtonText: 'OK',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.userLogin();
-        this.router.navigate(['/home']);
-      }
-    });
   }
 
   signUpAlert() {

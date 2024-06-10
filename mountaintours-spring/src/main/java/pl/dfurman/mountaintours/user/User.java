@@ -14,7 +14,6 @@ import java.util.Collections;
 @Data
 @EqualsAndHashCode
 public class User implements UserDetails {
-
     private Long id;
     private String firstName;
     private String lastName;

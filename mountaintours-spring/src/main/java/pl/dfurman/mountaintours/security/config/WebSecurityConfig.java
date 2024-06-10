@@ -74,11 +74,6 @@ public class WebSecurityConfig {
                                 "/*.bundle.*",
                                 "/login",
                                 "api/login"
-//                                "/","api/save-map",
-//                                "api/find-all-maps" ,
-//                                "api/user-by-tour-owner-id/**",
-//                                "api/tours/*/participants/**",
-//                                "api/number-of-participants/tour/**"
                         )
                         .permitAll()
                         .anyRequest().authenticated()
@@ -87,7 +82,7 @@ public class WebSecurityConfig {
                 .formLogin(Customizer.withDefaults())
                 .logout((logout) -> logout.logoutUrl("api/logout"))
                 .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(sessionFilter, UsernamePasswordAuthenticationFilter.class);
                 /*.securityContext((context) -> context
                         .securityContextRepository(repository))*/
                 /*.csrf((csrf) -> csrf
@@ -96,8 +91,6 @@ public class WebSecurityConfig {
                 )
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)*/
 //                .cors(AbstractHttpConfigurer::disable)
-        ;
-
         return http.build();
     }
     @Bean

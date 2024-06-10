@@ -23,11 +23,11 @@ public class RegistrationService {
 
         return userService.singUpUser(
                 new User(
-                    request.getFirstName(),
-                    request.getLastName(),
+                        request.getFirstName(),
+                        request.getLastName(),
                         request.getPassword(),
-                    request.getEmail(),
-                    UserRole.USER
-                    ));
+                        request.getEmail(),
+                        UserRole.USER
+                ));
     }
 }

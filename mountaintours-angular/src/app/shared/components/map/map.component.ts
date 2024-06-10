@@ -494,13 +494,13 @@ export class MapComponent implements OnInit{
     let html = '';
 
     try {
-      fetch(`https://api.mapy.cz/v1/rgeocode/?lon=${event.latlng.lng}&lat=${event.latlng.lat}&apikey=${this.API_KEY}`, {
+      fetch(`https://api.mapy.cz/v1/rgeocode/?lon=${event.latlng.lng}&lat=${event.latlng.lat}&apikey=${this.API_KEY}&lang=pl`, {
         mode: 'cors',
       })
         .then(response => response.json())
         .then(json => {
           if (json?.items?.length > 0) {
-            html = '<p>Response details are available in the console.</p><ul>';
+            html = '<ul>';
             json.items.forEach((item: any) => {
               html += `<li>${item.name}</li>`;
             });

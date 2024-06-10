@@ -116,7 +116,6 @@ public class JdbcMapRepository implements MapRepository{
                         }
                         map.setWaypoints(waypointList);
                     }
-
                 }
                 map.setOwnerId(rs.getLong("owner_id"));
                 map.setTourId(rs.getLong("tour_id"));
